@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: shop.JewelryMS.be.BeApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.428 s -- in shop.JewelryMS.be.BeApplicationTests
