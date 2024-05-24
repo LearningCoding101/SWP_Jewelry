@@ -19,4 +19,4 @@ EXPOSE 8080
 
 COPY --from=build /build/target/jewelry.jar jewelry.jar
 
-ENTRYPOINT ["java", "-jar", "product.jar"]
+ENTRYPOINT ["java", "-jar", "jewelry.jar"]
