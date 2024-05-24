@@ -1,2 +1,4 @@
+com\shop\JewleryMS\Service\ApiService.class
 com\shop\JewleryMS\JewleryMsApplication.class
 com\shop\JewleryMS\testAgain.class
+com\shop\JewleryMS\Controller\InfoController.class
