@@ -1,6 +1,7 @@
 package com.shop.JewleryMS.Service;
 
 import com.shop.JewleryMS.Entity.Category;
+import com.shop.JewleryMS.Model.CategoryRequest;
 import com.shop.JewleryMS.Model.CreateCategoryRequest;
 import com.shop.JewleryMS.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,12 @@ public class CategoryService {
     public Category readCategoryById(Long id){
         return categoryRepository.findById(id).orElse(null);
     }
-    public void updateCategory(Long id, String name, String description){
-        Optional<Category> categoryOpt = categoryRepository.findById(id);
+    public void updateCategory(CategoryRequest categoryRequest){
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryRequest.getId());
         if(categoryOpt.isPresent()){
             Category category = categoryOpt.get();
-            category.setName(name);
-            category.setDescription(description);
+            category.setName(categoryRequest.getName());
+            category.setDescription(categoryRequest.getDescription());
             categoryRepository.save(category);
         }
     }

@@ -29,9 +29,8 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception {
-        Object AbstractHttpConfigurer;
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         req -> req
                                 .requestMatchers("/**")
