@@ -6,6 +6,9 @@ import com.shop.JewleryMS.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CategoryService {
     @Autowired
@@ -20,4 +23,25 @@ public class CategoryService {
 
     }
 
+    public List<Category> readAllCategory(){
+        List<Category> allCategory = categoryRepository.findAll();
+
+
+        return allCategory;
+    }
+    public Category readCategoryById(Long id){
+        return categoryRepository.findById(id).orElse(null);
+    }
+    public void updateCategory(Long id, String name, String description){
+        Optional<Category> categoryOpt = categoryRepository.findById(id);
+        if(categoryOpt.isPresent()){
+            Category category = categoryOpt.get();
+            category.setName(name);
+            category.setDescription(description);
+            categoryRepository.save(category);
+        }
+    }
+    public void deleteCategory(long id){
+        categoryRepository.deleteById(id);
+    }
 }
