@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface AuthenticationRepository extends JpaRepository<Account, Long> {
-    List<Account> findAll();  // Use the correct method name to find all accounts
+
+    Account findAccountByaUsername(String aUsername);
+
 }
