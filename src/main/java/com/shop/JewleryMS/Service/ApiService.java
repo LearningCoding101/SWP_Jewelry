@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.hibernate.type.format.jackson.JacksonXmlFormatMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,14 +17,11 @@ import java.util.regex.Pattern;
 public class ApiService {
     private final RestTemplate restTemplate;
     private final ObjectMapper jsonMapper;
-    private final XmlMapper xmlMapper;
 
     public ApiService(RestTemplate restTemplate,
-                      ObjectMapper jsonMapper,
-                      XmlMapper xmlMapper) {
+                      ObjectMapper jsonMapper) {
         this.restTemplate = restTemplate;
         this.jsonMapper = jsonMapper;
-        this.xmlMapper = xmlMapper;
     }
 
     public String getGoldPrice(String url) {
