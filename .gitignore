@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 ### STS ###
+jewelry.jar
 .apt_generated
 .classpath
 .factorypath
