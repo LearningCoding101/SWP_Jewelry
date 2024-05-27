@@ -1,8 +1,8 @@
-package com.shop.JewleryMS.Service;
+package com.shop.JewleryMS.service;
 
-import com.shop.JewleryMS.Entity.ProductSell;
-import com.shop.JewleryMS.Model.CreateProductSellRequest;
-import com.shop.JewleryMS.Model.ProductSellRequest;
+import com.shop.JewleryMS.entity.ProductSell;
+import com.shop.JewleryMS.model.CreateProductSellRequest;
+import com.shop.JewleryMS.model.ProductSellRequest;
 import com.shop.JewleryMS.repository.ProductSellRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

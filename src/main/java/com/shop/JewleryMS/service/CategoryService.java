@@ -1,8 +1,8 @@
-package com.shop.JewleryMS.Service;
+package com.shop.JewleryMS.service;
 
-import com.shop.JewleryMS.Entity.Category;
-import com.shop.JewleryMS.Model.CategoryRequest;
-import com.shop.JewleryMS.Model.CreateCategoryRequest;
+import com.shop.JewleryMS.entity.Category;
+import com.shop.JewleryMS.model.CategoryRequest;
+import com.shop.JewleryMS.model.CreateCategoryRequest;
 import com.shop.JewleryMS.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

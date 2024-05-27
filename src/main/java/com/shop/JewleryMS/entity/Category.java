@@ -1,9 +1,17 @@
-package com.shop.JewleryMS.Model;
+package com.shop.JewleryMS.entity;
 
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class CreateCategoryRequest {
+@Entity
+@Getter
+@Setter
+@Table(name = "Category")
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
     String name;
     String description;
 

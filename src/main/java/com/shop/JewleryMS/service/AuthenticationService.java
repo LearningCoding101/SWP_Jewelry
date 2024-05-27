@@ -1,7 +1,7 @@
-package com.shop.JewleryMS.Service;
+package com.shop.JewleryMS.service;
 
-import com.shop.JewleryMS.Entity.Account;
-import com.shop.JewleryMS.Model.RegisterRequest;
+import com.shop.JewleryMS.entity.Account;
+import com.shop.JewleryMS.model.RegisterRequest;
 import com.shop.JewleryMS.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
