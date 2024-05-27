@@ -50,6 +50,5 @@ public class CustomerController {
         customerService.updateCustomerPoints(viewPointsRequest);
         return ResponseEntity.ok("Customer points updated successfully");
     }
-
 }
 

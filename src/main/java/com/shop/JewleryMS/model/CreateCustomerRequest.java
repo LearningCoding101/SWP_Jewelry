@@ -6,4 +6,5 @@ public class CreateCustomerRequest {//for Create methods, with the id autogenera
     String email;
     String phoneNumber;
     int pointsAmount;
+
 }
