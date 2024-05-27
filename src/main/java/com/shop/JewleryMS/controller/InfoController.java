@@ -1,12 +1,10 @@
-package com.shop.JewleryMS.Controller;
+package com.shop.JewleryMS.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.shop.JewleryMS.Service.ApiService;
+import com.shop.JewleryMS.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

@@ -1,6 +1,5 @@
 package com.shop.JewleryMS;
 
-import com.shop.JewleryMS.Service.AuthenticationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;

@@ -1,11 +1,9 @@
-package com.shop.JewleryMS.Controller;
+package com.shop.JewleryMS.controller;
 
-import com.shop.JewleryMS.Entity.Category;
-import com.shop.JewleryMS.Model.CategoryRequest;
-import com.shop.JewleryMS.Model.CreateCategoryRequest;
-import com.shop.JewleryMS.Model.RegisterRequest;
-import com.shop.JewleryMS.Service.CategoryService;
-import org.apache.coyote.Response;
+import com.shop.JewleryMS.entity.Category;
+import com.shop.JewleryMS.model.CategoryRequest;
+import com.shop.JewleryMS.model.CreateCategoryRequest;
+import com.shop.JewleryMS.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

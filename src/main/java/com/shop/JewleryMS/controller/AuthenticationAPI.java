@@ -1,8 +1,8 @@
-package com.shop.JewleryMS.Controller;
+package com.shop.JewleryMS.controller;
 
-import com.shop.JewleryMS.Entity.Account;
-import com.shop.JewleryMS.Model.RegisterRequest;
-import com.shop.JewleryMS.Service.AuthenticationService;
+import com.shop.JewleryMS.entity.Account;
+import com.shop.JewleryMS.model.RegisterRequest;
+import com.shop.JewleryMS.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

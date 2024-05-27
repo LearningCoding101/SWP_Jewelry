@@ -1,10 +1,9 @@
-package com.shop.JewleryMS.Controller;
+package com.shop.JewleryMS.controller;
 
-import com.shop.JewleryMS.Entity.ProductSell;
-import com.shop.JewleryMS.Model.CreateProductSellRequest;
-import com.shop.JewleryMS.Model.ProductSellRequest;
-import com.shop.JewleryMS.Service.ProductSellService;
-import jakarta.persistence.Entity;
+import com.shop.JewleryMS.entity.ProductSell;
+import com.shop.JewleryMS.model.CreateProductSellRequest;
+import com.shop.JewleryMS.model.ProductSellRequest;
+import com.shop.JewleryMS.service.ProductSellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

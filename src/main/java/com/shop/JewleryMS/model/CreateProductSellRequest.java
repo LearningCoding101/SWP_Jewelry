@@ -1,4 +1,4 @@
-package com.shop.JewleryMS.Model;
+package com.shop.JewleryMS.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductSellRequest {
-    Integer productID;
+public class CreateProductSellRequest {
     Integer categoryID;
     Integer promotionID;
     String name;
@@ -23,4 +22,5 @@ public class ProductSellRequest {
     String image;
     Integer chi;
     Float carat;
+
 }

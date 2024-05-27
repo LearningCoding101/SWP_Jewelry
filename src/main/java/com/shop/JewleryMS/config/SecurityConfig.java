@@ -1,6 +1,6 @@
 package com.shop.JewleryMS.config;
 
-import com.shop.JewleryMS.Service.AuthenticationService;
+import com.shop.JewleryMS.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

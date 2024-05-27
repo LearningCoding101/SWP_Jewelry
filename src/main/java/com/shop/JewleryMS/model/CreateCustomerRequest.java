@@ -1,4 +1,4 @@
-package com.shop.JewleryMS.Model;
+package com.shop.JewleryMS.model;
 import lombok.Data;
 
 @Data
