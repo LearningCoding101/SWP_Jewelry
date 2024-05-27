@@ -1,9 +1,9 @@
-package com.shop.JewleryMS.service;
+package com.shop.JewleryMS.Service;
 
-import com.shop.JewleryMS.entity.Customer;
-import com.shop.JewleryMS.model.CreateCustomerRequest;
-import com.shop.JewleryMS.model.CustomerRequest;
-import com.shop.JewleryMS.model.ViewCustomerPointRequest;
+import com.shop.JewleryMS.Entity.Customer;
+import com.shop.JewleryMS.Model.CreateCustomerRequest;
+import com.shop.JewleryMS.Model.CustomerRequest;
+import com.shop.JewleryMS.Model.ViewCustomerPointRequest;
 import com.shop.JewleryMS.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
