@@ -4,35 +4,43 @@ import com.shop.JewleryMS.entity.Category;
 import com.shop.JewleryMS.model.CategoryRequest;
 import com.shop.JewleryMS.model.CreateCategoryRequest;
 import com.shop.JewleryMS.service.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/Category")
+@RequestMapping("/category")
+@SecurityRequirement(name = "api")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
-    @PostMapping("/Create")
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest createCategoryRequest) {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
-    @GetMapping("/ReadAll")
+    @GetMapping("/readAll")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Category>>readAllCategory(){
+        System.out.println("pinged readall");
         List<Category> categoryList = categoryService.readAllCategory();
         return ResponseEntity.ok(categoryList);
     }
 
-    @PostMapping("/Delete")
-    public ResponseEntity<String> deleteCategory(@RequestBody long id){
+    @PostMapping("/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> deleteCategory(@RequestBody Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 
-    @PostMapping("/Update")
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequest){
         categoryService.updateCategory(categoryRequest);
         return ResponseEntity.ok("Category updated successfully");
