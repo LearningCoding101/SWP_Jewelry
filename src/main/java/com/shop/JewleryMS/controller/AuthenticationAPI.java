@@ -26,6 +26,7 @@ public class AuthenticationAPI {
     @Autowired
     EmailService emailService;
     @GetMapping("testGetUserByEmail")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getByEmail(@RequestParam String email){
         System.out.println("Reached");
         Account account = authenticationService.getAccount(email);
@@ -33,7 +34,8 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(account);
     }
     @GetMapping("testGetAll")
-    public ResponseEntity getAll(){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Account>> getAll(){
         System.out.println("Reached");
         List<Account> account = authenticationService.getAllAccount();
 
@@ -42,6 +44,7 @@ public class AuthenticationAPI {
 
 
     @GetMapping("authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> test2(){
         System.out.println("Reached!");
         return ResponseEntity.ok("test");
@@ -71,12 +74,5 @@ public class AuthenticationAPI {
         return ResponseEntity.ok("New password sent");
     }
 
-    @GetMapping("test")
-    public void sendMail(){
-        EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient("hahoang433322@gmail.com");
-        emailDetail.setSubject("test123");
-        emailDetail.setMsgBody("aaa");
-        emailService.sendMailTemplate(emailDetail);
-    }
+
  }
