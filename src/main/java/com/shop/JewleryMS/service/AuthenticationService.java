@@ -2,6 +2,7 @@ package com.shop.JewleryMS.service;
 
 import com.shop.JewleryMS.config.SecurityConfig;
 import com.shop.JewleryMS.entity.Account;
+import com.shop.JewleryMS.entity.RoleEnum;
 import com.shop.JewleryMS.model.AccountResponse;
 import com.shop.JewleryMS.model.LoginRequest;
 import com.shop.JewleryMS.model.RegisterRequest;
@@ -38,6 +39,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setEmail(registerRequest.getEmail());
         account.setAPassword(passwordEncoder.encode(registerRequest.getAPassword()));
         account.setAUsername(registerRequest.getAUsername());
+        account.setRole(RoleEnum.STAFF);
         return authenticationRepository.save(account);
     }
     public List<Account> getAllAccount(){
@@ -67,6 +69,7 @@ public class AuthenticationService implements UserDetailsService {
         AccountResponse accountResponse = new AccountResponse();
         accountResponse.setUsername(account.getUsername());
         accountResponse.setToken(token);
+        accountResponse.setRole(account.getRole());
         return accountResponse;
     }
 

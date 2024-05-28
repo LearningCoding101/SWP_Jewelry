@@ -34,10 +34,12 @@ public class Filter extends OncePerRequestFilter {
     JWTservice jwTservice;
     private final List<String> AUTH_PERMISSION = List.of(
             "/swagger-ui/**",
-            "/v3/api-docs/**",
+            "/api-docs/**",
+            "/favicon",
             "/swagger-resources/**",
             "/account/register",
-            "/account/login"
+            "/account/login",
+            "/account/reset"
     );
 
     @Override

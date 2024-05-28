@@ -3,7 +3,7 @@ import com.shop.JewleryMS.entity.Account;
 import com.shop.JewleryMS.model.EmailDetail;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import mail.dto.EmailDetail;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,7 +12,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import javax.naming.Context;
 import java.util.Random;
 
 @Service
@@ -37,7 +36,8 @@ public class EmailService {
         String temporaryPassword = generateTempEmail(12);
         String companyName = "JewelryManagementSystem";
 
-        String resetPasswordEmail = "Subject: Password Reset Request\n\n" +
+
+        String resetPasswordEmail =
                 "Dear " + account.getAccountName() + ",\n\n" +
                 "We have received a request to reset the password for your account. Please find your new temporary password below:\n\n" +
                 "Temporary Password: " + temporaryPassword + "\n\n" +
@@ -47,13 +47,12 @@ public class EmailService {
                 "Best regards,\n" +
                 companyName + " Support Team";
 
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(emailAddressTo);
+        emailDetail.setSubject("Subject: Password Reset Request");
+        emailDetail.setMsgBody(resetPasswordEmail);
 
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(emailAddressTo);
-        mailMessage.setSubject("Subject: Password Reset Request");
-        mailMessage.setText(resetPasswordEmail);
-        mailSender.send(mailMessage);
+        sendMailTemplate(emailDetail);
 
 
     }
@@ -61,7 +60,7 @@ public class EmailService {
         try{
             Context context = new Context();
 
-            context.setVariable("name", "Gia Bảo");
+            context.setVariable("name", "Jewelry Management System");
 
             String text = templateEngine.process("emailtemplate", context);
 
@@ -70,7 +69,7 @@ public class EmailService {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
 
             // Setting up necessary details
-            mimeMessageHelper.setFrom("admin@gmail.com");
+            mimeMessageHelper.setFrom("jewelryms44@gmail.com");
             mimeMessageHelper.setTo(emailDetail.getRecipient());
             mimeMessageHelper.setText(text, true);
             mimeMessageHelper.setSubject(emailDetail.getSubject());

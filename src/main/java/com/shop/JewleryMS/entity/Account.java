@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "Account")
@@ -30,11 +32,13 @@ public class Account implements UserDetails {
     @Column(name = "accountName")
     String accountName;
     @Column(name = "role")
-    String role;
+            @Enumerated(value = EnumType.STRING)
+    RoleEnum role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

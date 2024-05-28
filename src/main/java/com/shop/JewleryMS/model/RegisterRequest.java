@@ -1,5 +1,6 @@
 package com.shop.JewleryMS.model;
 
+import com.shop.JewleryMS.entity.RoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 
