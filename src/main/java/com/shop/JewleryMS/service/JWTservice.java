@@ -52,6 +52,7 @@ public class JWTservice {
 
     // get userName form CLAIM
     public Account extractAccount (String token){
+        System.out.println("extract");
         String username = extractClaim(token,Claims::getSubject);
         return authenticationRepository.findAccountByUsername(username);
     }

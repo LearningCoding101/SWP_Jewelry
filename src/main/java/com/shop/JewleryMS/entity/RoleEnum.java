@@ -1,8 +1,8 @@
 package com.shop.JewleryMS.entity;
 
 public enum RoleEnum {
-    ADMIN,
-    STAFF,
-    MANAGER
+    ROLE_ADMIN,
+    ROLE_STAFF,
+    ROLE_MANAGER
 
 }

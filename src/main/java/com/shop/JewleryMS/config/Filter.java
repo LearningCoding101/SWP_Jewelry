@@ -48,8 +48,10 @@ public class Filter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         if (isPermitted(uri)) {
             // yêu cầu truy cập 1 api => ai cũng truy cập đc
+
             filterChain.doFilter(request, response); // cho phép truy cập dô controller
         } else {
+
             String token = getToken(request);
             if (token == null) {
                 resolver.resolveException(request, response, null, new AuthException("Empty token!"));
@@ -60,6 +62,7 @@ public class Filter extends OncePerRequestFilter {
             try {
                 // từ token tìm ra thằng đó là ai
                 account = jwTservice.extractAccount(token);
+
             } catch (ExpiredJwtException expiredJwtException) {
                 // token het han
                 resolver.resolveException(request, response, null, new AuthException("Expired Token!"));
@@ -69,10 +72,12 @@ public class Filter extends OncePerRequestFilter {
                 return;
             }
             // token dung
+
             UsernamePasswordAuthenticationToken
                     authenToken =
                     new UsernamePasswordAuthenticationToken(account, token, account.getAuthorities());
             authenToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            System.out.println(authenToken.getAuthorities().toString());
             SecurityContextHolder.getContext().setAuthentication(authenToken);
             // token ok, cho vao`
             filterChain.doFilter(request, response);
