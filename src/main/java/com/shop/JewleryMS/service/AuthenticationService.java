@@ -9,6 +9,7 @@ import com.shop.JewleryMS.model.RegisterRequest;
 import com.shop.JewleryMS.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,7 +40,9 @@ public class AuthenticationService implements UserDetailsService {
         account.setEmail(registerRequest.getEmail());
         account.setAPassword(passwordEncoder.encode(registerRequest.getAPassword()));
         account.setAUsername(registerRequest.getAUsername());
+        
         account.setRole(RoleEnum.STAFF);
+//        account.setStatus(true);
         return authenticationRepository.save(account);
     }
     public List<Account> getAllAccount(){
@@ -65,6 +68,10 @@ public class AuthenticationService implements UserDetailsService {
                 loginRequest.getPassword()
         ));
                 Account account = authenticationRepository.findAccountByUsername(loginRequest.getUsername());
+        // Throw a custom exception if the account is inactive
+//        if (!account.getStatus()) {
+//            throw new BadCredentialsException("Username or password not correct");
+//        }
         String token = jwTservice.generateToken(account);
         AccountResponse accountResponse = new AccountResponse();
         accountResponse.setUsername(account.getUsername());
