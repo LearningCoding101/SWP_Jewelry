@@ -39,7 +39,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setEmail(registerRequest.getEmail());
         account.setAPassword(passwordEncoder.encode(registerRequest.getAPassword()));
         account.setAUsername(registerRequest.getAUsername());
-        account.setRole(RoleEnum.STAFF);
+        account.setRole(RoleEnum.ROLE_ADMIN);
         return authenticationRepository.save(account);
     }
     public List<Account> getAllAccount(){
