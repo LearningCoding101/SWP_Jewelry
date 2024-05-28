@@ -6,10 +6,12 @@ import com.shop.JewleryMS.model.CustomerRequest;
 import com.shop.JewleryMS.model.ViewCustomerPointRequest;
 import com.shop.JewleryMS.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
@@ -19,7 +21,7 @@ public class CustomerService {
 
         customer.setEmail(createCustomerRequest.getEmail());
         customer.setPhoneNumber(createCustomerRequest.getPhoneNumber());
-        customer.setPointsAmount(createCustomerRequest.getPointsAmount());
+        customer.setPointAmount(createCustomerRequest.getPointAmount());
 
         return customerRepository.save(customer);
     }
@@ -39,7 +41,7 @@ public class CustomerService {
             Customer customer = customerUpdate.get();
             customer.setEmail(customerRequest.getEmail());
             customer.setPhoneNumber(customerRequest.getPhoneNumber());
-            customer.setPointsAmount(customerRequest.getPointsAmount());
+            customer.setPointAmount(customerRequest.getPointAmount());
             customerRepository.save(customer);
         }
     }
@@ -51,7 +53,7 @@ public class CustomerService {
     public void updateCustomerPoints(ViewCustomerPointRequest customerRequest) {
         Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
         customerUpdate.ifPresent(customer -> {
-            customer.setPointsAmount(customerRequest.getPointsAmount());
+            customer.setPointAmount(customerRequest.getPointAmount());
             customerRepository.save(customer);
         });
     }

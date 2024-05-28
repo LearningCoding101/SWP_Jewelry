@@ -7,5 +7,5 @@ public class ViewCustomerPointRequest {
         long id;
         String phoneNumber;
         String email;
-        int pointsAmount;
+        int pointAmount;
 }
