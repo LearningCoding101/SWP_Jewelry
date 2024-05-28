@@ -82,14 +82,79 @@ public String createOrder(HttpServletRequest request, int amount, String orderIn
              System.out.println("ERROR AT VNPAY ENCODING");
              e.printStackTrace();
          }
+         if(itr.hasNext()){
+             query.append('&');
+             hashData.append('&');
+         }
 
 
 
         }
     }
-    return null;
+    String queryUrl = query.toString();
+    String salt = VNPAYConfig.vnp_HashSecret;
+    String vnpSecureHash = VNPAYConfig.hmacSHA512(salt, hashData.toString());
+    queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
+    String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
+
+    return paymentUrl;
 
 
 }
+    public int orderReturn(HttpServletRequest request){
+        Map fields = new HashMap<>();
+
+        for (Enumeration params = request.getParameterNames();
+             params.hasMoreElements();
+             ) {
+            String fieldName = null;
+            String fieldValue = null;
+
+            try{
+                fieldName = URLEncoder.encode((String)
+                params.nextElement(),
+                        StandardCharsets.US_ASCII.toString()
+
+                );
+                fieldValue = URLEncoder.encode((String)
+                  params.nextElement(),
+                  StandardCharsets.US_ASCII
+                );
+            } catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+            if(
+                    (fieldValue != null) &&
+                            (fieldValue.length() > 0)
+            ) {
+                fields.put(fieldName,fieldValue);
+            }
+
+
+        }
+        String vnpSecureHash = request.getParameter("vnp_SecureHash");
+        if (fields.containsKey("vnp_SecureHashType")){
+            fields.remove("vnp_SecureHashType");
+
+        }
+        if (fields.containsKey("vnp_SecureHash")){
+            fields.remove("vnp_SecureHash");
+        }
+        String signValue = VNPAYConfig.hashAllFields(fields);
+        if(signValue.equals(vnpSecureHash)){
+            if("00".equals(request.getParameter(
+                    "vnp_TransactionStatus"
+            ))){
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return -1;
+        }
+
+    }
+
+
 
 }

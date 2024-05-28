@@ -69,8 +69,8 @@ public class AuthenticationAPI {
 
 
     //ResetPassword
-    @PostMapping("/reset")
-    public ResponseEntity<String> resetPassword(@RequestBody String email){
+    @GetMapping("/reset")
+    public ResponseEntity<String> resetPassword(@RequestParam String email){
         authenticationService.sendForgotPasswordEmail(email);
         return ResponseEntity.ok("New password sent");
     }

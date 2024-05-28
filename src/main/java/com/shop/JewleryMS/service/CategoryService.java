@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
-    @PreAuthorize("hasRole('ADMIN')")
+
     public Category createCategory(CreateCategoryRequest createCategoryRequest){
         Category category = new Category();
         category.setName(createCategoryRequest.getName());
@@ -26,16 +26,16 @@ public class CategoryService {
         return categoryRepository.save(category);
 
     }
-    @PostAuthorize("hasRole('STAFF')")
+
     public List<Category> readAllCategory(){
         List<Category> allCategory = categoryRepository.findAll();
         return allCategory;
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public Category readCategoryById(Long id){
         return categoryRepository.findById(id).orElse(null);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public void updateCategory(CategoryRequest categoryRequest){
         Optional<Category> categoryOpt = categoryRepository.findById(categoryRequest.getId());
         if(categoryOpt.isPresent()){
@@ -45,7 +45,7 @@ public class CategoryService {
             categoryRepository.save(category);
         }
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public void deleteCategory(long id){
         categoryRepository.deleteById(id);
     }

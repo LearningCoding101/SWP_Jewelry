@@ -53,7 +53,10 @@ public class AuthenticationService implements UserDetailsService {
         Optional<Account> accountOptional = Optional.ofNullable(authenticationRepository.findAccountByemail(email));
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            emailService.sendTempPassword(account);
+            System.out.println(account.getAccountName());
+            String tempPassword = emailService.sendTempPassword(account);
+            account.setAPassword(tempPassword);
+            authenticationRepository.save(account);
             return "Successfully sent new temporary password";
         } else {
             return "Is your email correct?";

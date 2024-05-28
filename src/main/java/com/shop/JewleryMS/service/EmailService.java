@@ -30,7 +30,7 @@ public class EmailService {
     @Autowired
     MailSender mailSender;
 
-    public void sendTempPassword(Account account){
+    public String sendTempPassword(Account account){
         String emailAddressTo = account.getEmail();
         String userName = "John Doe";
         String temporaryPassword = generateTempEmail(12);
@@ -38,14 +38,12 @@ public class EmailService {
 
 
         String resetPasswordEmail =
-                "Dear " + account.getAccountName() + ",\n\n" +
-                "We have received a request to reset the password for your account. Please find your new temporary password below:\n\n" +
-                "Temporary Password: " + temporaryPassword + "\n\n" +
-                "Use this temporary password to log in and set a new, secure password.\n\n" +
-                "If you did not request a password reset, please disregard this email. Your account will remain secure.\n\n" +
-                "Thank you for your attention.\n\n" +
-                "Best regards,\n" +
-                companyName + " Support Team";
+                "Dear " + account.getAccountName() + ",<br>" +
+                        "We have received a request to reset the password for your account. Please find your new temporary password below:<br>" +
+                        "Temporary Password: " + temporaryPassword + "<br>" +
+                        "Use this temporary password to log in and set a new, secure password.<br>" +
+                        "If you did not request a password reset, please disregard this email. Your account will remain secure.";
+
 
         EmailDetail emailDetail = new EmailDetail();
         emailDetail.setRecipient(emailAddressTo);
@@ -53,14 +51,16 @@ public class EmailService {
         emailDetail.setMsgBody(resetPasswordEmail);
 
         sendMailTemplate(emailDetail);
-
+        return temporaryPassword;
 
     }
-    public void sendMailTemplate(EmailDetail emailDetail){
-        try{
+    public void sendMailTemplate(EmailDetail emailDetail) {
+        try {
             Context context = new Context();
+            // Set the content of the email
 
-            context.setVariable("name", "Jewelry Management System");
+            context.setVariable("name", emailDetail.getRecipient());
+            context.setVariable("content", emailDetail.getMsgBody());
 
             String text = templateEngine.process("emailtemplate", context);
 
@@ -74,7 +74,7 @@ public class EmailService {
             mimeMessageHelper.setText(text, true);
             mimeMessageHelper.setSubject(emailDetail.getSubject());
             javaMailSender.send(mimeMessage);
-        }catch (MessagingException messagingException){
+        } catch (MessagingException messagingException) {
             messagingException.printStackTrace();
         }
     }
