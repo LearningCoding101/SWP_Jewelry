@@ -29,6 +29,10 @@ public class CustomerService {
     public Customer getCustomerById(long id) {
         return customerRepository.findById(id).orElse(null);
     }
+    public Customer getCustomerByPhoneNumber(String id) {
+        return customerRepository.findByPhoneNumber(id).orElse(null);
+    }
+
 
     public List<Customer> readAllCustomer() {
         return customerRepository.findAll();
@@ -47,8 +51,13 @@ public class CustomerService {
     }
 
     public void deleteCustomerById(long id) {
-        customerRepository.deleteById(id);
+        Optional<Customer> customerUpdate = customerRepository.findById(id);
+        customerUpdate.ifPresent(customer -> {
+            customer.setStatus(false); // Set status to false
+            customerRepository.save(customer);
+        });
     }
+
 
     public void updateCustomerPoints(ViewCustomerPointRequest customerRequest) {
         Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
@@ -56,6 +65,11 @@ public class CustomerService {
             customer.setPointAmount(customerRequest.getPointAmount());
             customerRepository.save(customer);
         });
+    }
+
+    public List<Customer> readAllActiveCustomers() {
+        // Retrieve only active customers (status = true)
+        return customerRepository.findByStatus(true);
     }
 
 }

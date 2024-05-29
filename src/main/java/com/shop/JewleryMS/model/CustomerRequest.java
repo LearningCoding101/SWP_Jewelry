@@ -8,5 +8,4 @@ public class CustomerRequest {//For read methods, we pull all datas
     String phoneNumber;
     String email;
     int pointAmount;
-
 }

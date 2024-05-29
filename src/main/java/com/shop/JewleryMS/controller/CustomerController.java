@@ -6,46 +6,77 @@ import com.shop.JewleryMS.model.CreateCustomerRequest;
 import com.shop.JewleryMS.model.CustomerRequest;
 import com.shop.JewleryMS.model.ViewCustomerPointRequest;
 import com.shop.JewleryMS.service.CustomerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/Customer")
+@RequestMapping("/customer")
+@SecurityRequirement(name = "api")
 public class CustomerController {
     @Autowired
     CustomerService customerService;
-    @PostMapping("/CreateCustomer")
+
+    //Create section
+    @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<Customer> createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
         Customer customer = customerService.createCustomer(createCustomerRequest);
         return ResponseEntity.ok(customer);
     }
-    @GetMapping("/ReadAllCustomer")
+
+    //Read section
+    @GetMapping("/list-all")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<List<Customer>>readAllCustomer(){
         List<Customer> customerList = customerService.readAllCustomer();
         return ResponseEntity.ok(customerList);
     }
 
-    @GetMapping("/ReadCustomerId")
-    public ResponseEntity<Customer> readCustomerFromId(@RequestBody long id){
+    @GetMapping("/list-by-id")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    public ResponseEntity<Customer> readCustomerFromId(@RequestParam Long id){
         Customer customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
 
-    @PostMapping("/Delete")
-    public ResponseEntity<String> deleteCustomer(@RequestBody long id){
-        customerService.deleteCustomerById(id);
-        return ResponseEntity.ok("Customer details deleted successfully");
+    @GetMapping("/list-by-number")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    public ResponseEntity<Customer> readCustomerFromPhoneNumber(@RequestParam String id){
+        Customer customer = customerService.getCustomerByPhoneNumber(id);
+        return ResponseEntity.ok(customer);
     }
 
-    @PostMapping("/UpdateCustomerDetails")
+    @GetMapping("/list-active-customer")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    public ResponseEntity<List<Customer>> readAllActiveCustomer() {
+        List<Customer> customerList = customerService.readAllActiveCustomers(); // Filter active customers
+        return ResponseEntity.ok(customerList);
+    }
+
+
+    //Delete section
+    @PostMapping("/delete-status")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    public ResponseEntity<String> deleteCustomer(@RequestBody long id){
+        customerService.deleteCustomerById(id);
+        return ResponseEntity.ok("Customer details marked as inactive successfully");
+    }
+
+
+    //Update section
+    @PostMapping("/update-customer-details")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerRequest customerRequest){
         customerService.updateCustomerDetails(customerRequest);
         return ResponseEntity.ok("Customer Details updated successfully");
     }
 
-    @PostMapping("/UpdateCustomerPoints")
+    @PostMapping("/update-customer-points")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> updateCustomerPoints(@RequestBody ViewCustomerPointRequest viewPointsRequest){
         customerService.updateCustomerPoints(viewPointsRequest);
         return ResponseEntity.ok("Customer points updated successfully");
