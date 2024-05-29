@@ -1,6 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.ProductSell;
+import com.project.JewelryMS.model.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSellRequest;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,31 +14,31 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Productsell")
+@RequestMapping("productsell")
 @SecurityRequirement(name = "api")
 public class ProductSellController {
 
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
-    @PostMapping("Create")
+    @PostMapping("create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductSell> createProductSell(@RequestBody ProductSellRequest productSellRequest) {
+    public ResponseEntity<ProductSell> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
         try {
-            ProductSell createdProduct = productSellService.createProductSell(productSellRequest);
+            ProductSell createdProduct = productSellService.createProductSell(createProductSellRequest);
             return ResponseEntity.ok(createdProduct);
         } catch (IOException e) {
             return ResponseEntity.status(500).body(null);
         }
     }
 
-    @GetMapping("Read")
+    @GetMapping("read")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductSell>> readAllProductSell(){
         return ResponseEntity.ok(productSellService.readAllProductSell());
     }
 
-    @PostMapping("/Update")
+    @PostMapping("update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSell> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
         try {
@@ -51,9 +52,9 @@ public class ProductSellController {
     }
 
     // Get a specific ProductSell by ID
-    @GetMapping("/Read/{id}")
+    @GetMapping("/read/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductSell> getProductSell(@PathVariable long id) {
+    public ResponseEntity<ProductSell> getProductSell(@RequestParam long id) {
         ProductSell productSell = productSellService.getProductSellById(id);
         if (productSell != null) {
             return ResponseEntity.ok(productSell);
@@ -62,7 +63,7 @@ public class ProductSellController {
         }
     }
 
-    @PostMapping("/Delete")
+    @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody Long id){
         productSellService.deleteProduct(id);
