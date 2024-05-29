@@ -14,12 +14,12 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "JewelryManagement API", version = "1.0", description = "Handle jewelry sale internally"))
 @SecurityScheme(name = "api", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
-public class JewleryMsApplication {
+public class JewelryMsApplication {
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
 	}
 	public static void main(String[] args) {
-		SpringApplication.run(JewleryMsApplication.class, args);
+		SpringApplication.run(JewelryMsApplication.class, args);
 	}
 }

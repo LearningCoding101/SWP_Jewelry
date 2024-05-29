@@ -1,6 +1,5 @@
 package com.shop.JewleryMS.service;
 
-import com.shop.JewleryMS.config.SecurityConfig;
 import com.shop.JewleryMS.entity.Account;
 import com.shop.JewleryMS.entity.RoleEnum;
 import com.shop.JewleryMS.model.AccountResponse;
@@ -55,7 +54,7 @@ public class AuthenticationService implements UserDetailsService {
             Account account = accountOptional.get();
             System.out.println(account.getAccountName());
             String tempPassword = emailService.sendTempPassword(account);
-            account.setAPassword(tempPassword);
+            account.setAPassword(passwordEncoder.encode(tempPassword));
             authenticationRepository.save(account);
             return "Successfully sent new temporary password";
         } else {
