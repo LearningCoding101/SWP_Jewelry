@@ -36,10 +36,12 @@ public class Filter extends OncePerRequestFilter {
             "/swagger-ui/**",
             "/api-docs/**",
             "/favicon",
+            "/VNPAY/**",
             "/swagger-resources/**",
             "/account/register",
             "/account/login",
-            "/account/reset"
+            "/account/reset",
+            "/Info/GoldPrice"
     );
 
     @Override

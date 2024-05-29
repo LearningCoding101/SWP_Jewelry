@@ -1,9 +1,13 @@
+
 package com.shop.JewleryMS.controller;
 
 import com.shop.JewleryMS.entity.ProductSell;
 import com.shop.JewleryMS.model.CreateProductSellRequest;
 import com.shop.JewleryMS.model.ProductSellRequest;
 import com.shop.JewleryMS.service.ProductSellService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.Entity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Productsell")
+@SecurityRequirement(name = "api")
 public class ProductSellController {
 
     @Autowired

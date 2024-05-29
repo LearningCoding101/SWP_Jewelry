@@ -1,3 +1,4 @@
+
 package com.shop.JewleryMS.entity;
 
 import jakarta.persistence.*;

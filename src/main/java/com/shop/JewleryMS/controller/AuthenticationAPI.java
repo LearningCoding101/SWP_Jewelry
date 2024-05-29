@@ -2,15 +2,12 @@ package com.shop.JewleryMS.controller;
 
 import com.shop.JewleryMS.entity.Account;
 import com.shop.JewleryMS.model.AccountResponse;
-import com.shop.JewleryMS.model.EmailDetail;
 import com.shop.JewleryMS.model.LoginRequest;
 import com.shop.JewleryMS.model.RegisterRequest;
 import com.shop.JewleryMS.service.AuthenticationService;
 import com.shop.JewleryMS.service.EmailService;
-import com.shop.JewleryMS.service.JWTservice;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +66,8 @@ public class AuthenticationAPI {
 
 
     //ResetPassword
-    @PostMapping("/reset")
-    public ResponseEntity<String> resetPassword(@RequestBody String email){
+    @GetMapping("/reset")
+    public ResponseEntity<String> resetPassword(@RequestParam String email){
         authenticationService.sendForgotPasswordEmail(email);
         return ResponseEntity.ok("New password sent");
     }
