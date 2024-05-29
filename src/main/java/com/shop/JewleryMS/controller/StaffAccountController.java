@@ -4,6 +4,7 @@ import com.shop.JewleryMS.entity.StaffAccount;
 import com.shop.JewleryMS.model.CreateStaffAccountRequest;
 import com.shop.JewleryMS.model.StaffAccountRequest;
 import com.shop.JewleryMS.service.StaffAccountService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("Staffaccount")
+@SecurityRequirement(name = "api")
 public class StaffAccountController {
 
     @Autowired
