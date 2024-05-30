@@ -48,7 +48,7 @@ public class StaffAccountController {
     }
 
     // Get a specific StaffAccount by ID
-    @GetMapping("/read/{id}")
+    @GetMapping("readbyid")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StaffAccount> getStaffAccountById(@RequestParam("id") long id) {
         StaffAccount staffAccount = staffAccountService.getStaffAccountById(id);
@@ -59,9 +59,9 @@ public class StaffAccountController {
         }
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deactivateStaffAccount(@RequestParam("id") long id) {
+    public ResponseEntity<String> deactivateStaffAccount(@RequestBody long id) {
         try {
             staffAccountService.deactivateStaffAccount(id);
             return ResponseEntity.ok("StaffAccount deactivated successfully");
