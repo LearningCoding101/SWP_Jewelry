@@ -22,4 +22,5 @@ public class Promotion {
     String description;
     Date startDate;
     Date endDate;
+    boolean status=true;
 }
