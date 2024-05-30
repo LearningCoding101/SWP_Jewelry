@@ -84,4 +84,5 @@ public class AuthenticationService implements UserDetailsService {
 
         return authenticationRepository.findAccountByUsername(username);
     }
+
 }
