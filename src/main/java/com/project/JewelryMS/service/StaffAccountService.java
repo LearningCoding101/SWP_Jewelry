@@ -58,22 +58,22 @@ public class StaffAccountService {
         }
     }
 
-//    // Method to "delete" a StaffAccount by updating the Account status
-//    public void deactivateStaffAccount(long staffID) {
-//        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(staffID);
-//        if (staffAccountOpt.isPresent()) {
-//            StaffAccount staffAccount = staffAccountOpt.get();
-//            long userID = (long) staffAccount.getUserID();
-//            Optional<Account> accountOpt = authenticationRepository.findById(userID);
-//            if (accountOpt.isPresent()) {
-//                Account account = accountOpt.get();
-//                account.setAstatus(false);
-//                authenticationRepository.save(account);
-//            } else {
-//                throw new RuntimeException("Account associated with StaffAccount ID " + staffID + " not found");
-//            }
-//        } else {
-//            throw new RuntimeException("StaffAccount with ID " + staffID + " not found");
-//        }
-//    }
+    // Method to "delete" a StaffAccount by updating the Account status
+    public void deactivateStaffAccount(long staffID) {
+        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(staffID);
+        if (staffAccountOpt.isPresent()) {
+            StaffAccount staffAccount = staffAccountOpt.get();
+            long userID = (long) staffAccount.getUserID();
+            Optional<Account> accountOpt = authenticationRepository.findById(userID);
+            if (accountOpt.isPresent()) {
+                Account account = accountOpt.get();
+                account.setStatus(false);
+                authenticationRepository.save(account);
+            } else {
+                throw new RuntimeException("Account associated with StaffAccount ID " + staffID + " not found");
+            }
+        } else {
+            throw new RuntimeException("StaffAccount with ID " + staffID + " not found");
+        }
+    }
 }

@@ -34,7 +34,8 @@ public class Account implements UserDetails {
     @Column(name = "role")
             @Enumerated(value = EnumType.STRING)
     RoleEnum role;
-//    Boolean astatus;
+    @Column(name = "status")
+    Boolean status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

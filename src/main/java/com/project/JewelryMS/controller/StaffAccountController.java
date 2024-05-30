@@ -59,15 +59,15 @@ public class StaffAccountController {
         }
     }
 
-//    @PostMapping("/delete/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<String> deactivateStaffAccount(@RequestParam("id") long id) {
-//        try {
-//            staffAccountService.deactivateStaffAccount(id);
-//            return ResponseEntity.ok("StaffAccount deactivated successfully");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(404).body(e.getMessage());
-//        }
-//    }
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deactivateStaffAccount(@RequestParam("id") long id) {
+        try {
+            staffAccountService.deactivateStaffAccount(id);
+            return ResponseEntity.ok("StaffAccount deactivated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
 }
