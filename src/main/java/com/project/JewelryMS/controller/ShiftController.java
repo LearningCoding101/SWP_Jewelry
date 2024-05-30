@@ -33,7 +33,7 @@ public class ShiftController {
     }
 
     // Read Shift by ID
-    @GetMapping("read/{id}")
+    @GetMapping("readbyid")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Shift> getShiftById(@RequestParam("id") int id) {
         return ResponseEntity.ok(shiftService.getShiftById(id));

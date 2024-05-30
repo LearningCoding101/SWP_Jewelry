@@ -3,6 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.CreateStaffAccountRequest;
+import com.project.JewelryMS.model.DeleteStaffAccountRequest;
 import com.project.JewelryMS.model.StaffAccountRequest;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
@@ -59,8 +60,8 @@ public class StaffAccountService {
     }
 
     // Method to "delete" a StaffAccount by updating the Account status
-    public void deactivateStaffAccount(long staffID) {
-        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(staffID);
+    public void deactivateStaffAccount(DeleteStaffAccountRequest deleteStaffAccountRequest) {
+        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(deleteStaffAccountRequest.getStaffID());
         if (staffAccountOpt.isPresent()) {
             StaffAccount staffAccount = staffAccountOpt.get();
             long userID = (long) staffAccount.getUserID();
@@ -70,10 +71,10 @@ public class StaffAccountService {
                 account.setStatus(false);
                 authenticationRepository.save(account);
             } else {
-                throw new RuntimeException("Account associated with StaffAccount ID " + staffID + " not found");
+                throw new RuntimeException("Account associated with StaffAccount ID " + deleteStaffAccountRequest.getStaffID() + " not found");
             }
         } else {
-            throw new RuntimeException("StaffAccount with ID " + staffID + " not found");
+            throw new RuntimeException("StaffAccount with ID " + deleteStaffAccountRequest.getStaffID()+ " not found");
         }
     }
 }

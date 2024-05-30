@@ -2,6 +2,7 @@ package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.CreateStaffAccountRequest;
+import com.project.JewelryMS.model.DeleteStaffAccountRequest;
 import com.project.JewelryMS.model.StaffAccountRequest;
 import com.project.JewelryMS.service.StaffAccountService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -50,7 +51,7 @@ public class StaffAccountController {
     // Get a specific StaffAccount by ID
     @GetMapping("readbyid")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<StaffAccount> getStaffAccountById(@RequestParam("id") long id) {
+    public ResponseEntity<StaffAccount> getStaffAccountById(@RequestParam("id") int id) {
         StaffAccount staffAccount = staffAccountService.getStaffAccountById(id);
         if (staffAccount != null) {
             return ResponseEntity.ok(staffAccount);
@@ -61,9 +62,9 @@ public class StaffAccountController {
 
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deactivateStaffAccount(@RequestBody long id) {
+    public ResponseEntity<String> deactivateStaffAccount(@RequestBody DeleteStaffAccountRequest deleteStaffAccountRequest) {
         try {
-            staffAccountService.deactivateStaffAccount(id);
+            staffAccountService.deactivateStaffAccount(deleteStaffAccountRequest);
             return ResponseEntity.ok("StaffAccount deactivated successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
