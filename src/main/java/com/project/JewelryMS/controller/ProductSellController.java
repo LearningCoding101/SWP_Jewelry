@@ -52,9 +52,11 @@ public class ProductSellController {
     }
 
     // Get a specific ProductSell by ID
+
     @GetMapping("/readbyid")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSell> getProductSell(@RequestParam("id") int id) {
+
         ProductSell productSell = productSellService.getProductSellById(id);
         if (productSell != null) {
             return ResponseEntity.ok(productSell);
@@ -66,6 +68,7 @@ public class ProductSellController {
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody int id){
+
         productSellService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
