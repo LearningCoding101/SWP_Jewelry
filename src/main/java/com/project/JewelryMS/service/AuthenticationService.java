@@ -50,8 +50,9 @@ public class AuthenticationService implements UserDetailsService {
         return authenticationRepository.findAccountByemail(email);
     }
     public String sendForgotPasswordEmail(String email) {
-        Optional<Account> accountOptional = Optional.ofNullable(authenticationRepository.findAccountByemail(email));
+        Optional<Account> accountOptional = Optional.ofNullable(authenticationRepository.findAccountByemail(email.replace("\"", "")));
         if (accountOptional.isPresent()) {
+
             Account account = accountOptional.get();
             String tempPassword = emailService.sendTempPassword(account);
             account.setAPassword(passwordEncoder.encode(tempPassword));
