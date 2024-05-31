@@ -73,5 +73,10 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(authenticationService.sendForgotPasswordEmail(email));
     }
 
-
+    //Read All Manager Account
+    @GetMapping("/managers")
+    public ResponseEntity<List<Account>> getAllManagerAccounts() {
+        List<Account> managerAccounts = authenticationService.getAllManagerAccount();
+        return ResponseEntity.ok(managerAccounts);
+    }
 }

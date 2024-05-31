@@ -84,4 +84,8 @@ public class AuthenticationService implements UserDetailsService {
         return authenticationRepository.findAccountByUsername(username);
     }
 
+    public List<Account> getAllManagerAccount() {
+        return authenticationRepository.findByRole(RoleEnum.ROLE_MANAGER);
+    }
+
 }
