@@ -68,7 +68,7 @@ public class StaffAccountService {
             Optional<Account> accountOpt = authenticationRepository.findById(userID);
             if (accountOpt.isPresent()) {
                 Account account = accountOpt.get();
-                account.setStatus(false);
+                account.setStatus(0);
                 authenticationRepository.save(account);
             } else {
                 throw new RuntimeException("Account associated with StaffAccount ID " + deleteStaffAccountRequest.getStaffID() + " not found");
