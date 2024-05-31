@@ -5,6 +5,7 @@ com\project\JewelryMS\model\CreateProductSellRequest.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\service\VNPAYservice.class
 com\project\JewelryMS\model\ProductSellRequest.class
+com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\service\ShiftService.class
 com\project\JewelryMS\config\SecurityConfig.class
 com\project\JewelryMS\model\CodeService.class
@@ -19,6 +20,7 @@ com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\model\EmailDetail.class
 com\project\JewelryMS\model\CreateCategoryRequest.class
 com\project\JewelryMS\controller\ShiftController.class
+com\project\JewelryMS\service\ManagerAccountService.class
 com\project\JewelryMS\controller\OrderController.class
 com\project\JewelryMS\service\AuthenticationService.class
 com\project\JewelryMS\repository\AuthenticationRepository.class
@@ -32,6 +34,7 @@ com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
 com\project\JewelryMS\repository\ShiftRepository.class
 com\project\JewelryMS\controller\StaffAccountController.class
+com\project\JewelryMS\controller\ManagerAccountController.class
 com\project\JewelryMS\entity\StaffAccount.class
 com\project\JewelryMS\controller\VNPAYController.class
 com\project\JewelryMS\service\ApiService.class

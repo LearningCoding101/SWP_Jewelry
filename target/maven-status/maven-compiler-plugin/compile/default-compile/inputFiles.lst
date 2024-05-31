@@ -7,6 +7,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AuthenticationAPI.j
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CategoryController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CodeController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\InfoController.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ManagerAccountController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\OrderController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ProductSellController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ShiftController.java
@@ -37,6 +38,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\ResetPassRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\StaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\AuthenticationRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\CategoryRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ManagerAccountRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ShiftRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\StaffAccountRepository.java
@@ -45,6 +47,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\service\AuthenticationService.
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\CategoryService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\EmailService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\JWTservice.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\ManagerAccountService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\OrderService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProductSellService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\QRService.java
