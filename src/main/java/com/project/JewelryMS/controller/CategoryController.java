@@ -24,7 +24,8 @@ public class CategoryController {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
-    @GetMapping("/read")
+
+    @GetMapping("/readAll")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Category>>readAllCategory(){
         System.out.println("pinged readall");
