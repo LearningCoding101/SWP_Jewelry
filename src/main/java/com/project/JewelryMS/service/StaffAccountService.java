@@ -80,7 +80,7 @@ public class StaffAccountService {
             StaffAccount staffAccount = staffAccountOpt.get();
             Account account = staffAccount.getAccount();
             if (account != null) {
-                account.setStatus(1);
+                account.setStatus(0);
                 authenticationRepository.save(account);
             } else {
                 throw new RuntimeException("Account associated with StaffAccount ID " + deleteStaffAccountRequest.getStaffID() + " not found");

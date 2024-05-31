@@ -89,4 +89,5 @@ public class AuthenticationService implements UserDetailsService {
         return authenticationRepository.findByRole(RoleEnum.ROLE_MANAGER);
     }
 
+
 }

@@ -27,10 +27,10 @@ public class CategoryService {
         return categoryRepository.save(category);
 
     }
-    @PostAuthorize("hasRole('STAFF')")
+//    @PostAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Category> readAllCategory(){
-        List<Category> allCategory = categoryRepository.findAll();
-        return allCategory;
+         return categoryRepository.findAll();
     }
     @PreAuthorize("hasRole('ADMIN')")
     public Category readCategoryById(Long id){

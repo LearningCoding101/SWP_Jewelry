@@ -17,4 +17,5 @@ public interface AuthenticationRepository extends JpaRepository<Account, Long> {
     Account findAccountByemail(String email);
     List<Account> findByRole(RoleEnum role);
 
+
 }
