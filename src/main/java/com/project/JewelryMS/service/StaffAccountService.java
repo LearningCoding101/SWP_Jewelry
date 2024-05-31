@@ -60,7 +60,13 @@ public class StaffAccountService {
             existingStaffAccount.setSalary(staffAccountRequest.getSalary());
             existingStaffAccount.setShiftID(staffAccountRequest.getShiftID());
             existingStaffAccount.setStartDate(staffAccountRequest.getStartDate());
-            existingStaffAccount.setUserID(staffAccountRequest.getUserID());
+            Account account = staffAccountRequest.getAccount();
+            if (account != null) {
+                existingStaffAccount.setAccount(account);
+                account.setStaffAccount(existingStaffAccount);
+            } else {
+                throw new RuntimeException("Account information is missing in the request");
+            }
             return staffAccountRepository.save(existingStaffAccount);
         } else {
             throw new RuntimeException("StaffAccount with ID " + staffAccountRequest.getStaffID() + " not found");
