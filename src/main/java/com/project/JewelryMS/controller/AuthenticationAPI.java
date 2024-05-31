@@ -4,6 +4,7 @@ import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.model.AccountResponse;
 import com.project.JewelryMS.model.LoginRequest;
 import com.project.JewelryMS.model.RegisterRequest;
+import com.project.JewelryMS.model.ResetPassRequest;
 import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -67,10 +68,9 @@ public class AuthenticationAPI {
 
 
     //ResetPassword
-    @GetMapping("/reset")
-    public ResponseEntity<String> resetPassword(@RequestParam String email){
-
-        return ResponseEntity.ok(authenticationService.sendForgotPasswordEmail(email));
+    @PostMapping("/reset")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPassRequest email){
+        return ResponseEntity.ok(authenticationService.sendForgotPasswordEmail(email.getEmail()));
     }
 
     //Read All Manager Account

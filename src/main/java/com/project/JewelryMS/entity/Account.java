@@ -31,11 +31,12 @@ public class Account implements UserDetails {
     String aPassword;
     @Column(name = "accountName")
     String accountName;
+    @Column(name = "status")
+    Integer status;
     @Column(name = "role")
             @Enumerated(value = EnumType.STRING)
     RoleEnum role;
-    @Column(name = "status")
-    Boolean status;
+
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private StaffAccount staffAccount;
