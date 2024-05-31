@@ -41,6 +41,7 @@ com\project\JewelryMS\model\CreateShiftRequest.class
 com\project\JewelryMS\exception\APIhandleException.class
 com\project\JewelryMS\model\ResetPassRequest.class
 com\project\JewelryMS\model\StaffAccountRequest.class
+com\project\JewelryMS\service\QRService.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
 com\project\JewelryMS\config\CORSconfig.class
 com\project\JewelryMS\entity\ProductSell.class
