@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class StaffAccount {
 
     @OneToOne
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
+    @JsonBackReference
     private Account account;
 
     @Column(name = "FK_shiftID")

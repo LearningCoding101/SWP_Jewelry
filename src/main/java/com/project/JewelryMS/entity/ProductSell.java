@@ -1,6 +1,7 @@
 package com.project.JewelryMS.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,8 +16,10 @@ public class ProductSell {
     @Column(name = "carat")
     private float carat;
 
-    @Column(name = "FK_categoryID")
-    private int categoryID;
+    @ManyToOne
+    @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
+    @JsonBackReference
+    private Category category;
 
     @Column(name = "chi")
     private int chi;

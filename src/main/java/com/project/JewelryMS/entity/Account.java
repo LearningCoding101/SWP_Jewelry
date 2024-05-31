@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class Account implements UserDetails {
 
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private StaffAccount staffAccount;
 
     @Override
