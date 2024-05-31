@@ -24,12 +24,11 @@ public class CategoryController {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
-    @GetMapping("/readAll")
+    @GetMapping("/read")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Category>>readAllCategory(){
         System.out.println("pinged readall");
-        List<Category> categoryList = categoryService.readAllCategory();
-        return ResponseEntity.ok(categoryList);
+        return ResponseEntity.ok(categoryService.readAllCategory());
     }
 
     @PostMapping("/delete")
