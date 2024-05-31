@@ -1,11 +1,12 @@
 package com.project.JewelryMS.model;
 
+import com.project.JewelryMS.entity.Category;
 import lombok.Data;
 
 @Data
 public class CreateProductSellRequest {
     private float carat;
-    private int categoryID;
+    Category category;
     private int chi;
     private float cost;
     private String pDescription;

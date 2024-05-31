@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category")
+@SecurityRequirement(name = "api")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
@@ -23,12 +24,12 @@ public class CategoryController {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
+
     @GetMapping("/readAll")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Category>>readAllCategory(){
         System.out.println("pinged readall");
-        List<Category> categoryList = categoryService.readAllCategory();
-        System.out.println("tess:"+categoryList.toString());
-        return ResponseEntity.ok(categoryList);
+        return ResponseEntity.ok(categoryService.readAllCategory());
     }
 
     @PostMapping("/delete")

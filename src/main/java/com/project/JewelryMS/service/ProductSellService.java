@@ -1,8 +1,10 @@
 package com.project.JewelryMS.service;
 
+import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSellRequest;
+import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,8 @@ public class ProductSellService {
     @Autowired
     ProductSellRepository productSellRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
     public List<ProductSell> readAllProductSell(){
         return productSellRepository.findAll();
     }
@@ -33,7 +37,7 @@ public class ProductSellService {
             ProductSell existingProduct = existingProductOpt.get();
             // Update fields
             existingProduct.setCarat(productSellRequest.getCarat());
-            existingProduct.setCategoryID(productSellRequest.getCategoryID());
+            existingProduct.setCategory(productSellRequest.getCategory());
             existingProduct.setChi(productSellRequest.getChi());
             existingProduct.setCost(productSellRequest.getCost());
             existingProduct.setPDescription(productSellRequest.getPDescription());
@@ -52,22 +56,23 @@ public class ProductSellService {
         }
     }
 
-    public ProductSell createProductSell(CreateProductSellRequest CreateproductSellRequest) throws IOException {
+    public ProductSell createProductSell(CreateProductSellRequest createproductSellRequest) throws IOException {
         ProductSell newProductSell = new ProductSell();
-        newProductSell.setCarat(CreateproductSellRequest.getCarat());
-        newProductSell.setCategoryID(CreateproductSellRequest.getCategoryID());
-        newProductSell.setChi(CreateproductSellRequest.getChi());
-        newProductSell.setCost(CreateproductSellRequest.getCost());
-        newProductSell.setPDescription(CreateproductSellRequest.getPDescription());
-        newProductSell.setGemstoneType(CreateproductSellRequest.getGemstoneType());
-        newProductSell.setManufacturer(CreateproductSellRequest.getManufacturer());
-        newProductSell.setMetalType(CreateproductSellRequest.getMetalType());
-        newProductSell.setPName(CreateproductSellRequest.getPName());
-        newProductSell.setProductCode(CreateproductSellRequest.getProductCode());
-        newProductSell.setProductCost(CreateproductSellRequest.getProductCost());
-        newProductSell.setPromotionID(CreateproductSellRequest.getPromotionID());
-        newProductSell.setImage(CreateproductSellRequest.getImage());
-        newProductSell.setPStatus(CreateproductSellRequest.isPStatus());
+        newProductSell.setCarat(createproductSellRequest.getCarat());
+        // Fetch the category from the database
+        newProductSell.setCategory(createproductSellRequest.getCategory());
+        newProductSell.setChi(createproductSellRequest.getChi());
+        newProductSell.setCost(createproductSellRequest.getCost());
+        newProductSell.setPDescription(createproductSellRequest.getPDescription());
+        newProductSell.setGemstoneType(createproductSellRequest.getGemstoneType());
+        newProductSell.setManufacturer(createproductSellRequest.getManufacturer());
+        newProductSell.setMetalType(createproductSellRequest.getMetalType());
+        newProductSell.setPName(createproductSellRequest.getPName());
+        newProductSell.setProductCode(createproductSellRequest.getProductCode());
+        newProductSell.setProductCost(createproductSellRequest.getProductCost());
+        newProductSell.setPromotionID(createproductSellRequest.getPromotionID());
+        newProductSell.setImage(createproductSellRequest.getImage());
+        newProductSell.setPStatus(createproductSellRequest.isPStatus());
         return productSellRepository.save(newProductSell);
     }
 
