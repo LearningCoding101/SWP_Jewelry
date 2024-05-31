@@ -78,10 +78,8 @@ public class StaffAccountService {
         Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(deleteStaffAccountRequest.getStaffID());
         if (staffAccountOpt.isPresent()) {
             StaffAccount staffAccount = staffAccountOpt.get();
-            long userID = (long) staffAccount.getUserID();
-            Optional<Account> accountOpt = authenticationRepository.findById(userID);
-            if (accountOpt.isPresent()) {
-                Account account = accountOpt.get();
+            Account account = staffAccount.getAccount();
+            if (account != null) {
                 account.setStatus(false);
                 authenticationRepository.save(account);
             } else {
