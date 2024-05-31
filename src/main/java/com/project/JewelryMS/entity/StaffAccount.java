@@ -17,8 +17,9 @@ public class StaffAccount {
     @Column(name = "PK_staffID")
     private int staffID;
 
-    @Column(name = "FK_UserID")
-    private int userID;
+    @OneToOne
+    @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
+    private Account account;
 
     @Column(name = "FK_shiftID")
     private int shiftID;

@@ -38,6 +38,9 @@ public class Account implements UserDetails {
     RoleEnum role;
 
 
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private StaffAccount staffAccount;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(new SimpleGrantedAuthority(role.name()));

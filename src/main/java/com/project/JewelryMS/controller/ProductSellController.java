@@ -36,7 +36,9 @@ public class ProductSellController {
     @GetMapping("read")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductSell>> readAllProductSell(){
-        return ResponseEntity.ok(productSellService.readAllProductSell());
+        List<ProductSell> allProductSell= productSellService.readAllProductSell();
+        System.out.println("Read Product Sell ");
+        return ResponseEntity.ok(allProductSell);
     }
 
     @PostMapping("update")

@@ -1,5 +1,6 @@
 package com.project.JewelryMS.model;
 
+import com.project.JewelryMS.entity.Account;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -10,10 +11,6 @@ public class StaffAccountRequest {
 
     private long staffID;
 
-
-    private int userID;
-
-
     private int shiftID;
 
 
@@ -23,4 +20,5 @@ public class StaffAccountRequest {
     private float salary;
 
     private Date startDate;
+    private Account account;
 }

@@ -19,13 +19,13 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest createCategoryRequest) {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
     @GetMapping("/readAll")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Category>>readAllCategory(){
         System.out.println("pinged readall");
         List<Category> categoryList = categoryService.readAllCategory();
@@ -33,14 +33,14 @@ public class CategoryController {
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequest){
         categoryService.updateCategory(categoryRequest);
         return ResponseEntity.ok("Category updated successfully");
