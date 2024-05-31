@@ -37,6 +37,9 @@ public class Account implements UserDetails {
     @Column(name = "status")
     Boolean status;
 
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private StaffAccount staffAccount;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(new SimpleGrantedAuthority(role.name()));

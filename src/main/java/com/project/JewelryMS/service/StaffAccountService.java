@@ -20,6 +20,7 @@ public class StaffAccountService {
 
     @Autowired
     private AuthenticationRepository authenticationRepository;
+
     // Create
     public StaffAccount createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
         StaffAccount newStaffAccount = new StaffAccount();
@@ -27,7 +28,14 @@ public class StaffAccountService {
         newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
         newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
         newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
-        newStaffAccount.setUserID(createStaffAccountRequest.getUserID());
+        // Directly use the Account from the request
+        Account account = createStaffAccountRequest.getAccount();
+        if (account != null) {
+            newStaffAccount.setAccount(account);
+            account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
+        } else {
+            throw new RuntimeException("Account information is missing in the request");
+        }
         return staffAccountRepository.save(newStaffAccount);
     }
 
