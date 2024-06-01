@@ -15,6 +15,8 @@ public interface AuthenticationRepository extends JpaRepository<Account, Long> {
     Account findAccountByUsername(String Username);
     @Query("SELECT a FROM Account a WHERE a.email = ?1")
     Account findAccountByemail(String email);
+    List<Account> findByRole(RoleEnum role);
+
 
 
 }

@@ -42,7 +42,6 @@ public class Account implements UserDetails {
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("account")
-//    @JsonManagedReference
     private StaffAccount staffAccount;
 
     @Override
