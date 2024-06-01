@@ -2,11 +2,13 @@ package com.project.JewelryMS.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "category.productSell"})
 public class ProductSell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +20,7 @@ public class ProductSell {
 
     @ManyToOne
     @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
-    @JsonBackReference
+//    @JsonBackReference
     private Category category;
 
     @Column(name = "chi")
