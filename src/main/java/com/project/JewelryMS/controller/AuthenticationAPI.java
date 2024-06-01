@@ -1,10 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Account;
-import com.project.JewelryMS.model.AccountResponse;
-import com.project.JewelryMS.model.LoginRequest;
-import com.project.JewelryMS.model.RegisterRequest;
-import com.project.JewelryMS.model.ResetPassRequest;
+import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -83,5 +80,12 @@ public class AuthenticationAPI {
     public ResponseEntity<List<Account>> getAllManagerAccounts() {
         List<Account> managerAccounts = authenticationService.getAllManagerAccount();
         return ResponseEntity.ok(managerAccounts);
+    }
+
+    //Login GG
+    @PostMapping("/loginGG")
+    public ResponseEntity<AccountResponseGG>  loginGG(@RequestBody LoginGoogleRequest loginGoogleRequest){
+        AccountResponseGG accountResponseGG = authenticationService.loginGoogle(loginGoogleRequest);
+        return ResponseEntity.ok(accountResponseGG);
     }
 }
