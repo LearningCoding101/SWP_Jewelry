@@ -52,9 +52,14 @@ public class AuthenticationAPI {
 
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
         System.out.println("Reached");
-        Account account = authenticationService.register(registerRequest);
-
-        return ResponseEntity.ok(account);
+        Account account = null;
+        if(authenticationService.handleRegisterCheckEmail(registerRequest)){
+            account = authenticationService.register(registerRequest);
+        }
+        if(account == null){
+            return ResponseEntity.badRequest().body("Invalid Email or Information");
+        }
+        return ResponseEntity.ok("Account created");
     }
 
     //login

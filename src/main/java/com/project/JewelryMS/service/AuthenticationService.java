@@ -42,6 +42,15 @@ public class AuthenticationService implements UserDetailsService {
         account.setRole(RoleEnum.ROLE_ADMIN);
         return authenticationRepository.save(account);
     }
+    public Boolean handleRegisterCheckEmail(RegisterRequest registerRequest){
+        String emailCheck = registerRequest.getEmail();
+        if(emailService.validEmail(emailCheck)){
+            return true;
+        }
+        return false;
+    }
+
+
     public List<Account> getAllAccount(){
         return authenticationRepository.findAll();
     }

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class EmailService {
@@ -23,11 +25,12 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
+    private static final String EMAIL_PATTERN ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     private static final String UPCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBER = "0123456789";
     private static final Random RANDOM = new Random();
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     @Autowired
     MailSender mailSender;
 
@@ -93,9 +96,13 @@ public class EmailService {
         return randomString.toString();
     }
 
-    public boolean vallidEmail(String email){
-
-        return false;
+    public boolean validEmail(String email){
+        if (email == null){
+            return false;
+        } else {
+            Matcher matcher = pattern.matcher(email);
+            return matcher.matches();
+        }
     }
 
 }
