@@ -84,4 +84,6 @@ public class AuthenticationAPI {
         List<Account> managerAccounts = authenticationService.getAllManagerAccount();
         return ResponseEntity.ok(managerAccounts);
     }
+
+
 }

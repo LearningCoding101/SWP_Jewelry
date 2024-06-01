@@ -23,6 +23,10 @@ public class ProductSell {
 //    @JsonBackReference
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "FK_promotionID", referencedColumnName = "PK_promotionID")
+    private int promotionID;
+
     @Column(name = "chi")
     private int chi;
 
@@ -53,9 +57,6 @@ public class ProductSell {
 
     @Column(name = "productCost")
     private int productCost;
-
-    @Column(name = "FK_promotionID")
-    private int promotionID;
 
     @Column(name = "pStatus")
     private boolean pStatus;
