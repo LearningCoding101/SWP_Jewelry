@@ -3,15 +3,17 @@ package com.project.JewelryMS.model;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.Promotion;
 import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
-import lombok.Data;
+import lombok.*;
 
+import java.util.Date;
 @Data
-public class ProductSellRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class ProductSellResponse {
     private long productID;
     private float carat;
-    Category category;
-    Promotion promotion;
     private int chi;
     private float cost;
     private String pDescription;
@@ -23,4 +25,5 @@ public class ProductSellRequest {
     private String productCode;
     private int productCost;
     private boolean pStatus;
+    private long category_id;
 }

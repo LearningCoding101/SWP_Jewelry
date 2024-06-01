@@ -4,6 +4,7 @@ package com.project.JewelryMS.controller;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSellRequest;
+import com.project.JewelryMS.model.ProductSellResponse;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,8 @@ public class ProductSellController {
 
     @GetMapping("read")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ProductSell>> readAllProductSell(){
-        List<ProductSell> allProductSell= productSellService.readAllProductSell();
-        System.out.println("Read Product Sell ");
-        return ResponseEntity.ok(allProductSell);
+    public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
+        return ResponseEntity.ok(productSellService.readAllProductSell());
     }
 
     @PostMapping("update")
