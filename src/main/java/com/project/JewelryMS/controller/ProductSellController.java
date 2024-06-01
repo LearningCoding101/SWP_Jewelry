@@ -16,14 +16,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("productsell")
-@SecurityRequirement(name = "api")
+//@SecurityRequirement(name = "api")
 public class ProductSellController {
 
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
     @PostMapping("create")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSell> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
         try {
             ProductSell createdProduct = productSellService.createProductSell(createProductSellRequest);
@@ -34,7 +34,7 @@ public class ProductSellController {
     }
 
     @GetMapping("read")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductSell>> readAllProductSell(){
         List<ProductSell> allProductSell= productSellService.readAllProductSell();
         System.out.println("Read Product Sell ");
@@ -42,7 +42,7 @@ public class ProductSellController {
     }
 
     @PostMapping("update")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSell> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
         try {
             ProductSell updatedProduct = productSellService.updateProductSell(productSellRequest);
@@ -57,7 +57,7 @@ public class ProductSellController {
     // Get a specific ProductSell by ID
 
     @GetMapping("/readbyid")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSell> getProductSell(@RequestParam("id") int id) {
 
         ProductSell productSell = productSellService.getProductSellById(id);
@@ -69,7 +69,7 @@ public class ProductSellController {
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody int id){
 
         productSellService.deleteProduct(id);
