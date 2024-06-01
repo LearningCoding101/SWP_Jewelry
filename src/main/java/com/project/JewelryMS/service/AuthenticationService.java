@@ -112,7 +112,7 @@ public class AuthenticationService implements UserDetailsService {
                  account = new Account();
                  account.setEmail(email);
                  account.setAUsername(firebaseToken.getName());
-                 account.setRole(RoleEnum.ROLE_STAFF);
+                 account.setRole(RoleEnum.ROLE_ADMIN);
                  account = authenticationRepository.save(account);
             }
              accountResponseGG.setEmail(account.getEmail());
