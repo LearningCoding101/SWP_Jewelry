@@ -4,6 +4,7 @@ import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSellRequest;
+import com.project.JewelryMS.model.ProductSellResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class ProductSellService {
 
     @Autowired
     CategoryRepository categoryRepository;
-    public List<ProductSell> readAllProductSell(){
-        return productSellRepository.findAll();
+    public List<ProductSellResponse> readAllProductSell(){
+        return productSellRepository.findAllProductSellResponses();
     }
 
     public ProductSell getProductSellById(long id){
@@ -47,7 +48,7 @@ public class ProductSellService {
             existingProduct.setPName(productSellRequest.getPName());
             existingProduct.setProductCode(productSellRequest.getProductCode());
             existingProduct.setProductCost(productSellRequest.getProductCost());
-            existingProduct.setPromotionID(productSellRequest.getPromotionID());
+            existingProduct.setPromotion(productSellRequest.getPromotion());
             existingProduct.setImage(productSellRequest.getImage());
             existingProduct.setPStatus(productSellRequest.isPStatus());
             return productSellRepository.save(existingProduct);
@@ -70,7 +71,7 @@ public class ProductSellService {
         newProductSell.setPName(createproductSellRequest.getPName());
         newProductSell.setProductCode(createproductSellRequest.getProductCode());
         newProductSell.setProductCost(createproductSellRequest.getProductCost());
-        newProductSell.setPromotionID(createproductSellRequest.getPromotionID());
+        newProductSell.setPromotion(createproductSellRequest.getPromotion());
         newProductSell.setImage(createproductSellRequest.getImage());
         newProductSell.setPStatus(createproductSellRequest.isPStatus());
         return productSellRepository.save(newProductSell);

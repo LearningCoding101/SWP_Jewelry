@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "category.productSell"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "category.productSell", "promotion.productSell"})
 public class ProductSell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +18,12 @@ public class ProductSell {
     @Column(name = "carat")
     private float carat;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
 //    @JsonBackReference
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_promotionID", referencedColumnName = "PK_promotionID")
     private Promotion promotion;
 

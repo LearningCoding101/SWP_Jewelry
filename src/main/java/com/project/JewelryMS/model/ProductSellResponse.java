@@ -1,7 +1,16 @@
 package com.project.JewelryMS.model;
 
 import com.project.JewelryMS.entity.Category;
+import com.project.JewelryMS.entity.Promotion;
+import jakarta.persistence.Column;
+import lombok.*;
 
+import java.util.Date;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ProductSellResponse {
     private long productID;
     private float carat;
@@ -16,6 +25,5 @@ public class ProductSellResponse {
     private String productCode;
     private int productCost;
     private boolean pStatus;
-    Category category;
-    private int promotionID;
+    private long category_id;
 }

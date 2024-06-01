@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +26,8 @@ public class Promotion {
     Date endDate;
     boolean status=true;
 
-    @OneToMany(mappedBy = "promotion")
-    ProductSell productSell;
+//    @OneToMany(mappedBy = "promotion")
+////    @JsonManagedReference
+//    @JsonIgnoreProperties("promotion")
+//    private List<ProductSell> productSell;
 }
