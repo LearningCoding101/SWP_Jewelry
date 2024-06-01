@@ -24,6 +24,6 @@ public class Promotion {
     Date endDate;
     boolean status=true;
 
-    @OneToMany
-    @Jo
+    @OneToMany(mappedBy = "promotion")
+    ProductSell productSell;
 }

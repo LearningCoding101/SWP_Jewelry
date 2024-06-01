@@ -25,7 +25,7 @@ public class ProductSell {
 
     @ManyToOne
     @JoinColumn(name = "FK_promotionID", referencedColumnName = "PK_promotionID")
-    private int promotionID;
+    private Promotion promotion;
 
     @Column(name = "chi")
     private int chi;
