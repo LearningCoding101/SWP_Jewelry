@@ -33,6 +33,7 @@ public class StaffAccountController {
     @GetMapping("read")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<StaffAccount>> readAllStaffAccounts() {
+        System.out.println("Read Staff");
         return ResponseEntity.ok(staffAccountService.readAllStaffAccounts());
     }
 
