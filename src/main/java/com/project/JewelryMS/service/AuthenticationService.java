@@ -4,6 +4,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.RoleEnum;
 import com.project.JewelryMS.model.AccountResponse;
+import com.project.JewelryMS.model.ChangePassRequest;
 import com.project.JewelryMS.model.LoginRequest;
 import com.project.JewelryMS.model.RegisterRequest;
 import com.project.JewelryMS.repository.AuthenticationRepository;
@@ -50,6 +51,12 @@ public class AuthenticationService implements UserDetailsService {
         return false;
     }
 
+    public String changePassword(ChangePassRequest changePassRequest){
+
+
+
+        return "";
+    }
 
     public List<Account> getAllAccount(){
         return authenticationRepository.findAll();

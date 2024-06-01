@@ -1,10 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Account;
-import com.project.JewelryMS.model.AccountResponse;
-import com.project.JewelryMS.model.LoginRequest;
-import com.project.JewelryMS.model.RegisterRequest;
-import com.project.JewelryMS.model.ResetPassRequest;
+import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -70,7 +67,10 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(accountResponse);
     }
     //Change password
+    /*@PostMapping("change")
+    public ResponseEntity changePassword(@RequestBody ChangePassRequest changePassRequest){
 
+    }*/
 
     //ResetPassword
     @PostMapping("/reset")
