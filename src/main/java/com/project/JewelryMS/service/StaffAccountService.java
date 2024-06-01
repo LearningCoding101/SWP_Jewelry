@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF;
+
 @Service
 public class StaffAccountService {
     @Autowired
@@ -23,20 +25,24 @@ public class StaffAccountService {
 
     // Create
     public StaffAccount createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
-        StaffAccount newStaffAccount = new StaffAccount();
-        newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
-        newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
-        newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
-        newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
-        // Directly use the Account from the request
-        Account account = createStaffAccountRequest.getAccount();
-        if (account != null) {
-            newStaffAccount.setAccount(account);
-            account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
-        } else {
-            throw new RuntimeException("Account information is missing in the request");
-        }
-        return staffAccountRepository.save(newStaffAccount);
+//        if(createStaffAccountRequest.getAccount().getRole() != ROLE_STAFF) {
+            StaffAccount newStaffAccount = new StaffAccount();
+            newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
+            newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
+            newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
+            newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
+            // Directly use the Account from the request
+            Account account = createStaffAccountRequest.getAccount();
+            if (account != null) {
+                newStaffAccount.setAccount(account);
+                account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
+            } else {
+                throw new RuntimeException("Account information is missing in the request");
+            }
+            return staffAccountRepository.save(newStaffAccount);
+//        }else{
+//            throw new RuntimeException("Account not have Staff Role");
+//        }
     }
 
     // Read all
