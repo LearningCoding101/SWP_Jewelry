@@ -1,14 +1,15 @@
-package com.project.JewelryMS.model;
+package com.project.JewelryMS.model.ProductSell;
 
-import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.Promotion;
-import lombok.Data;
+import lombok.*;
 
 @Data
-public class CreateProductSellRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class ProductSellResponse {
+    private long productID;
     private float carat;
-    Category category;
-    Promotion promotion;
     private int chi;
     private float cost;
     private String pDescription;
@@ -20,4 +21,5 @@ public class CreateProductSellRequest {
     private String productCode;
     private int productCost;
     private boolean pStatus;
+    private long category_id;
 }
