@@ -29,7 +29,7 @@ public class Account implements UserDetails {
     @Column(name = "aUsername", unique = true)
     String aUsername;
     @Column(name = "aPassword")
-            @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String aPassword;
     @Column(name = "accountName")
     String accountName;
