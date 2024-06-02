@@ -11,6 +11,7 @@ import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,6 +43,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setAPassword(passwordEncoder.encode(registerRequest.getAPassword()));
         account.setAUsername(registerRequest.getAUsername());
         account.setRole(RoleEnum.ROLE_ADMIN);
+        account.setStatus(1);
         return authenticationRepository.save(account);
     }
     public Boolean handleRegisterCheckEmail(RegisterRequest registerRequest){
@@ -79,12 +81,12 @@ public class AuthenticationService implements UserDetailsService {
                 loginRequest.getPassword()
         ));
                 Account account = authenticationRepository.findAccountByUsername(loginRequest.getUsername());
-        String token = jwTservice.generateToken(account);
-        AccountResponse accountResponse = new AccountResponse();
-        accountResponse.setUsername(account.getUsername());
-        accountResponse.setToken(token);
-        accountResponse.setRole(account.getRole());
-        return accountResponse;
+                    String token = jwTservice.generateToken(account);
+                    AccountResponse accountResponse = new AccountResponse();
+                    accountResponse.setUsername(account.getUsername());
+                    accountResponse.setToken(token);
+                    accountResponse.setRole(account.getRole());
+                    return accountResponse;
     }
 
     public void changePassword(){}

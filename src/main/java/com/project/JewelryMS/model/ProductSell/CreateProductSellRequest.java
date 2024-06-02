@@ -1,4 +1,4 @@
-package com.project.JewelryMS.model;
+package com.project.JewelryMS.model.ProductSell;
 
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.Promotion;

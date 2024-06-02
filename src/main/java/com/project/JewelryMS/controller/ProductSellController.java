@@ -2,14 +2,12 @@ package com.project.JewelryMS.controller;
 
 
 import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.model.CreateProductSellRequest;
+import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSellRequest;
-import com.project.JewelryMS.model.ProductSellResponse;
+import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
 import com.project.JewelryMS.service.ProductSellService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

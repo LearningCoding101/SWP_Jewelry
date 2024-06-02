@@ -2,9 +2,10 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.StaffAccount;
-import com.project.JewelryMS.model.CreateStaffAccountRequest;
-import com.project.JewelryMS.model.DeleteStaffAccountRequest;
-import com.project.JewelryMS.model.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.DeleteStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF;
 
 @Service
 public class StaffAccountService {
@@ -47,13 +46,13 @@ public class StaffAccountService {
     }
 
     // Read all
-    public List<StaffAccount> readAllStaffAccounts() {
-        return staffAccountRepository.findAll();
+    public List<StaffAccountResponse> readAllStaffAccounts() {
+        return staffAccountRepository.findAllStaffAccountsByRoleStaff();
     }
 
     // Read by ID
-    public StaffAccount getStaffAccountById(long id) {
-        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(id);
+    public StaffAccountResponse getStaffAccountById(long id) {
+        Optional<StaffAccountResponse> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
         return staffAccountOptional.orElse(null);
     }
 
