@@ -21,11 +21,14 @@ public class ManagerAccountController {
     ManagerAccountService managerAccountService;
 
     @GetMapping("/readAll")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ManagerAccountResponse>> readAllManagerAccounts() {
         return ResponseEntity.ok(managerAccountService.getAllManagerAccounts());
     }
 
+
     @GetMapping("/readbyid")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ManagerAccountResponse> readManagerAccountById(@RequestParam("id") int id) {
         ManagerAccountResponse managerAccountResponse = managerAccountService.getManagerAccountById(id);
         if (managerAccountResponse != null) {
@@ -34,6 +37,7 @@ public class ManagerAccountController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 

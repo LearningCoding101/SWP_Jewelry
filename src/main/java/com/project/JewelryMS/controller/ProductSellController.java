@@ -3,8 +3,8 @@ package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
-import com.project.JewelryMS.model.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
+import com.project.JewelryMS.model.ProductSellRequest;
 import com.project.JewelryMS.service.ProductSellService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,55 +21,57 @@ public class ProductSellController {
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
-    @PostMapping("create")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductSell> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
-        try {
-            ProductSell createdProduct = productSellService.createProductSell(createProductSellRequest);
-            return ResponseEntity.ok(createdProduct);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body(null);
-        }
-    }
+//    @PostMapping("create")
+//    //@PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<ProductSell> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
+//        try {
+//            ProductSell createdProduct = productSellService.createProductSell(createProductSellRequest);
+//            return ResponseEntity.ok(createdProduct);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(500).body(null);
+//        }
+//    }
 
     @GetMapping("read")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
-        return ResponseEntity.ok(productSellService.readAllProductSell());
+        List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();
+        System.out.println("Read Product Sell ");
+        return ResponseEntity.ok(allProductSell);
     }
 
-    @PostMapping("update")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductSell> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
-        try {
-            ProductSell updatedProduct = productSellService.updateProductSell(productSellRequest);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body(null);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @PostMapping("update")
+//    //@PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<ProductSell> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
+//        try {
+//            ProductSell updatedProduct = productSellService.updateProductSell(productSellRequest);
+//            return ResponseEntity.ok(updatedProduct);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(500).body(null);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     // Get a specific ProductSell by ID
 
-    @GetMapping("/readbyid")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductSell> getProductSell(@RequestParam("id") int id) {
+//    @GetMapping("/readbyid")
+//    //@PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<ProductSell> getProductSell(@RequestParam("id") int id) {
+//
+//        ProductSell productSell = productSellService.getProductSellById(id);
+//        if (productSell != null) {
+//            return ResponseEntity.ok(productSell);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
-        ProductSell productSell = productSellService.getProductSellById(id);
-        if (productSell != null) {
-            return ResponseEntity.ok(productSell);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PostMapping("/delete")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteCategory(@RequestBody int id){
-
-        productSellService.deleteProduct(id);
-        return ResponseEntity.ok("Product deleted successfully");
-    }
+//    @PostMapping("/delete")
+//    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<String> deleteCategory(@RequestBody int id){
+//
+//        productSellService.deleteProduct(id);
+//        return ResponseEntity.ok("Product deleted successfully");
+//    }
 }

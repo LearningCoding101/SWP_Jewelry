@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "category.productSell", "promotion.productSell"})
@@ -23,9 +25,14 @@ public class ProductSell {
 //    @JsonBackReference
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FK_promotionID", referencedColumnName = "PK_promotionID")
-    private Promotion promotion;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ProductSell_Promotion",
+            joinColumns = @JoinColumn(name = "productsellID", referencedColumnName = "PK_productID"),
+            inverseJoinColumns = @JoinColumn(name = "promotionID", referencedColumnName = "PK_promotionID")
+    )
+    @JsonIgnoreProperties("productSell")
+    private List<Promotion> promotion ;
 
     @Column(name = "chi")
     private int chi;

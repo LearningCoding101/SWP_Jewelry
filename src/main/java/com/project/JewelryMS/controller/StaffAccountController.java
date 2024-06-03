@@ -30,7 +30,7 @@ public class StaffAccountController {
 
     // Read all StaffAccounts
     @GetMapping("read")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<StaffAccountResponse>> readAllStaffAccounts() {
         System.out.println("Read Staff");
         return ResponseEntity.ok(staffAccountService.readAllStaffAccounts());
@@ -50,7 +50,7 @@ public class StaffAccountController {
 
     // Get a specific StaffAccount by ID
     @GetMapping("readbyid")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StaffAccountResponse> getStaffAccountById(@RequestParam("id") int id) {
         StaffAccountResponse staffAccount = staffAccountService.getStaffAccountById(id);
         if (staffAccount != null) {

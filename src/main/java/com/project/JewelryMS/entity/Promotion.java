@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="Promotion")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "productSell"})
 public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +25,8 @@ public class Promotion {
     String description;
     Date startDate;
     Date endDate;
-    boolean status=true;
+    boolean status;
+    @ManyToMany(mappedBy = "promotion", fetch = FetchType.LAZY)
+    private List<ProductSell> productSell ;
 
-//    @OneToMany(mappedBy = "promotion")
-////    @JsonManagedReference
-//    @JsonIgnoreProperties("promotion")
-//    private List<ProductSell> productSell;
 }
