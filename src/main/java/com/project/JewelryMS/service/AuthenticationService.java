@@ -62,6 +62,9 @@ public class AuthenticationService implements UserDetailsService {
     public Account getAccount(String email){
         return authenticationRepository.findAccountByemail(email);
     }
+    public Account getAccountById(Long id){
+        return authenticationRepository.findAccountById(id);
+    }
     public String sendForgotPasswordEmail(String email) {
         Optional<Account> accountOptional = Optional.ofNullable(authenticationRepository.findAccountByemail(email.replace("\"", "")));
         if (accountOptional.isPresent()) {
@@ -86,6 +89,7 @@ public class AuthenticationService implements UserDetailsService {
                     accountResponse.setUsername(account.getUsername());
                     accountResponse.setToken(token);
                     accountResponse.setRole(account.getRole());
+                    accountResponse.setId((long)account.getPK_userID());
                     return accountResponse;
     }
 

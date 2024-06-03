@@ -10,4 +10,5 @@ public class AccountResponse {
     String username;
     String token;
     RoleEnum role;
+    Long id;
 }

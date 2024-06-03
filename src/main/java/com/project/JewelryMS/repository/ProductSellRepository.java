@@ -20,9 +20,5 @@ public interface ProductSellRepository extends JpaRepository<ProductSell, Long> 
     @Query("SELECT p.PK_promotionID FROM Promotion p JOIN p.productSell ps WHERE ps.productID = :productSellId")
     List<Long> findPromotionIdsByProductSellId(@Param("productSellId") long productSellId);
 
-    @Query("SELECT new com.project.JewelryMS.model.ProductSell.ProductSellResponse(p.productID, p.carat, p.chi, p.cost, p.pDescription, p.gemstoneType, p.image, p.manufacturer, p.metalType, p.pName, p.productCode, p.productCost, p.pStatus, c.id) " +
-            "FROM ProductSell p " +
-            "LEFT JOIN p.category c")
-    List<ProductSellResponse> findAllProductSellResponses();
 
 }
