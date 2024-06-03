@@ -1,7 +1,7 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Shift;
-import com.project.JewelryMS.model.CreateShiftRequest;
+import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.repository.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,4 +37,6 @@ public class ShiftService {
         Optional<Shift> shiftOptional = shiftRepository.findById(id);
         return shiftOptional.orElse(null);
     }
+
+
 }

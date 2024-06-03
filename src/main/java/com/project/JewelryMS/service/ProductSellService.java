@@ -1,11 +1,14 @@
 package com.project.JewelryMS.service;
 
+import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
+import com.project.JewelryMS.entity.Promotion;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
-import com.project.JewelryMS.model.ProductSellRequest;
+import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.repository.PromotionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductSellService {
@@ -22,6 +27,9 @@ public class ProductSellService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    PromotionRepository promotionRepository;
 
     public List<ProductSellResponse> getAllProductSellResponses() {
         List<ProductSellResponse> responses = new ArrayList<>();
@@ -67,59 +75,122 @@ public class ProductSellService {
         return responses;
     }
 
-//    public ProductSell getProductSellById(long id){
-//        Optional<ProductSell> product = productSellRepository.findById(id);
-//        return product.orElse(null);
-//    }
+    public ProductSellResponse createProductSell(CreateProductSellRequest request) {
+        ProductSell productSell = new ProductSell();
+        productSell.setCarat(request.getCarat());
+        // Set Category
+        Optional<Category> categoryOpt = categoryRepository.findById(request.getCategory_id());
+        if (categoryOpt.isPresent()) {
+            productSell.setCategory(categoryOpt.get());
+        } else {
+            throw new IllegalArgumentException("Category ID not found");
+        }
+        productSell.setChi(request.getChi());
+        productSell.setCost(request.getCost());
+        productSell.setPDescription(request.getPDescription());
+        productSell.setGemstoneType(request.getGemstoneType());
+        productSell.setImage(request.getImage());
+        productSell.setManufacturer(request.getManufacturer());
+        productSell.setMetalType(request.getMetalType());
+        productSell.setPName(request.getPName());
+        productSell.setProductCode(request.getProductCode());
+        productSell.setProductCost(request.getProductCost());
+        productSell.setPStatus(request.isPStatus());
+        // Save ProductSell
+        ProductSell productSell1 = productSellRepository.save(productSell);
+        return getProductSellById(productSell1.getProductID());
+    }
 
-//    public ProductSell updateProductSell(ProductSellRequest productSellRequest) throws IOException {
-//        long productId = productSellRequest.getProductID();
-//        Optional<ProductSell> existingProductOpt = productSellRepository.findById(productSellRequest.getProductID());
-//        if (existingProductOpt.isPresent()) {
-//            ProductSell existingProduct = existingProductOpt.get();
-//            // Update fields
-//            existingProduct.setCarat(productSellRequest.getCarat());
-//            existingProduct.setCategory(productSellRequest.getCategory());
-//            existingProduct.setChi(productSellRequest.getChi());
-//            existingProduct.setCost(productSellRequest.getCost());
-//            existingProduct.setPDescription(productSellRequest.getPDescription());
-//            existingProduct.setGemstoneType(productSellRequest.getGemstoneType());
-//            existingProduct.setManufacturer(productSellRequest.getManufacturer());
-//            existingProduct.setMetalType(productSellRequest.getMetalType());
-//            existingProduct.setPName(productSellRequest.getPName());
-//            existingProduct.setProductCode(productSellRequest.getProductCode());
-//            existingProduct.setProductCost(productSellRequest.getProductCost());
-//            existingProduct.setPromotion(productSellRequest.getPromotion());
-//            existingProduct.setImage(productSellRequest.getImage());
-//            existingProduct.setPStatus(productSellRequest.isPStatus());
-//            return productSellRepository.save(existingProduct);
-//        } else {
-//            throw new RuntimeException("ProductSell with ID " + productId + " not found");
-//        }
-//    }
+    // Read all ProductSell entries
+    public List<ProductSell> getAllProductSells() {
+        return productSellRepository.findAll();
+    }
 
-//    public ProductSell createProductSell(CreateProductSellRequest createproductSellRequest) throws IOException {
-//        ProductSell newProductSell = new ProductSell();
-//        newProductSell.setCarat(createproductSellRequest.getCarat());
-//        // Fetch the category from the database
-//        newProductSell.setCategory(createproductSellRequest.getCategory());
-//        newProductSell.setChi(createproductSellRequest.getChi());
-//        newProductSell.setCost(createproductSellRequest.getCost());
-//        newProductSell.setPDescription(createproductSellRequest.getPDescription());
-//        newProductSell.setGemstoneType(createproductSellRequest.getGemstoneType());
-//        newProductSell.setManufacturer(createproductSellRequest.getManufacturer());
-//        newProductSell.setMetalType(createproductSellRequest.getMetalType());
-//        newProductSell.setPName(createproductSellRequest.getPName());
-//        newProductSell.setProductCode(createproductSellRequest.getProductCode());
-//        newProductSell.setProductCost(createproductSellRequest.getProductCost());
-//        newProductSell.setPromotion(createproductSellRequest.getPromotion());
-//        newProductSell.setImage(createproductSellRequest.getImage());
-//        newProductSell.setPStatus(createproductSellRequest.isPStatus());
-//        return productSellRepository.save(newProductSell);
-//    }
+    public ProductSellResponse getProductSellById(long id) {
+        ProductSell productSell = productSellRepository.findByIdWithCategoryAndPromotion(id)
+                .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
+        return mapToProductSellResponse(productSell);
+    }
 
-//    public void deleteProduct(long id){
-//        productSellRepository.deleteById(id);
-//    }
+    private ProductSellResponse mapToProductSellResponse(ProductSell productSell) {
+        ProductSellResponse response = new ProductSellResponse();
+        response.setProductID(productSell.getProductID());
+        response.setCarat(productSell.getCarat());
+        response.setChi(productSell.getChi());
+        response.setCost(productSell.getCost());
+        response.setDescription(productSell.getPDescription());
+        response.setGemstoneType(productSell.getGemstoneType());
+        response.setImage(productSell.getImage());
+        response.setManufacturer(productSell.getManufacturer());
+        response.setMetalType(productSell.getMetalType());
+        response.setName(productSell.getPName());
+        response.setProductCode(productSell.getProductCode());
+        response.setProductCost(productSell.getProductCost());
+        response.setStatus(productSell.isPStatus());
+
+        if (productSell.getCategory() != null) {
+            response.setCategory_id(productSell.getCategory().getId());
+        }
+
+        List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId(productSell.getProductID());
+        List<String> promotionIds = listPromotion.stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+        response.setPromotion_id(promotionIds);
+
+        return response;
+    }
+
+    public ProductSellResponse updateProductSell(ProductSellRequest productSellRequest) {
+        // Fetch the existing ProductSell entity
+        ProductSell existingProductSell = productSellRepository.findById(productSellRequest.getProductID())
+                .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
+
+        // Update fields from the request
+        existingProductSell.setCarat(productSellRequest.getCarat());
+        existingProductSell.setChi(productSellRequest.getChi());
+        existingProductSell.setCost(productSellRequest.getCost());
+        existingProductSell.setPDescription(productSellRequest.getPDescription());
+        existingProductSell.setGemstoneType(productSellRequest.getGemstoneType());
+        existingProductSell.setImage(productSellRequest.getImage());
+        existingProductSell.setManufacturer(productSellRequest.getManufacturer());
+        existingProductSell.setMetalType(productSellRequest.getMetalType());
+        existingProductSell.setPName(productSellRequest.getPName());
+        existingProductSell.setProductCode(productSellRequest.getProductCode());
+        existingProductSell.setProductCost(productSellRequest.getProductCost());
+        existingProductSell.setPStatus(productSellRequest.isPStatus());
+
+        // Update category
+        Category category = categoryRepository.findById(productSellRequest.getCategory_id())
+                .orElseThrow(() -> new IllegalArgumentException("Category ID not found"));
+        existingProductSell.setCategory(category);
+
+        // Update promotions
+        List<Long> promotionIds = productSellRequest.getPromotion_id();
+        List<Promotion> promotions = new ArrayList<>();
+
+        for (Long promotionId : promotionIds) {
+            Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
+            promotionOptional.ifPresent(promotions::add);
+        }
+        existingProductSell.setPromotion(promotions);
+
+        // Save the updated entity
+        productSellRepository.save(existingProductSell);
+
+        // Return the updated ProductSellResponse
+        return mapToProductSellResponse(existingProductSell);
+    }
+
+    public void DeleteProduct(long id){
+        Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
+        if(productSellOptional.isPresent()){
+            ProductSell productSell = productSellOptional.get();
+            productSell.setPStatus(false);
+        }else {
+            throw new RuntimeException("Product Sell with ID " + id + " not found");
+        }
+    }
+
 }

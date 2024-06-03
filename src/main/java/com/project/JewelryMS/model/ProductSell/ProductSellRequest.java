@@ -1,17 +1,18 @@
-package com.project.JewelryMS.model;
+package com.project.JewelryMS.model.ProductSell;
 
-import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.Promotion;
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductSellRequest {
     private long productID;
     private float carat;
-    Category category;
-    Promotion promotion;
+    private long category_id;
+    private List<Long> promotion_id;
     private int chi;
     private float cost;
     private String pDescription;
@@ -23,4 +24,5 @@ public class ProductSellRequest {
     private String productCode;
     private int productCost;
     private boolean pStatus;
+
 }

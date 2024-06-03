@@ -7,8 +7,7 @@ import lombok.Data;
 @Data
 public class CreateProductSellRequest {
     private float carat;
-    Category category;
-    Promotion promotion;
+    private long category_id;
     private int chi;
     private float cost;
     private String pDescription;
