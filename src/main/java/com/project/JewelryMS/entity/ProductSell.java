@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -23,6 +24,7 @@ public class ProductSell {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
 //    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -67,4 +69,10 @@ public class ProductSell {
 
     @Column(name = "pStatus")
     private boolean pStatus;
+
+    @OneToMany(mappedBy = "productSell")
+    @JsonIgnoreProperties
+    Set<OrderDetail> orderDetails;
+
+
 }

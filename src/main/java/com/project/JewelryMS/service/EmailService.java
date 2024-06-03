@@ -2,10 +2,12 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.model.EmailDetail;
+import com.project.JewelryMS.model.Order.ProductResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,16 +15,26 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class EmailService {
-
+    @Autowired
+    HtmlFormatterService htmlFormatterService;
     @Autowired
     private TemplateEngine templateEngine;
-
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private JavaMailSender javaMailSender;
     private static final String EMAIL_PATTERN ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
@@ -95,6 +107,51 @@ public class EmailService {
         }
         return randomString.toString();
     }
+
+    public void sendMailWithEmbeddedImage(EmailDetail emailDetail, BufferedImage bufferedImage, List<ProductResponse> productResponseList) {
+        try {
+            Context context = new Context();
+
+            context.setVariable("name", emailDetail.getRecipient());
+            context.setVariable("content", emailDetail.getMsgBody());
+            context.setVariable("orderTable", htmlFormatterService.DefaultOrderTable(productResponseList));
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            byteArrayOutputStream.flush();
+            byte[] imageBytes = byteArrayOutputStream.toByteArray();
+            byteArrayOutputStream.close();
+            String cid = UUID.randomUUID().toString();
+            context.setVariable("cid", cid);
+            // Encode the image data as a Base64 string imageService.imgToBase64String(bufferedImage, "png")
+            /*String imageString = imageService.imgToBase64String(bufferedImage, "png");
+
+            context.setVariable("image", "data:image/png;base64," + imageString);
+*/
+            String text = templateEngine.process("orderEmail", context);
+
+            // Creating a simple mail message
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            // Setting up necessary details
+            mimeMessageHelper.setFrom("jewelryms44@gmail.com");
+            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setSubject(emailDetail.getSubject());
+            mimeMessageHelper.addInline(cid, new ByteArrayResource(imageBytes), "image/png");
+            // Send the email
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            messagingException.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
 
     public boolean validEmail(String email){
         if (email == null){
