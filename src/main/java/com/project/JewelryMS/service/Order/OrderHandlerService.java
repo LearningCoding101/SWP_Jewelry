@@ -87,7 +87,9 @@ public class OrderHandlerService {
             for(OrderDetail item : iterateList){
                 ProductSell product = item.getProductSell();
                 ProductResponse response = new ProductResponse();
+                response.setQuantity(item.getQuantity());
                 response.setProductID(product.getProductID());
+                response.setName(product.getPName());
                 response.setCarat(product.getCarat());
                 response.setChi(product.getChi());
                 response.setCost(product.getCost());
@@ -115,6 +117,46 @@ public class OrderHandlerService {
 
         }
         return result;
+    }
+    public List<ProductResponse> generateEmailOrderTable(Long orderID){
+        PurchaseOrder order = orderService.getOrderById(orderID);
+        OrderResponse orderToGet = new OrderResponse();
+        orderToGet.setStatus(order.getStatus());
+        orderToGet.setPaymentType(order.getPaymentType());
+        orderToGet.setTotalAmount(order.getTotalAmount());
+        orderToGet.setPurchaseDate(order.getPurchaseDate());
+        Set<ProductResponse> productResponses = new HashSet<>();
+        List<OrderDetail> iterateList = order.getOrderDetails().stream().toList();
+        for(OrderDetail item : iterateList){
+            ProductSell product = item.getProductSell();
+            ProductResponse response = new ProductResponse();
+            response.setQuantity(item.getQuantity());
+            response.setProductID(product.getProductID());
+            response.setName(product.getPName());
+            response.setCarat(product.getCarat());
+            response.setChi(product.getChi());
+            response.setCost(product.getCost());
+            response.setDescription(product.getPDescription());
+            response.setGemstoneType(product.getGemstoneType());
+            response.setImage(Arrays.toString(product.getImage()));
+            response.setManufacturer(product.getManufacturer());
+            response.setProductCost(product.getProductCost());
+            response.setStatus(product.isPStatus());
+            response.setCategory_id(product.getProductID());
+            List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
+            List<String> promotionIds = new ArrayList<>();
+
+            for (Long promotionId : listPromotion) {
+                promotionIds.add(String.valueOf(promotionId));
+            }
+
+            response.setPromotion_id(promotionIds);
+
+
+            productResponses.add(response);
+        }
+        return productResponses.stream().toList();
+
     }
 
 }

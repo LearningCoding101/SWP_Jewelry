@@ -2,6 +2,7 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.model.EmailDetail;
+import com.project.JewelryMS.model.Order.ProductResponse;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -20,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -27,7 +29,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class EmailService {
-
+    @Autowired
+    HtmlFormatterService htmlFormatterService;
     @Autowired
     private TemplateEngine templateEngine;
     @Autowired
@@ -105,13 +108,13 @@ public class EmailService {
         return randomString.toString();
     }
 
-    public void sendMailWithEmbeddedImage(EmailDetail emailDetail, BufferedImage bufferedImage) {
+    public void sendMailWithEmbeddedImage(EmailDetail emailDetail, BufferedImage bufferedImage, List<ProductResponse> productResponseList) {
         try {
             Context context = new Context();
 
             context.setVariable("name", emailDetail.getRecipient());
             context.setVariable("content", emailDetail.getMsgBody());
-
+            context.setVariable("orderTable", htmlFormatterService.DefaultOrderTable(productResponseList));
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
             byteArrayOutputStream.flush();

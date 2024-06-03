@@ -39,7 +39,8 @@ public class OrderController {
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value
-        String value = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList()).toString();
+        Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
+        String value = orderID.toString();
 
         // Create QR code image
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(qrService.createQR(value));
@@ -51,7 +52,9 @@ public class OrderController {
         emailDetail.setSubject("Your Order QR Code");
         emailDetail.setMsgBody("Please find your order QR code attached.");
 
-        emailService.sendMailWithEmbeddedImage(emailDetail, qrImage);
+        emailService.sendMailWithEmbeddedImage(emailDetail,
+                qrImage,
+                orderHandlerService.generateEmailOrderTable(orderID));
 
         // Return the QR code image as the HTTP response
         return ResponseEntity.ok(qrImage);
