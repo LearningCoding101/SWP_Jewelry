@@ -29,6 +29,13 @@ public class AuthenticationAPI {
 
         return ResponseEntity.ok(account);
     }
+    @GetMapping("getbyid")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity getById(@RequestParam AccountIDRequest accountIDRequest){
+        Account account = authenticationService.getAccountById(accountIDRequest.getId());
+
+        return ResponseEntity.ok(account);
+    }
     @GetMapping("testGetAll")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Account>> getAll(){

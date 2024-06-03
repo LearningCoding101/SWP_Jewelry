@@ -45,7 +45,8 @@ public class Filter extends OncePerRequestFilter {
             "/code/**",
             "/category/**",
             "/productsell/**",
-            "/account/loginGG"
+            "/account/loginGG",
+            "/api/order/**"
 
     );
 

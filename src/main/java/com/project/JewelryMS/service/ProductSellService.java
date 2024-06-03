@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductSellService {
@@ -67,10 +68,10 @@ public class ProductSellService {
         return responses;
     }
 
-//    public ProductSell getProductSellById(long id){
-//        Optional<ProductSell> product = productSellRepository.findById(id);
-//        return product.orElse(null);
-//    }
+    public ProductSell getProductSellById(long id){
+        Optional<ProductSell> product = productSellRepository.findById(id);
+        return product.orElse(null);
+    }
 
 //    public ProductSell updateProductSell(ProductSellRequest productSellRequest) throws IOException {
 //        long productId = productSellRequest.getProductID();
