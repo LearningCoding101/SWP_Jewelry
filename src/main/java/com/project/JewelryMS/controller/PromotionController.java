@@ -21,7 +21,11 @@ import java.util.List;
 public class PromotionController {
     @Autowired
     PromotionService promotionService;
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @GetMapping("/productSellIdsByPromotionId")
+    public List<PromotionResponse> getProductSellIdsByPromotionId() {
+        return promotionService.ReadAllPromotionwithProductID();
+    }
     //Create section
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")

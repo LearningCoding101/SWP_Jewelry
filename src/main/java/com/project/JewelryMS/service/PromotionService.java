@@ -6,6 +6,7 @@ import com.project.JewelryMS.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,27 @@ import java.util.concurrent.TimeUnit;
 public class PromotionService {
     @Autowired
     PromotionRepository promotionRepository;
-
+    public List<PromotionResponse> ReadAllPromotionwithProductID(){
+        List<Promotion> promotionList = promotionRepository.findAllPromotion();
+        List<PromotionResponse> responses = new ArrayList<>();
+        for(Promotion p : promotionList){
+            PromotionResponse promotionResponse = new PromotionResponse();
+            promotionResponse.setPromotionID(p.getPK_promotionID());
+            promotionResponse.setCode(p.getCode());
+            promotionResponse.setDescription(p.getDescription());
+            promotionResponse.setStartDate(p.getStartDate());
+            promotionResponse.setEndDate(p.getEndDate());
+            promotionResponse.setStatus(p.isStatus());
+            List<Long> listPromotion = promotionRepository.findProductSellIdsByPromotionId(p.getPK_promotionID());
+            List<String> promotionIds = new ArrayList<>();
+            for (Long promotionId : listPromotion) {
+                promotionIds.add(String.valueOf(promotionId));
+            }
+            promotionResponse.setProductSell_id(promotionIds);
+            responses.add(promotionResponse);
+        }
+        return responses;
+    }
     //Create promotions
     public Promotion createPromotion(CreatePromotionRequest createPromotionRequest) {
         Promotion promotion = new Promotion();

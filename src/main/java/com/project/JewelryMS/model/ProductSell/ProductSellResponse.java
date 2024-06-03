@@ -2,24 +2,26 @@ package com.project.JewelryMS.model.ProductSell;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@ToString
 public class ProductSellResponse {
     private long productID;
     private float carat;
     private int chi;
     private float cost;
-    private String pDescription;
+    private String Description;
     private String gemstoneType;
     private byte[] image;
     private String manufacturer;
     private String metalType;
-    private String pName;
+    private String Name;
     private String productCode;
     private int productCost;
-    private boolean pStatus;
+    private boolean Status;
     private long category_id;
+    private List<String> promotion_id;
 }
