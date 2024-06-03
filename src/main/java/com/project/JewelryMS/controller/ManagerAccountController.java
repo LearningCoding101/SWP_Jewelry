@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 @RestController
 @RequestMapping("manager")
-@SecurityRequirement(name = "api")
 public class ManagerAccountController {
 
     @Autowired
@@ -27,6 +26,7 @@ public class ManagerAccountController {
         return ResponseEntity.ok(managerAccountService.getAllManagerAccounts());
     }
 
+
     @GetMapping("/readbyid")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ManagerAccountResponse> readManagerAccountById(@RequestParam("id") int id) {
@@ -37,6 +37,7 @@ public class ManagerAccountController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 
 

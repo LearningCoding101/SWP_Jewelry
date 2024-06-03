@@ -1,6 +1,8 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.ProductSell;
+import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
+import com.project.JewelryMS.model.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
