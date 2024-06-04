@@ -1,6 +1,7 @@
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\controller\CustomerController.class
 com\project\JewelryMS\model\CategoryRequest.class
+com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\model\Order\OrderResponse.class
