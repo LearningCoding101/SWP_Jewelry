@@ -22,10 +22,8 @@ public class Category {
     @Column(name="description")
     private String description;
 
-
-//    @OneToMany(mappedBy = "category")
-////    @JsonManagedReference
-//    @JsonIgnoreProperties("category")
-//    private List<ProductSell> productSell;
+    @OneToMany(mappedBy = "category")
+    @JsonIgnoreProperties("category")
+    private List<ProductSell> productSell;
 
 }

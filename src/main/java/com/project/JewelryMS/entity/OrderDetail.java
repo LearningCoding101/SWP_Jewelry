@@ -19,6 +19,7 @@ public class OrderDetail implements Serializable {
     @JoinColumn(name = "FK_ProductID", referencedColumnName = "PK_ProductID")
     ProductSell productSell;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_OrderID", referencedColumnName = "PK_OrderID")
     @EqualsAndHashCode.Exclude
@@ -26,4 +27,7 @@ public class OrderDetail implements Serializable {
     PurchaseOrder purchaseOrder;
 
     Integer quantity;
+
+    @OneToOne(mappedBy = "orderDetail", cascade = CascadeType.ALL)
+    private ProductBuy productBuy;
 }

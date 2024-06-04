@@ -98,7 +98,7 @@ public class ProductSellService {
         productSell.setPStatus(request.isPStatus());
         // Save ProductSell
         ProductSell productSell1 = productSellRepository.save(productSell);
-        return getProductSellById(productSell1.getProductID());
+        return getProductSellById2(productSell1.getProductID());
     }
 
     // Read all ProductSell entries
@@ -106,12 +106,23 @@ public class ProductSellService {
         return productSellRepository.findAll();
     }
 
-    public ProductSellResponse getProductSellById(long id) {
+    public ProductSellResponse getProductSellById2(long id) {
         ProductSell productSell = productSellRepository.findByIdWithCategoryAndPromotion(id)
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
         return mapToProductSellResponse(productSell);
     }
+
+    public ProductSell getProductSellById(long id) {
+            Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
+            if(productSellOptional.isPresent()){
+                ProductSell productSell = productSellOptional.get();
+                return productSell;
+            }
+            return productSellOptional.get();
+    }
+
+
 
     private ProductSellResponse mapToProductSellResponse(ProductSell productSell) {
         ProductSellResponse response = new ProductSellResponse();
