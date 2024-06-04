@@ -48,7 +48,7 @@ public class OrderController {
 
         // Pass email details and QR code image data to email service
         EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient("hahoang33322@gmail.com");
+        emailDetail.setRecipient("hahoang433322@gmail.com");
         emailDetail.setSubject("Your Order QR Code");
         emailDetail.setMsgBody("Please find your order QR code attached.");
 

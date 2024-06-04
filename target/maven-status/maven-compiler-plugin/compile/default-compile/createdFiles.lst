@@ -4,6 +4,7 @@ com\project\JewelryMS\controller\CustomerController.class
 com\project\JewelryMS\model\PromotionRequest.class
 com\project\JewelryMS\config\VNPAYConfig.class
 com\project\JewelryMS\model\AccountIDRequest.class
+com\project\JewelryMS\model\Order\ProductResponse.class
 com\project\JewelryMS\model\CategoryRequest.class
 com\project\JewelryMS\model\Staff\StaffAccountRequest.class
 com\project\JewelryMS\model\LoginRequest.class
@@ -13,7 +14,9 @@ com\project\JewelryMS\model\ProductSellRequest.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\model\AccountResponseGG.class
+com\project\JewelryMS\model\Order\OrderResponse.class
 com\project\JewelryMS\service\ShiftService.class
+com\project\JewelryMS\model\Order\CreateOrderWrapper.class
 com\project\JewelryMS\config\SecurityConfig.class
 com\project\JewelryMS\model\CodeService.class
 com\project\JewelryMS\repository\CustomerRepository.class
@@ -26,6 +29,8 @@ com\project\JewelryMS\service\ProductSellService.class
 com\project\JewelryMS\repository\OrderDetailRepository.class
 com\project\JewelryMS\controller\AuthenticationAPI.class
 com\project\JewelryMS\service\StaffAccountService.class
+com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
+com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\model\CreatePromotionRequest.class
 com\project\JewelryMS\model\EmailDetail.class
@@ -41,6 +46,7 @@ com\project\JewelryMS\service\AuthenticationService.class
 com\project\JewelryMS\model\StaffAccountResponse.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\controller\PromotionController.class
+com\project\JewelryMS\model\Order\CreateOrderRequest.class
 com\project\JewelryMS\repository\AuthenticationRepository.class
 com\project\JewelryMS\service\EmailService.class
 com\project\JewelryMS\entity\PurchaseOrder.class
@@ -66,6 +72,7 @@ com\project\JewelryMS\service\ApiService.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\service\Order\OrderHandlerService.class
 com\project\JewelryMS\model\CreateShiftRequest.class
+com\project\JewelryMS\service\ImageService.class
 com\project\JewelryMS\config\FirebaseConfig.class
 com\project\JewelryMS\exception\APIhandleException.class
 com\project\JewelryMS\model\ResetPassRequest.class
