@@ -24,7 +24,7 @@ public class StaffAccountController {
 
     // Create a new staff account
     @PostMapping("staff")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccountResponse> createStaffAccount(@RequestBody CreateStaffAccountRequest createStaffAccountRequest) {
         StaffAccountResponse newStaffAccount = staffAccountService.createStaffAccount(createStaffAccountRequest);
         return ResponseEntity.ok(newStaffAccount);
@@ -32,7 +32,7 @@ public class StaffAccountController {
 
     // Read all staff accounts
     @GetMapping("staff")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<StaffAccountResponse>> readAllStaffAccounts() {
         List<StaffAccountResponse> staffAccounts = staffAccountService.readAllStaffAccounts();
         return ResponseEntity.ok(staffAccounts);
@@ -40,7 +40,7 @@ public class StaffAccountController {
 
     // Read a staff account by ID
     @GetMapping("staff/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccountResponse> getStaffAccountById(@PathVariable long id) {
         StaffAccountResponse staffAccount = staffAccountService.getStaffAccountById(id);
         if (staffAccount != null) {
@@ -52,7 +52,7 @@ public class StaffAccountController {
 
     // Update an existing staff account
     @PutMapping("staff/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccount> updateStaffAccount(@PathVariable long id, @RequestBody StaffAccountRequest staffAccountRequest) {
         staffAccountRequest.setStaffID(id); // Ensure the ID from the path is set in the request
         StaffAccount updatedStaffAccount = staffAccountService.updateStaffAccount(staffAccountRequest);
@@ -61,7 +61,7 @@ public class StaffAccountController {
 
     // Deactivate a staff account
     @DeleteMapping("staff/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<String> deactivateStaffAccount(@PathVariable long id) {// Ensure the ID from the path is set in the request
         staffAccountService.deactivateStaffAccount(id);
         return ResponseEntity.noContent().build();

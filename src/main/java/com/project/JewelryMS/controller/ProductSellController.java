@@ -21,38 +21,40 @@ public class ProductSellController {
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PostMapping("productsell")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductSellResponse> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
             ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
             return ResponseEntity.ok(createdProduct);
     }
 
     @GetMapping("productsell")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
         List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();
         System.out.println("Read Product Sell ");
         return ResponseEntity.ok(allProductSell);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("productsell/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ProductSellResponse> getProductSellById(@PathVariable long id) {
         ProductSellResponse response = productSellService.getProductSellById2(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("productsell/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ProductSellResponse> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
             ProductSellResponse updatedProduct = productSellService.updateProductSell(productSellRequest);
             return ResponseEntity.ok(updatedProduct);
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @DeleteMapping("productsell/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody int id){
 
