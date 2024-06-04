@@ -1,6 +1,7 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
+import com.project.JewelryMS.entity.RoleEnum;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
 import com.project.JewelryMS.model.Staff.DeleteStaffAccountRequest;
@@ -23,26 +24,25 @@ public class StaffAccountService {
     private AuthenticationRepository authenticationRepository;
 
     // Create
-    public StaffAccount createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
-//        if(createStaffAccountRequest.getAccount().getRole() != ROLE_STAFF) {
-            StaffAccount newStaffAccount = new StaffAccount();
-            newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
-            newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
-            newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
-            newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
-            // Directly use the Account from the request
-            Account account = createStaffAccountRequest.getAccount();
-            if (account != null) {
+    public StaffAccountResponse createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
+        Optional<Account> accountOptional = authenticationRepository.findById(createStaffAccountRequest.getAccount_id());
+        if(accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            if (account.getRole()== RoleEnum.ROLE_STAFF) {
+                StaffAccount newStaffAccount = new StaffAccount();
+                newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
+                newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
+                newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
+                newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
                 newStaffAccount.setAccount(account);
-                account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
-            } else {
-                throw new RuntimeException("Account information is missing in the request");
+                StaffAccount staffAccount = staffAccountRepository.save(newStaffAccount);
+                return getStaffAccountById(staffAccount.getStaffID());
+            }else{
+                throw new RuntimeException("Account not have Staff Role");
             }
-            return staffAccountRepository.save(newStaffAccount);
-//        }else{
-//            throw new RuntimeException("Account not have Staff Role");
-//        }
-
+        }else{
+            throw new RuntimeException("Account ID not find");
+        }
     }
 
     // Read all
@@ -66,13 +66,6 @@ public class StaffAccountService {
             existingStaffAccount.setSalary(staffAccountRequest.getSalary());
             existingStaffAccount.setShiftID(staffAccountRequest.getShiftID());
             existingStaffAccount.setStartDate(staffAccountRequest.getStartDate());
-            Account account = staffAccountRequest.getAccount();
-            if (account != null) {
-                existingStaffAccount.setAccount(account);
-                account.setStaffAccount(existingStaffAccount);
-            } else {
-                throw new RuntimeException("Account information is missing in the request");
-            }
             return staffAccountRepository.save(existingStaffAccount);
         } else {
             throw new RuntimeException("StaffAccount with ID " + staffAccountRequest.getStaffID() + " not found");
@@ -80,8 +73,8 @@ public class StaffAccountService {
     }
 
     // Method to "delete" a StaffAccount by updating the Account status
-    public void deactivateStaffAccount(DeleteStaffAccountRequest deleteStaffAccountRequest) {
-        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(deleteStaffAccountRequest.getStaffID());
+    public void deactivateStaffAccount(long id) {
+        Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(id);
         if (staffAccountOpt.isPresent()) {
             StaffAccount staffAccount = staffAccountOpt.get();
             Account account = staffAccount.getAccount();
@@ -89,10 +82,10 @@ public class StaffAccountService {
                 account.setStatus(0);
                 authenticationRepository.save(account);
             } else {
-                throw new RuntimeException("Account associated with StaffAccount ID " + deleteStaffAccountRequest.getStaffID() + " not found");
+                throw new RuntimeException("Account associated with StaffAccount ID " + id + " not found");
             }
         } else {
-            throw new RuntimeException("StaffAccount with ID " + deleteStaffAccountRequest.getStaffID()+ " not found");
+            throw new RuntimeException("StaffAccount with ID " + id + " not found");
         }
     }
 }
