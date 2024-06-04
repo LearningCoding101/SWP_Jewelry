@@ -1,6 +1,8 @@
 package com.project.JewelryMS.service;
 
+import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
+import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.repository.ProductBuyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,14 @@ public class ProductBuyService {
             throw new RuntimeException("ProductBuy not found with ID: " + buyID);
         }
     }
+
+//    public ProductBuyResponse CreateProductBuy(CreateProductBuyRequest createProductBuyRequest){
+//        Optional<>
+//    }
+
+
+
+
 
     public String DeleteProductBuy(Long id){
         Optional<ProductBuy> productBuyOptional = productBuyRepository.findById(id);

@@ -38,9 +38,11 @@ com\project\JewelryMS\model\Shift\ShiftRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
 com\project\JewelryMS\model\CreateCustomerRequest.class
+com\project\JewelryMS\model\GuaranteeRequest.class
 com\project\JewelryMS\controller\StaffAccountController.class
 com\project\JewelryMS\entity\Customer.class
 com\project\JewelryMS\service\ApiService.class
+com\project\JewelryMS\service\GuaranteeService.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\service\ImageService.class
 com\project\JewelryMS\config\FirebaseConfig.class
@@ -62,6 +64,7 @@ com\project\JewelryMS\config\VNPAYConfig.class
 com\project\JewelryMS\model\AccountIDRequest.class
 com\project\JewelryMS\model\Order\ProductResponse.class
 com\project\JewelryMS\model\Staff\StaffAccountRequest.class
+com\project\JewelryMS\entity\Guarantee.class
 com\project\JewelryMS\service\VNPAYservice.class
 com\project\JewelryMS\entity\ProductBuy.class
 com\project\JewelryMS\model\LoginGoogleRequest.class
@@ -79,6 +82,7 @@ com\project\JewelryMS\model\OrderDetail\CalculatePointsRequest.class
 com\project\JewelryMS\repository\OrderDetailRepository.class
 com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
+com\project\JewelryMS\controller\GuaranteeController.class
 com\project\JewelryMS\model\CreatePromotionRequest.class
 com\project\JewelryMS\model\EmailDetail.class
 com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
@@ -86,6 +90,7 @@ com\project\JewelryMS\controller\ProductBuyController.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class
+com\project\JewelryMS\repository\GuaranteeRepository.class
 com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\repository\OrderRepositiory.class
 com\project\JewelryMS\model\Manager\ManagerAccountResponse.class
@@ -97,5 +102,6 @@ com\project\JewelryMS\service\Order\OrderHandlerService.class
 com\project\JewelryMS\model\ResetPassRequest.class
 com\project\JewelryMS\model\CustomerRequest.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
+com\project\JewelryMS\model\CreateGuaranteeRequest.class
 com\project\JewelryMS\repository\ProductBuyRepository.class
 com\project\JewelryMS\service\JWTservice.class
