@@ -1,9 +1,7 @@
 package com.project.JewelryMS.service;
 
-import com.project.JewelryMS.entity.Customer;
 import com.project.JewelryMS.entity.Guarantee;
 import com.project.JewelryMS.model.*;
-import com.project.JewelryMS.repository.CustomerRepository;
 import com.project.JewelryMS.repository.GuaranteeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
