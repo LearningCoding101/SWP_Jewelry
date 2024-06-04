@@ -1,5 +1,7 @@
 package com.project.JewelryMS.model;
 
+import com.project.JewelryMS.entity.Category;
+import com.project.JewelryMS.entity.Promotion;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
 import lombok.Data;
@@ -8,7 +10,8 @@ import lombok.Data;
 public class ProductSellRequest {
     private long productID;
     private float carat;
-    private int categoryID;
+    Category category;
+    Promotion promotion;
     private int chi;
     private float cost;
     private String pDescription;
@@ -19,6 +22,5 @@ public class ProductSellRequest {
     private String pName;
     private String productCode;
     private int productCost;
-    private int promotionID;
     private boolean pStatus;
 }

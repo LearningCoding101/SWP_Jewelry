@@ -42,7 +42,12 @@ public class Filter extends OncePerRequestFilter {
             "/account/reset",
             "/Info/GoldPrice",
             "/vnpay/**",
-            "/code/**"
+            "/code/**",
+            "/category/**",
+            "/productsell/**",
+            "/account/loginGG",
+            "/api/order/**"
+
     );
 
     @Override

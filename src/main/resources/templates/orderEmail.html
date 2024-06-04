@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org ">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed;background-color:#f9f9f9" id="bodyTable">
     <tbody>
     <tr>
@@ -31,15 +31,12 @@
                                 <td style="background-color:#00d2f4;font-size:1px;line-height:3px" class="topBorder" height="3">&nbsp;</td>
                             </tr>
                             <tr>
-                                <td style="padding-top: 60px; padding-bottom: 20px;" align="center" valign="middle" class="emailLogo">
-
-                                </td>
+                                <div th:utext="${orderTable}"></div>
                             </tr>
                             <tr>
                                 <td style="padding-bottom: 20px;" align="center" valign="top" class="imgHero">
                                     <a href="#" style="text-decoration:none" target="_blank">
-                                        <img alt="" border="0" src="http://email.aumfusion.com/vespro/img/hero-img/blue/heroGradient/user-account.png" style="width:100%;max-width:600px;height:auto;display:block;color: #f9f9f9;" width="600">
-                                    </a>
+                                        <img src="cid:${cid}" height="0" width="0" />                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -52,7 +49,6 @@
                                     <h4 class="text" style="color:#999;font-family:Poppins,Helvetica,Arial,sans-serif;font-size:16px;font-weight:500;font-style:normal;letter-spacing:normal;line-height:24px;text-transform:none;text-align:center;padding:0;margin:0"><span th:utext="${content}" /></h4>
                                 </td>
                             </tr>
-
                             <tr>
                                 <td style="padding-left:20px;padding-right:20px" align="center" valign="top" class="containtTable ui-sortable">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" class="tableDescription" style="">

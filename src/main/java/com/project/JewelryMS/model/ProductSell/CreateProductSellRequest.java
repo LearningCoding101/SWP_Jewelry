@@ -1,11 +1,14 @@
-package com.project.JewelryMS.model;
+package com.project.JewelryMS.model.ProductSell;
 
+import com.project.JewelryMS.entity.Category;
+import com.project.JewelryMS.entity.Promotion;
 import lombok.Data;
 
 @Data
 public class CreateProductSellRequest {
     private float carat;
-    private int categoryID;
+    Category category;
+    Promotion promotion;
     private int chi;
     private float cost;
     private String pDescription;
@@ -16,6 +19,5 @@ public class CreateProductSellRequest {
     private String pName;
     private String productCode;
     private int productCost;
-    private int promotionID;
     private boolean pStatus;
 }
