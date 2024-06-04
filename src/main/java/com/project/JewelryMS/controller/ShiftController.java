@@ -1,7 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Shift;
-import com.project.JewelryMS.model.CreateShiftRequest;
+import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.service.ShiftService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;

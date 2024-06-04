@@ -23,6 +23,7 @@ public class StaffAccount {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
 //    @JsonBackReference
+    @JsonIgnoreProperties
     private Account account;
 
     @Column(name = "FK_shiftID")

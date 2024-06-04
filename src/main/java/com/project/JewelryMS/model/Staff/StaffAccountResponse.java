@@ -8,10 +8,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class StaffAccountResponse {
     private int staffID;
 
