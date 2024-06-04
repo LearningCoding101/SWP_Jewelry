@@ -2,9 +2,10 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.StaffAccount;
-import com.project.JewelryMS.model.CreateStaffAccountRequest;
-import com.project.JewelryMS.model.DeleteStaffAccountRequest;
-import com.project.JewelryMS.model.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.DeleteStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,30 +24,35 @@ public class StaffAccountService {
 
     // Create
     public StaffAccount createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
-        StaffAccount newStaffAccount = new StaffAccount();
-        newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
-        newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
-        newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
-        newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
-        // Directly use the Account from the request
-        Account account = createStaffAccountRequest.getAccount();
-        if (account != null) {
-            newStaffAccount.setAccount(account);
-            account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
-        } else {
-            throw new RuntimeException("Account information is missing in the request");
-        }
-        return staffAccountRepository.save(newStaffAccount);
+//        if(createStaffAccountRequest.getAccount().getRole() != ROLE_STAFF) {
+            StaffAccount newStaffAccount = new StaffAccount();
+            newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
+            newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
+            newStaffAccount.setShiftID(createStaffAccountRequest.getShiftID());
+            newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
+            // Directly use the Account from the request
+            Account account = createStaffAccountRequest.getAccount();
+            if (account != null) {
+                newStaffAccount.setAccount(account);
+                account.setStaffAccount(newStaffAccount);  // Set the bidirectional relationship
+            } else {
+                throw new RuntimeException("Account information is missing in the request");
+            }
+            return staffAccountRepository.save(newStaffAccount);
+//        }else{
+//            throw new RuntimeException("Account not have Staff Role");
+//        }
+
     }
 
     // Read all
-    public List<StaffAccount> readAllStaffAccounts() {
-        return staffAccountRepository.findAll();
+    public List<StaffAccountResponse> readAllStaffAccounts() {
+        return staffAccountRepository.findAllStaffAccountsByRoleStaff();
     }
 
     // Read by ID
-    public StaffAccount getStaffAccountById(long id) {
-        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(id);
+    public StaffAccountResponse getStaffAccountById(long id) {
+        Optional<StaffAccountResponse> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
         return staffAccountOptional.orElse(null);
     }
 

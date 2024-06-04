@@ -1,10 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Account;
-import com.project.JewelryMS.model.AccountResponse;
-import com.project.JewelryMS.model.LoginRequest;
-import com.project.JewelryMS.model.RegisterRequest;
-import com.project.JewelryMS.model.ResetPassRequest;
+import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,6 +29,13 @@ public class AuthenticationAPI {
 
         return ResponseEntity.ok(account);
     }
+    @GetMapping("getbyid")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity getById(@RequestParam AccountIDRequest accountIDRequest){
+        Account account = authenticationService.getAccountById(accountIDRequest.getId());
+
+        return ResponseEntity.ok(account);
+    }
     @GetMapping("testGetAll")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Account>> getAll(){
@@ -52,9 +56,14 @@ public class AuthenticationAPI {
 
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
         System.out.println("Reached");
-        Account account = authenticationService.register(registerRequest);
-
-        return ResponseEntity.ok(account);
+        Account account = null;
+        if(authenticationService.handleRegisterCheckEmail(registerRequest)){
+            account = authenticationService.register(registerRequest);
+        }
+        if(account == null){
+            return ResponseEntity.badRequest().body("Invalid Email or Information");
+        }
+        return ResponseEntity.ok("Account created");
     }
 
     //login
@@ -78,5 +87,12 @@ public class AuthenticationAPI {
     public ResponseEntity<List<Account>> getAllManagerAccounts() {
         List<Account> managerAccounts = authenticationService.getAllManagerAccount();
         return ResponseEntity.ok(managerAccounts);
+    }
+
+    //Login GG
+    @PostMapping("/loginGG")
+    public ResponseEntity<AccountResponseGG>  loginGG(@RequestBody LoginGoogleRequest loginGoogleRequest){
+        AccountResponseGG accountResponseGG = authenticationService.loginGoogle(loginGoogleRequest);
+        return ResponseEntity.ok(accountResponseGG);
     }
 }

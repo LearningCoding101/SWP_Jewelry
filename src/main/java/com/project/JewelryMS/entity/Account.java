@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class Account implements UserDetails {
     @Column(name = "aUsername", unique = true)
     String aUsername;
     @Column(name = "aPassword")
-            @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String aPassword;
     @Column(name = "accountName")
     String accountName;
@@ -40,7 +41,7 @@ public class Account implements UserDetails {
 
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnoreProperties("account")
     private StaffAccount staffAccount;
 
     @Override

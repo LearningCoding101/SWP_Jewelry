@@ -1,6 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.QRService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

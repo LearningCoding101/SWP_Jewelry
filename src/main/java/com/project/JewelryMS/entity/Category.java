@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,8 +21,11 @@ public class Category {
     private String name;
     @Column(name="description")
     private String description;
-    @OneToMany(mappedBy = "category")
-    @JsonManagedReference
-    private List<ProductSell> productSell;
+
+
+//    @OneToMany(mappedBy = "category")
+////    @JsonManagedReference
+//    @JsonIgnoreProperties("category")
+//    private List<ProductSell> productSell;
 
 }

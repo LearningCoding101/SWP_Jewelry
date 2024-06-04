@@ -2,11 +2,16 @@ package com.project.JewelryMS.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "category.productSell", "promotion.productSell"})
 public class ProductSell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +21,20 @@ public class ProductSell {
     @Column(name = "carat")
     private float carat;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ProductSell_Promotion",
+            joinColumns = @JoinColumn(name = "productsellID", referencedColumnName = "PK_productID"),
+            inverseJoinColumns = @JoinColumn(name = "promotionID", referencedColumnName = "PK_promotionID")
+    )
+    @JsonIgnoreProperties("productSell")
+    private List<Promotion> promotion ;
 
     @Column(name = "chi")
     private int chi;
@@ -52,9 +67,12 @@ public class ProductSell {
     @Column(name = "productCost")
     private int productCost;
 
-    @Column(name = "FK_promotionID")
-    private int promotionID;
-
     @Column(name = "pStatus")
     private boolean pStatus;
+
+    @OneToMany(mappedBy = "productSell")
+    @JsonIgnoreProperties
+    Set<OrderDetail> orderDetails;
+
+
 }

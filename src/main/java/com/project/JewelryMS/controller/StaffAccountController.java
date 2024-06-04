@@ -1,11 +1,11 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.StaffAccount;
-import com.project.JewelryMS.model.CreateStaffAccountRequest;
-import com.project.JewelryMS.model.DeleteStaffAccountRequest;
-import com.project.JewelryMS.model.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.DeleteStaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import com.project.JewelryMS.service.StaffAccountService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("staff")
-@SecurityRequirement(name = "api")
+//@SecurityRequirement(name = "api")
 public class StaffAccountController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class StaffAccountController {
 
     // Create a new StaffAccount
     @PostMapping("create")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StaffAccount> createStaffAccount(@RequestBody CreateStaffAccountRequest createStaffAccountRequest) {
         StaffAccount createdStaff = staffAccountService.createStaffAccount(createStaffAccountRequest);
         return ResponseEntity.ok(createdStaff);
@@ -32,13 +32,14 @@ public class StaffAccountController {
     // Read all StaffAccounts
     @GetMapping("read")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<StaffAccount>> readAllStaffAccounts() {
+    public ResponseEntity<List<StaffAccountResponse>> readAllStaffAccounts() {
+        System.out.println("Read Staff");
         return ResponseEntity.ok(staffAccountService.readAllStaffAccounts());
     }
 
     // Update a StaffAccount
     @PostMapping("update")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StaffAccount> updateStaffAccount(@RequestBody StaffAccountRequest staffAccountRequest) {
         try {
             StaffAccount updatedStaff = staffAccountService.updateStaffAccount(staffAccountRequest);
@@ -51,8 +52,8 @@ public class StaffAccountController {
     // Get a specific StaffAccount by ID
     @GetMapping("readbyid")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<StaffAccount> getStaffAccountById(@RequestParam("id") int id) {
-        StaffAccount staffAccount = staffAccountService.getStaffAccountById(id);
+    public ResponseEntity<StaffAccountResponse> getStaffAccountById(@RequestParam("id") int id) {
+        StaffAccountResponse staffAccount = staffAccountService.getStaffAccountById(id);
         if (staffAccount != null) {
             return ResponseEntity.ok(staffAccount);
         } else {
@@ -61,7 +62,7 @@ public class StaffAccountController {
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deactivateStaffAccount(@RequestBody DeleteStaffAccountRequest deleteStaffAccountRequest) {
         try {
             staffAccountService.deactivateStaffAccount(deleteStaffAccountRequest);
