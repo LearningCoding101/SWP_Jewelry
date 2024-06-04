@@ -66,7 +66,7 @@ public class CustomerController {
 
 
     //Delete section
-    @PostMapping("/delete-status")
+    @PatchMapping("/delete-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> deleteCustomer(@RequestBody long id){
         customerService.deleteCustomerById(id);
@@ -75,14 +75,14 @@ public class CustomerController {
 
 
     //Update section
-    @PostMapping("/update-customer-details")
+    @PutMapping("/update-customer-details")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerRequest customerRequest){
         customerService.updateCustomerDetails(customerRequest);
         return ResponseEntity.ok("Customer Details updated successfully");
     }
 
-    @PostMapping("/update-customer-points")
+    @PatchMapping("/update-customer-points")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> updateCustomerPoints(@RequestBody ViewCustomerPointRequest viewPointsRequest){
         customerService.updateCustomerPoints(viewPointsRequest);

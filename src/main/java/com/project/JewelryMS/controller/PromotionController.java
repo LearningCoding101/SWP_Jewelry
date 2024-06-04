@@ -72,7 +72,7 @@ public class PromotionController {
     }
 
     //Delete section
-    @PostMapping("/delete-status")
+    @PatchMapping("/delete-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> deletePromotion(@RequestBody long id){
         promotionService.deletePromotionById(id);
@@ -80,7 +80,7 @@ public class PromotionController {
     }
 
     //Update section
-    @PostMapping("/update-promotion-details")
+    @PutMapping("/update-promotion-details")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<String> updatePromotionDetails(@RequestBody PromotionRequest promotionRequest){
         promotionService.updatePromotionDetails(promotionRequest);
