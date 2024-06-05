@@ -1,7 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Shift;
-import com.project.JewelryMS.model.CreateShiftRequest;
+import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.service.ShiftService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,21 @@ public class ShiftController {
 
     // Create Shift
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<Shift> createShift(@RequestBody CreateShiftRequest createShiftRequest) {
         return ResponseEntity.ok(shiftService.createShift(createShiftRequest));
     }
 
     // Read All Shifts
     @GetMapping("/read")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<Shift>> getAllShifts() {
         return ResponseEntity.ok(shiftService.readAllShifts());
     }
 
     // Read Shift by ID
     @GetMapping("readbyid")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<Shift> getShiftById(@RequestParam("id") int id) {
         return ResponseEntity.ok(shiftService.getShiftById(id));
     }

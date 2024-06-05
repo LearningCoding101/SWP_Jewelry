@@ -11,12 +11,9 @@ public class StaffAccountRequest {
 
     private int shiftID;
 
-
     private String phoneNumber;
-
 
     private float salary;
 
     private Date startDate;
-    private Account account;
 }

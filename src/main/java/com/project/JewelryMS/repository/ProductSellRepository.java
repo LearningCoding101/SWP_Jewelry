@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductSellRepository extends JpaRepository<ProductSell, Long> {
@@ -19,6 +20,12 @@ public interface ProductSellRepository extends JpaRepository<ProductSell, Long> 
 
     @Query("SELECT p.PK_promotionID FROM Promotion p JOIN p.productSell ps WHERE ps.productID = :productSellId")
     List<Long> findPromotionIdsByProductSellId(@Param("productSellId") long productSellId);
+
+    @Query("SELECT ps FROM ProductSell ps " +
+            "LEFT JOIN FETCH ps.category c " +
+            "LEFT JOIN FETCH ps.promotion p " +
+            "WHERE ps.productID = :productSellId")
+    Optional<ProductSell> findByIdWithCategoryAndPromotion(@Param("productSellId") long productSellId);
 
 
 }

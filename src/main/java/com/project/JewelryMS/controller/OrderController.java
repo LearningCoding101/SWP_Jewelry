@@ -1,12 +1,17 @@
 package com.project.JewelryMS.controller;
 
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.CreateOrderDetailRequest;
 import com.project.JewelryMS.model.Order.CreateOrderRequest;
 import com.project.JewelryMS.model.Order.CreateOrderWrapper;
 import com.project.JewelryMS.model.Order.OrderResponse;
+import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
+import com.project.JewelryMS.service.CustomerService;
 import com.project.JewelryMS.service.EmailService;
+import com.project.JewelryMS.service.Order.OrderDetailService;
 import com.project.JewelryMS.service.Order.OrderHandlerService;
 import com.project.JewelryMS.service.QRService;
 import org.apache.coyote.Response;
@@ -30,6 +35,11 @@ public class OrderController {
     EmailService emailService;
     @Autowired
     QRService qrService;
+    @Autowired
+    OrderDetailService orderDetailService;
+    @Autowired
+    CustomerService customerService;
+
     @PostMapping("initialize")
     public ResponseEntity saleCreateOrder(@RequestBody CreateOrderWrapper order){
         orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
@@ -84,6 +94,17 @@ public class OrderController {
 
     }
 
+    @PostMapping("calculate-total")
+    public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
+        List<OrderDetail> orderDetails = orderDetailRequest.getOrderDetails();
+        Float totalAmount = orderDetailService.calculateTotalAmount(orderDetails);
+        return ResponseEntity.ok(totalAmount);
+    }
 
+
+    @PostMapping("calculate-points")
+    public void calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
+        customerService.calculateAndUpdatePoints(request);
+    }
 
 }

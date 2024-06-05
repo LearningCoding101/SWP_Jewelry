@@ -8,6 +8,7 @@ import com.project.JewelryMS.model.ViewCustomerPointRequest;
 import com.project.JewelryMS.service.CustomerService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,12 @@ public class CustomerController {
     public ResponseEntity<List<Customer>>readAllCustomer(){
         List<Customer> customerList = customerService.readAllCustomer();
         return ResponseEntity.ok(customerList);
+    }
+
+    @GetMapping("/rank/{id}")
+    public ResponseEntity<String> getCustomerRank(@PathVariable("CustomerID") Long id) {
+        String rank = customerService.getCustomerRank(id);
+        return ResponseEntity.ok(rank);
     }
 
     @GetMapping("/list-by-id")
