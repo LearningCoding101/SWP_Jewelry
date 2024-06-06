@@ -3,10 +3,7 @@ package com.project.JewelryMS.controller;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.model.EmailDetail;
-import com.project.JewelryMS.model.Order.CreateOrderDetailRequest;
-import com.project.JewelryMS.model.Order.CreateOrderRequest;
-import com.project.JewelryMS.model.Order.CreateOrderWrapper;
-import com.project.JewelryMS.model.Order.OrderResponse;
+import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
 import com.project.JewelryMS.service.CustomerService;
@@ -58,7 +55,7 @@ public class OrderController {
 
         // Pass email details and QR code image data to email service
         EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient("hahoang33322@gmail.com");
+        emailDetail.setRecipient(order.getEmail());
         emailDetail.setSubject("Your Order QR Code");
         emailDetail.setMsgBody("Please find your order QR code attached.");
 
@@ -75,12 +72,13 @@ public class OrderController {
         return ResponseEntity.ok("");
     }
 
-    @GetMapping("get-order")
-    public ResponseEntity cashierGetPendingOrder(){
-
-
-        return ResponseEntity.ok("");
+    @GetMapping("get-order/{id}")
+    public ResponseEntity<List<ProductResponse>> cashierGetPendingOrder(@PathVariable(name = "id") Long id) {
+        List<ProductResponse> productResponses = orderHandlerService.getProductByOrderId(id);
+        System.out.println(id);
+        return ResponseEntity.ok(productResponses);
     }
+
     @GetMapping("get-all-order")
     public ResponseEntity<List<OrderResponse>> getAllOrderTest(){
         System.out.println("reached getAllOrder");

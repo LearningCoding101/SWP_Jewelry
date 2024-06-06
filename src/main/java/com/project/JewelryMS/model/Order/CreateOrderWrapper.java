@@ -8,4 +8,5 @@ import java.util.List;
 public class CreateOrderWrapper {
     private CreateOrderRequest orderRequest;
     private List<CreateOrderDetailRequest> detailList;
+    private String email;
 }
