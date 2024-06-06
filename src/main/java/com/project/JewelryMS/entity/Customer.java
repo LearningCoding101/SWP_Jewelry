@@ -14,6 +14,7 @@ import lombok.Setter;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PK_CustomerID")
     long PK_CustomerID;
 
     String email;
