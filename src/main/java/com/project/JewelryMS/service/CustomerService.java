@@ -105,7 +105,7 @@ public class CustomerService {
     }
 
     public void updateCustomerDetails(CustomerRequest customerRequest) {
-        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
+        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getPK_CustomerID());
         if(customerUpdate.isPresent()){
 
             Customer customer = customerUpdate.get();
@@ -126,7 +126,7 @@ public class CustomerService {
 
 
     public void updateCustomerPoints(ViewCustomerPointRequest customerRequest) {
-        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
+        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getPK_CustomerID());
         customerUpdate.ifPresent(customer -> {
             customer.setPointAmount(customerRequest.getPointAmount());
             customerRepository.save(customer);

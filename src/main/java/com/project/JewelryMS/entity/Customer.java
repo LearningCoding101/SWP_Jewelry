@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    long PK_CustomerID;
 
     String email;
     String phoneNumber;
