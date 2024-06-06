@@ -15,6 +15,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     String email;
     String phoneNumber;
     int pointAmount;

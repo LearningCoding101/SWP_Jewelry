@@ -1,7 +1,9 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Promotion;
-import com.project.JewelryMS.model.*;
+import com.project.JewelryMS.model.Promotion.CreatePromotionRequest;
+import com.project.JewelryMS.model.Promotion.PromotionRequest;
+import com.project.JewelryMS.model.Promotion.PromotionResponse;
 import com.project.JewelryMS.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
