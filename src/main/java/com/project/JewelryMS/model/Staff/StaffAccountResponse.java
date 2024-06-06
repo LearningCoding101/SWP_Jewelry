@@ -1,6 +1,7 @@
 package com.project.JewelryMS.model.Staff;
 
 import com.project.JewelryMS.entity.Account;
+import com.project.JewelryMS.entity.RoleEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -11,13 +12,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffAccountResponse {
     private int staffID;
-
-    private int shiftID;
 
     private String phoneNumber;
 
@@ -31,5 +32,19 @@ public class StaffAccountResponse {
 
     private String accountName;
 
-    private int status;
+    private RoleEnum role;
+
+    private int shiftID;
+
+    private Timestamp startTime;
+
+    private int register;
+
+    private Timestamp endTime;
+
+    private String shiftType;
+
+    private String shiftstatus;
+
+    private String workArea;
 }

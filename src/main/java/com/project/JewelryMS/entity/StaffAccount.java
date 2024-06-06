@@ -13,21 +13,23 @@ import java.sql.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "Staff")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "account.staffAccount"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "account.staffAccount", })
 public class StaffAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PK_staffID")
     private int staffID;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
 //    @JsonBackReference
     @JsonIgnoreProperties
     private Account account;
 
-    @Column(name = "FK_shiftID")
-    private int shiftID;
+    @ManyToOne
+    @JoinColumn(name = "FK_shiftID", referencedColumnName = "shiftID")
+    @JsonIgnoreProperties
+    private Shift shift;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;

@@ -4,6 +4,7 @@ package com.project.JewelryMS.controller;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
+import com.project.JewelryMS.service.ImageService;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,13 @@ public class ProductSellController {
     ProductSellService productSellService;
     // Create a new ProductSell
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    @PostMapping("productsell")
+    @PostMapping("productsell/initialize")
     public ResponseEntity<ProductSellResponse> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
             ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
             return ResponseEntity.ok(createdProduct);
     }
 
-    @GetMapping("productsell")
+    @GetMapping("productsell/read")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
         List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();
@@ -37,17 +38,17 @@ public class ProductSellController {
     }
 
 
-    @GetMapping("productsell/{id}")
+    @GetMapping("productsell/read/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ProductSellResponse> getProductSellById(@PathVariable long id) {
         ProductSellResponse response = productSellService.getProductSellById2(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("productsell/{id}")
+    @PutMapping("productsell/update/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<ProductSellResponse> updateProductSell( @RequestBody ProductSellRequest productSellRequest) {
-            ProductSellResponse updatedProduct = productSellService.updateProductSell(productSellRequest);
+    public ResponseEntity<ProductSellResponse> updateProductSell( @PathVariable long id, @RequestBody ProductSellRequest productSellRequest) {
+            ProductSellResponse updatedProduct = productSellService.updateProductSell(id,productSellRequest);
             return ResponseEntity.ok(updatedProduct);
     }
 
@@ -56,9 +57,18 @@ public class ProductSellController {
     @DeleteMapping("productsell/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteCategory(@RequestBody int id){
+    public ResponseEntity<String> deleteCategory(@PathVariable long id){
 
         productSellService.DeleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
+    }
+
+    @Autowired
+    private ImageService imageService;
+
+    @PostMapping("/update-image/{productId}")
+    public String updateProductImage(@PathVariable Long productId, @RequestParam String imagePath) {
+        imageService.updateProductImage(productId, imagePath);
+        return "Product image updated successfully";
     }
 }
