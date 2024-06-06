@@ -48,7 +48,7 @@ public class OrderController {
         // Generate QR code value
         Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
         String value = orderID.toString();
-
+        System.out.println(order.toString());
         // Create QR code image
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(qrService.createQR(value));
 
