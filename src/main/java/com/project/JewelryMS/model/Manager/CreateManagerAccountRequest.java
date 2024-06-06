@@ -17,6 +17,4 @@ public class CreateManagerAccountRequest {
     String aUsername;
     String aPassword;
     String accountName;
-    Integer status;
-    RoleEnum role;
 }
