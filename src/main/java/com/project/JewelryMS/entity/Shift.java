@@ -1,6 +1,5 @@
 package com.project.JewelryMS.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Getter
 @Setter
@@ -39,7 +37,4 @@ public class Shift {
 
     @Column(name = "workArea")
     private String workArea;
-
-    @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
-    private List<StaffAccount> staffAccounts;
 }
