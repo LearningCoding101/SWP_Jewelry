@@ -1,12 +1,8 @@
 package com.project.JewelryMS.model.ProductBuy;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
 public class CreateProductBuyRequest {
-    private Long OrderDetailID;
+    private Long orderID;
+    private Long productSellID;
     private Long categoryID;
     private Float appraisalValue;
     private String condition;

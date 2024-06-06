@@ -153,9 +153,8 @@ public class ProductSellService {
         return response;
     }
 
-    public ProductSellResponse updateProductSell(long id, ProductSellRequest productSellRequest) {
+    public ProductSellResponse updateProductSell(ProductSellRequest productSellRequest) {
         // Fetch the existing ProductSell entity
-        productSellRequest.setProductID(id);
         ProductSell existingProductSell = productSellRepository.findById(productSellRequest.getProductID())
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
@@ -200,7 +199,6 @@ public class ProductSellService {
         if(productSellOptional.isPresent()){
             ProductSell productSell = productSellOptional.get();
             productSell.setPStatus(false);
-            productSellRepository.save(productSell);
         }else {
             throw new RuntimeException("Product Sell with ID " + id + " not found");
         }
