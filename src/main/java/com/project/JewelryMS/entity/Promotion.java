@@ -21,7 +21,6 @@ public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long PK_promotionID;
-
     String code;
     String description;
     Date startDate;
