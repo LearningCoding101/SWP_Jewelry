@@ -3,10 +3,10 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Customer;
 import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.model.CreateCustomerRequest;
-import com.project.JewelryMS.model.CustomerRequest;
+import com.project.JewelryMS.model.Customer.CreateCustomerRequest;
+import com.project.JewelryMS.model.Customer.CustomerRequest;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
-import com.project.JewelryMS.model.ViewCustomerPointRequest;
+import com.project.JewelryMS.model.Customer.ViewCustomerPointRequest;
 import com.project.JewelryMS.repository.CustomerRepository;
 import com.project.JewelryMS.repository.OrderDetailRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
@@ -105,7 +105,7 @@ public class CustomerService {
     }
 
     public void updateCustomerDetails(CustomerRequest customerRequest) {
-        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
+        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getPK_CustomerID());
         if(customerUpdate.isPresent()){
 
             Customer customer = customerUpdate.get();
@@ -126,7 +126,7 @@ public class CustomerService {
 
 
     public void updateCustomerPoints(ViewCustomerPointRequest customerRequest) {
-        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getId());
+        Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getPK_CustomerID());
         customerUpdate.ifPresent(customer -> {
             customer.setPointAmount(customerRequest.getPointAmount());
             customerRepository.save(customer);

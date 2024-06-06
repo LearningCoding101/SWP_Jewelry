@@ -1,5 +1,6 @@
 package com.project.JewelryMS.service;
 
+import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.Order.CreateOrderRequest;
 import com.project.JewelryMS.model.Order.CreateOrderWrapper;
@@ -50,16 +51,21 @@ public class HtmlFormatterService {
                 "<tbody>";
 
         //Content
+        String categoryName = "";
         for(ProductResponse item : list){
+            String categoryIfNull = "";
+            Category category = categoryService.readCategoryById(item.getCategory_id());
+            if (category != null) {
+                categoryName = category.getName();
+            }
             tableStart += CreateTableRowOrder(
                     item.getName(),
                     String.valueOf(item.getCost()),
                     String.valueOf(item.getChi()),
                     String.valueOf(item.getCarat()),
                     item.getManufacturer(),
-                    categoryService.readCategoryById(item.getCategory_id()).getName(),
+                    categoryName, // categoryName will be empty string if category is null
                     String.valueOf(item.getQuantity())
-
             );
         }
 
