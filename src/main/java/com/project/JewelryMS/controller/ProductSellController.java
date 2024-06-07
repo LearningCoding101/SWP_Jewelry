@@ -61,4 +61,5 @@ public class ProductSellController {
         productSellService.DeleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
+
 }
