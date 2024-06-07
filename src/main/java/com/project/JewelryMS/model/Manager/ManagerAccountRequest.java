@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ManagerAccountRequest {
+    long user_ID;
     String email;
     String aUsername;
     String aPassword;
     String accountName;
+    Integer status;
     RoleEnum role;
 }

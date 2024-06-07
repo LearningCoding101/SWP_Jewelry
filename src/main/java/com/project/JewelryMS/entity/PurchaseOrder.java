@@ -18,7 +18,7 @@ public class PurchaseOrder implements Serializable {
             @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long PK_OrderID;
 
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderDetail> orderDetails = new HashSet<>();
     String paymentType;
     Float totalAmount;

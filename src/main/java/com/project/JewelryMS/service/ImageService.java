@@ -1,23 +1,16 @@
 package com.project.JewelryMS.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Base64;
 
 @Service
 public class ImageService {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     public String imgToBase64String(final RenderedImage img, final String formatName)
     {
         final ByteArrayOutputStream os = new ByteArrayOutputStream();

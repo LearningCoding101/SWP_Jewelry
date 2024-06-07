@@ -28,5 +28,6 @@ public class ManagerAccountResponse {
 
     RoleEnum role;
 
+    int status;
 }
 

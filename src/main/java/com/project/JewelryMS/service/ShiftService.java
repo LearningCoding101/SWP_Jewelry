@@ -33,7 +33,7 @@ public class ShiftService {
     }
 
     // Read Shift by ID
-    public Shift getShiftById(Integer id) {
+    public Shift getShiftById(long id) {
         Optional<Shift> shiftOptional = shiftRepository.findById(id);
         return shiftOptional.orElse(null);
     }
