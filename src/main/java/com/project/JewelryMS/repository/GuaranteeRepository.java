@@ -14,32 +14,33 @@ import java.util.Optional;
 public interface GuaranteeRepository extends JpaRepository<Guarantee, Long> {
 
     @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
             "FROM Guarantee g WHERE g.PK_guaranteeID = :PK_guaranteeID")
     Optional<GuaranteeResponse> findByGuaranteeId(@Param("PK_guaranteeID") long PK_guaranteeID);
 
     @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
-            "FROM Guarantee g WHERE g.policyType = :policyType")
-    List<GuaranteeResponse> findByStatus(@Param("policyType") String policyType);
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
+            "FROM Guarantee g WHERE g.status = :status")
+    List<GuaranteeResponse> findByStatus(@Param("status") boolean status);
 
     @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
-            "FROM Guarantee g WHERE g.FK_productID = :FK_productID")
-    Optional<GuaranteeResponse> findByProductId(@Param("FK_productID") long FK_productID);
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
+            "FROM Guarantee g WHERE g.productSell.productID = :productID")
+    Optional<GuaranteeResponse> findByProductId(@Param("productID") long productID);
 
     @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
-            "FROM Guarantee g")
-    List<GuaranteeResponse> listAllGuarantees();
-
-    @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
-            "FROM Guarantee g WHERE g.policyType = :policyType")
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
+            "FROM Guarantee g WHERE g.policyType LIKE %:policyType%")
     List<GuaranteeResponse> listAllGuaranteesByPolicyType(@Param("policyType") String policyType);
 
     @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
-            "g.PK_guaranteeID, g.productSell.FK_productID, g.policyType, g.coverage) " +
-            "FROM Guarantee g WHERE g.coverage = :coverage")
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
+            "FROM Guarantee g WHERE g.coverage LIKE %:coverage%")
     List<GuaranteeResponse> listAllGuaranteesByCoverage(@Param("coverage") String coverage);
+
+    @Query("SELECT new com.project.JewelryMS.model.Guarantee.GuaranteeResponse(" +
+            "g.PK_guaranteeID, g.productSell.productID, g.policyType, g.coverage, g.status) " +
+            "FROM Guarantee g")
+    List<GuaranteeResponse> listAllGuarantees();
 }
+

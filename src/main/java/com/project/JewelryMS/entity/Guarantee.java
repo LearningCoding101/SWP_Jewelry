@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Guarantee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long PK_guaranteeID;
+    private long PK_guaranteeID;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_productID", referencedColumnName = "PK_productID")
@@ -23,9 +23,9 @@ public class Guarantee {
     private ProductSell productSell;
 
     //For years, or months
-    String policyType;
+    private String policyType;
 
     //For what product
-    String coverage;
-    boolean status = true;
+    private String coverage;
+    private boolean status = true;
 }
