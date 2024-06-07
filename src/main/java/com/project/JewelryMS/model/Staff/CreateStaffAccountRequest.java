@@ -1,6 +1,5 @@
 package com.project.JewelryMS.model.Staff;
 
-import com.project.JewelryMS.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

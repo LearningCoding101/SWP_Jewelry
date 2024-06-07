@@ -1,8 +1,6 @@
 package com.project.JewelryMS.service;
 
-import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.Performance;
-import com.project.JewelryMS.entity.RoleEnum;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.Performance.CreatePerformanceRequest;
 import com.project.JewelryMS.model.Performance.DeletePerformanceRequest;

@@ -28,7 +28,7 @@ public class ManagerAccountController {
     // Get a manager account by ID
     @GetMapping("manager/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<ManagerAccountResponse> getManagerAccountById(@PathVariable int id) {
+    public ResponseEntity<ManagerAccountResponse> getManagerAccountById(@PathVariable Integer id) {
         ManagerAccountResponse managerAccount = managerAccountService.getManagerAccountById(id);
         return ResponseEntity.ok(managerAccount);
     }
@@ -44,18 +44,16 @@ public class ManagerAccountController {
     // Update an existing manager account
     @PutMapping("manager/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<Account> updateManagerAccount(@PathVariable int id, @RequestBody ManagerAccountRequest managerAccountRequest) {
-        managerAccountRequest.setUser_ID(id); // Ensure the ID from path is set in the request
-        Account updatedManagerAccount = managerAccountService.updateManagerAccount(managerAccountRequest);
+    public ResponseEntity<ManagerAccountResponse> updateManagerAccount(@PathVariable Integer id, @RequestBody ManagerAccountRequest managerAccountRequest) {
+        ManagerAccountResponse updatedManagerAccount = managerAccountService.updateManagerAccount(id,managerAccountRequest);
         return ResponseEntity.ok(updatedManagerAccount);
     }
 
     // Deactivate a manager account
     @DeleteMapping("manager/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deactivateManagerAccount(@PathVariable long id) {
-        managerAccountService.deactivateManagerAccount(id);
-        return ResponseEntity.ok("Delete Successfully");
+    public ResponseEntity<String> deactivateManagerAccount(@PathVariable Integer id) {
+        return ResponseEntity.ok(managerAccountService.deactivateManagerAccount(id));
     }
 
 }

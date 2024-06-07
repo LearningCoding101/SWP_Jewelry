@@ -1,8 +1,6 @@
 package com.project.JewelryMS.service;
 
-import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.repository.ProductBuyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
