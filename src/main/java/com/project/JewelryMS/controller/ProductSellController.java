@@ -63,12 +63,4 @@ public class ProductSellController {
         return ResponseEntity.ok("Product deleted successfully");
     }
 
-    @Autowired
-    private ImageService imageService;
-
-    @PostMapping("/update-image/{productId}")
-    public String updateProductImage(@PathVariable Long productId, @RequestParam String imagePath) {
-        imageService.updateProductImage(productId, imagePath);
-        return "Product image updated successfully";
-    }
 }
