@@ -1,6 +1,5 @@
 package com.project.JewelryMS.model.Performance;
 
-import com.project.JewelryMS.entity.StaffAccount;
 import lombok.Data;
 
 import java.util.Date;

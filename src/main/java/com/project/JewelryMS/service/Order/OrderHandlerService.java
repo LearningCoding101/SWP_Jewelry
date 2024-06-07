@@ -10,7 +10,6 @@ import com.project.JewelryMS.model.Order.ProductResponse;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

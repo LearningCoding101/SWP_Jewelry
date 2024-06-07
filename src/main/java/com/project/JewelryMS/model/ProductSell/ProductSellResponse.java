@@ -15,7 +15,6 @@ public class ProductSellResponse {
     private float carat;
     private int chi;
     private float cost;
-
     private String Description;
     private String gemstoneType;
     private byte[] image;

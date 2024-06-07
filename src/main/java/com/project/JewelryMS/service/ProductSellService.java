@@ -153,7 +153,7 @@ public class ProductSellService {
         return response;
     }
 
-    public ProductSellResponse updateProductSell(ProductSellRequest productSellRequest) {
+    public ProductSellResponse updateProductSell(Long id, ProductSellRequest productSellRequest) {
         // Fetch the existing ProductSell entity
         ProductSell existingProductSell = productSellRepository.findById(productSellRequest.getProductID())
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
