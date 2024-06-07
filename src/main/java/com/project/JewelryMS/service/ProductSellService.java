@@ -9,11 +9,16 @@ import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.repository.PromotionRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -203,5 +208,8 @@ public class ProductSellService {
             throw new RuntimeException("Product Sell with ID " + id + " not found");
         }
     }
+
+
+
 
 }
