@@ -22,7 +22,10 @@ public class Guarantee {
     @JsonIgnoreProperties
     private ProductSell productSell;
 
+    //For years, or months
     String policyType;
+
+    //For what product
     String coverage;
     boolean status = true;
 }

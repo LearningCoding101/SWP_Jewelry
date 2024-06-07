@@ -1,8 +1,8 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Guarantee;
-import com.project.JewelryMS.model.CreateGuaranteeRequest;
-import com.project.JewelryMS.model.GuaranteeRequest;
+import com.project.JewelryMS.model.Guarantee.CreateGuaranteeRequest;
+import com.project.JewelryMS.model.Guarantee.GuaranteeRequest;
 import com.project.JewelryMS.service.GuaranteeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
