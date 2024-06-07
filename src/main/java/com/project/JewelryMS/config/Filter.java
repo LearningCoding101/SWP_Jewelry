@@ -39,6 +39,7 @@ public class Filter extends OncePerRequestFilter {
             "/swagger-resources/**",
             "/account/register",
             "/account/login",
+            "/account/change",
             "/account/reset",
             "/Info/GoldPrice",
             "/vnpay/**",

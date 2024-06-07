@@ -10,6 +10,8 @@ import com.project.JewelryMS.entity.RoleEnum;
 import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -92,8 +94,22 @@ public class AuthenticationService implements UserDetailsService {
                     accountResponse.setId((long)account.getPK_userID());
                     return accountResponse;
     }
+    public ResponseEntity<String> changePassword(ChangePasswordRequest request) {
+        Account account = authenticationRepository.findById(request.getID()).orElse(null);
 
-    public void changePassword(){}
+        if (account == null) {
+            return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+        }
+
+        if (!passwordEncoder.matches(request.getOldPassword(), account.getAPassword())) {
+            return new ResponseEntity<>("Old password does not match", HttpStatus.BAD_REQUEST);
+        }
+
+        account.setAPassword(passwordEncoder.encode(request.getNewPassword()));
+        authenticationRepository.save(account);
+
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
