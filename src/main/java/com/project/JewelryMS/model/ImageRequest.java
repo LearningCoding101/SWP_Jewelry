@@ -1,5 +1,4 @@
 package com.project.JewelryMS.model;
 
-public class StaffAccountResponse {
-
+public class ImageRequest {
 }
