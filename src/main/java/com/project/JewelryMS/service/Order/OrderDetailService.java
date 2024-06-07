@@ -26,15 +26,17 @@ public class OrderDetailService {
     public void deleteOrder(Long id) {
         orderDetailRepository.deleteById(id);
     }
-    public Float calculateTotalAmount(List<OrderDetail> orderDetails) {
-        float totalAmount = 0;
 
-        for (OrderDetail orderDetail : orderDetails) {
+
+    public Float calculateSubTotal(OrderDetail orderDetail) {
+        float totalAmount = 0;
             float productCost = orderDetail.getProductSell().getCost();
             int quantity = orderDetail.getQuantity();
             totalAmount += productCost * quantity;
-        }
-
         return totalAmount;
     }
+
+//    public Float calculateTotal(Float subTotal, Long PrmomotionID){
+//
+//    }
 }

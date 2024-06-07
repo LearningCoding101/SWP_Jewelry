@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderHandlerService {
@@ -118,6 +119,42 @@ public class OrderHandlerService {
         }
         return result;
     }
+    public List<ProductResponse> getProductByOrderId(Long orderID) {
+        PurchaseOrder order = orderService.getOrderById(orderID);
+        Set<ProductResponse> productResponses = new HashSet<>();
+        System.out.println("reached " + order.getPurchaseDate());
+
+        for (OrderDetail item : order.getOrderDetails()) {
+
+            ProductSell product = item.getProductSell();
+            ProductResponse response = new ProductResponse();
+
+            response.setQuantity(item.getQuantity());
+            response.setProductID(product.getProductID());
+            response.setName(product.getPName());
+            response.setCarat(product.getCarat());
+            response.setChi(product.getChi());
+            response.setCost(product.getCost());
+            response.setDescription(product.getPDescription());
+            response.setGemstoneType(product.getGemstoneType());
+            response.setImage(Arrays.toString(product.getImage()));
+            response.setManufacturer(product.getManufacturer());
+            response.setProductCost(product.getProductCost());
+            response.setStatus(product.isPStatus());
+            response.setCategory_id(product.getProductID());
+
+            List<String> promotionIds = productSellRepository.findPromotionIdsByProductSellId(product.getProductID())
+                    .stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.toList());
+            response.setPromotion_id(promotionIds);
+
+            productResponses.add(response);
+        }
+
+        return new ArrayList<>(productResponses);
+    }
+
     public List<ProductResponse> generateEmailOrderTable(Long orderID){
         PurchaseOrder order = orderService.getOrderById(orderID);
         OrderResponse orderToGet = new OrderResponse();
@@ -136,6 +173,8 @@ public class OrderHandlerService {
             response.setCarat(product.getCarat());
             response.setChi(product.getChi());
             response.setCost(product.getCost());
+
+
             response.setDescription(product.getPDescription());
             response.setGemstoneType(product.getGemstoneType());
             response.setImage(Arrays.toString(product.getImage()));

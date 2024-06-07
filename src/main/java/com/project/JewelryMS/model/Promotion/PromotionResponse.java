@@ -1,4 +1,4 @@
-package com.project.JewelryMS.model;
+package com.project.JewelryMS.model.Promotion;
 
 import lombok.*;
 

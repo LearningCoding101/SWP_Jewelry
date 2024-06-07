@@ -26,6 +26,8 @@ public class Promotion {
     Date startDate;
     Date endDate;
     boolean status;
+
+
     @ManyToMany(mappedBy = "promotion", fetch = FetchType.LAZY)
     private List<ProductSell> productSell ;
 

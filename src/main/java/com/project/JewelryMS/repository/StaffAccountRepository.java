@@ -10,18 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StaffAccountRepository extends JpaRepository<StaffAccount, Integer> {
-    @Query("SELECT new com.project.JewelryMS.model.Staff.StaffAccountResponse(sa.staffID, sa.phoneNumber, sa.salary, sa.startDate, acc.email, acc.aUsername, acc.accountName, acc.role, sh.shiftID, sh.startTime, sh.register, sh.endTime, sh.shiftType, sh.status, sh.workArea) " +
-            "FROM Shift sh " +
-            "JOIN sh.staffAccounts sa " +
+public interface StaffAccountRepository extends JpaRepository<StaffAccount, Long> {
+    @Query("SELECT new com.project.JewelryMS.model.Staff.StaffAccountResponse(sa.staffID, sa.shiftID, sa.phoneNumber, sa.salary, sa.startDate, sa.account.email, sa.account.aUsername, sa.account.accountName, sa.account.status) " +
+            "FROM StaffAccount sa " +
             "JOIN sa.account acc " +
-            "WHERE acc.role = com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF AND acc.status = 1")
+            "WHERE acc.role = com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF")
     List<StaffAccountResponse> findAllStaffAccountsByRoleStaff();
 
-    @Query("SELECT new com.project.JewelryMS.model.Staff.StaffAccountResponse(sa.staffID, sa.phoneNumber, sa.salary, sa.startDate, acc.email, acc.aUsername, acc.accountName, acc.role, sh.shiftID, sh.startTime, sh.register, sh.endTime, sh.shiftType, sh.status, sh.workArea) " +
-            "FROM Shift sh " +
-            "JOIN sh.staffAccounts sa " +
+    @Query("SELECT new com.project.JewelryMS.model.Staff.StaffAccountResponse(sa.staffID, sa.shiftID, sa.phoneNumber, sa.salary, sa.startDate, sa.account.email, sa.account.aUsername, sa.account.accountName, sa.account.status) " +
+            "FROM StaffAccount sa " +
             "JOIN sa.account acc " +
-            "WHERE acc.role = com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF AND acc.status = 1 AND sa.staffID = :id")
-    Optional<StaffAccountResponse> findIDStaffAccount(Integer id);
+            "WHERE acc.role = com.project.JewelryMS.entity.RoleEnum.ROLE_STAFF AND sa.staffID = :id")
+    Optional<StaffAccountResponse> findIDStaffAccount(long id);
 }
