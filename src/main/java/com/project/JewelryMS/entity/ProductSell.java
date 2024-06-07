@@ -50,10 +50,10 @@ public class ProductSell {
 
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
-    private byte[] image;
+    private String image;
 
-    @Column(name = "manufacturer", length = 255)
-    private String manufacturer;
+    @Column(name = "manufacturer")
+    private float manufacturer;
 
     @Column(name = "metalType", length = 255)
     private String metalType;
@@ -63,9 +63,6 @@ public class ProductSell {
 
     @Column(name = "productCode", length = 255)
     private String productCode;
-
-    @Column(name = "productCost")
-    private int productCost;
 
     @Column(name = "pStatus")
     private boolean pStatus;

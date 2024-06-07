@@ -63,7 +63,7 @@ public class HtmlFormatterService {
                     String.valueOf(item.getCost()),
                     String.valueOf(item.getChi()),
                     String.valueOf(item.getCarat()),
-                    item.getManufacturer(),
+                    String.valueOf(item.getManufacturer()),
                     categoryName, // categoryName will be empty string if category is null
                     String.valueOf(item.getQuantity())
             );

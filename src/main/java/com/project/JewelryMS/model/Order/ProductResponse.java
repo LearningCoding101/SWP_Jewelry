@@ -22,11 +22,10 @@ public class ProductResponse {
     private String Description;
     private String gemstoneType;
     private String image;
-    private String manufacturer;
+    private float manufacturer;
     private String metalType;
     private String Name;
     private String productCode;
-    private int productCost;
     private boolean Status;
     private long category_id;
     private List<String> promotion_id;

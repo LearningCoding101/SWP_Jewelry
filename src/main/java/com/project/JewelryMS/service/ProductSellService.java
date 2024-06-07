@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +32,9 @@ public class ProductSellService {
 
     @Autowired
     PromotionRepository promotionRepository;
+
+    @Autowired
+    ImageService imageService;
 
     public List<ProductSellResponse> getAllProductSellResponses() {
         List<ProductSellResponse> responses = new ArrayList<>();
@@ -50,7 +55,6 @@ public class ProductSellService {
                 response.setMetalType(productSell.getMetalType());
                 response.setName(productSell.getPName());
                 response.setProductCode(productSell.getProductCode());
-                response.setProductCost(productSell.getProductCost());
                 response.setStatus(productSell.isPStatus());
 
                 if (productSell.getCategory() != null) {
@@ -86,7 +90,7 @@ public class ProductSellService {
             throw new IllegalArgumentException("Category ID not found");
         }
         productSell.setChi(request.getChi());
-        productSell.setCost(request.getCost());
+        productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufacturer()));
         productSell.setPDescription(request.getPDescription());
         productSell.setGemstoneType(request.getGemstoneType());
         productSell.setImage(request.getImage());
@@ -94,11 +98,28 @@ public class ProductSellService {
         productSell.setMetalType(request.getMetalType());
         productSell.setPName(request.getPName());
         productSell.setProductCode(request.getProductCode());
-        productSell.setProductCost(request.getProductCost());
-        productSell.setPStatus(request.isPStatus());
+        productSell.setPStatus(true);
         // Save ProductSell
         ProductSell productSell1 = productSellRepository.save(productSell);
         return getProductSellById2(productSell1.getProductID());
+    }
+
+    public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturer){
+        Float Totalprice = 0.0F;
+        Float gemStonePrice = 0.0F;
+        Float goldPrice = 0.0F;
+        if(gemstoneType.contains("Diamond")){
+            gemStonePrice = 127000000.0F;
+        }
+        if(metalType.contains("Gold 24k")){
+            goldPrice = 4000000.0F;
+        }
+        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * PricingRatio());
+        return Totalprice;
+    }
+
+    public Float PricingRatio(){
+        return 1.20F;
     }
 
     // Read all ProductSell entries
@@ -137,7 +158,6 @@ public class ProductSellService {
         response.setMetalType(productSell.getMetalType());
         response.setName(productSell.getPName());
         response.setProductCode(productSell.getProductCode());
-        response.setProductCost(productSell.getProductCost());
         response.setStatus(productSell.isPStatus());
 
         if (productSell.getCategory() != null) {
@@ -155,7 +175,7 @@ public class ProductSellService {
 
     public ProductSellResponse updateProductSell(Long id, ProductSellRequest productSellRequest) {
         // Fetch the existing ProductSell entity
-        ProductSell existingProductSell = productSellRepository.findById(productSellRequest.getProductID())
+        ProductSell existingProductSell = productSellRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
         // Update fields from the request
@@ -169,7 +189,6 @@ public class ProductSellService {
         existingProductSell.setMetalType(productSellRequest.getMetalType());
         existingProductSell.setPName(productSellRequest.getPName());
         existingProductSell.setProductCode(productSellRequest.getProductCode());
-        existingProductSell.setProductCost(productSellRequest.getProductCost());
         existingProductSell.setPStatus(productSellRequest.isPStatus());
 
         // Update category

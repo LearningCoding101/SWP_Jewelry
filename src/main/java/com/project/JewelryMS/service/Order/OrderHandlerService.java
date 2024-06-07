@@ -95,9 +95,8 @@ public class OrderHandlerService {
                 response.setCost(product.getCost());
                 response.setDescription(product.getPDescription());
                 response.setGemstoneType(product.getGemstoneType());
-                response.setImage(Arrays.toString(product.getImage()));
+                response.setImage(product.getImage());
                 response.setManufacturer(product.getManufacturer());
-                response.setProductCost(product.getProductCost());
                 response.setStatus(product.isPStatus());
                 response.setCategory_id(product.getProductID());
                 List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
@@ -136,9 +135,8 @@ public class OrderHandlerService {
             response.setCost(product.getCost());
             response.setDescription(product.getPDescription());
             response.setGemstoneType(product.getGemstoneType());
-            response.setImage(Arrays.toString(product.getImage()));
+            response.setImage(product.getImage());
             response.setManufacturer(product.getManufacturer());
-            response.setProductCost(product.getProductCost());
             response.setStatus(product.isPStatus());
             response.setCategory_id(product.getProductID());
 
@@ -176,9 +174,8 @@ public class OrderHandlerService {
 
             response.setDescription(product.getPDescription());
             response.setGemstoneType(product.getGemstoneType());
-            response.setImage(Arrays.toString(product.getImage()));
+            response.setImage(product.getImage());
             response.setManufacturer(product.getManufacturer());
-            response.setProductCost(product.getProductCost());
             response.setStatus(product.isPStatus());
             response.setCategory_id(product.getProductID());
             List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
