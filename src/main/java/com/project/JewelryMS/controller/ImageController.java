@@ -1,5 +1,7 @@
 package com.project.JewelryMS.controller;
 
+import com.project.JewelryMS.service.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -12,9 +14,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/images") //Temporarily remove /api for easier testing
+@RequestMapping("/images")
 public class ImageController {
+
     private final String apiKey = "bae68497dea95ef8d4911c8d98f34b5c";
+
+    @Autowired
+    private ImageService imageService;
 
     @PostMapping("/uploadByUrl")
     public ResponseEntity<?> uploadImageByUrl(@RequestBody String request) {
@@ -22,6 +28,9 @@ public class ImageController {
         if (imageUrl == null || imageUrl.isEmpty()) {
             return ResponseEntity.badRequest().body("Image URL is required");
         }
+
+        // Convert URL to Base64
+        String base64Image = imageService.convertUrlToBase64(imageUrl);
 
         String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
 
@@ -31,7 +40,7 @@ public class ImageController {
 
         // Create the body
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("image", imageUrl);
+        body.add("image", base64Image);
 
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
 
@@ -48,6 +57,9 @@ public class ImageController {
             return ResponseEntity.badRequest().body("Image file is required");
         }
 
+        // Convert MultipartFile to Base64
+        String base64Image = imageService.convertMultipartFileToBase64(file);
+
         String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
 
         // Create headers
@@ -56,7 +68,7 @@ public class ImageController {
 
         // Create the body
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("image", file.getResource());
+        body.add("image", base64Image);
 
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
 

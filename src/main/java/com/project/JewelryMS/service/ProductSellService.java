@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,13 +95,16 @@ public class ProductSellService {
         productSell.setCost(request.getCost());
         productSell.setPDescription(request.getPDescription());
         productSell.setGemstoneType(request.getGemstoneType());
-        productSell.setImage(request.getImage());
+
+        productSell.setImage(Base64.getDecoder().decode(request.getImage()));
+
         productSell.setManufacturer(request.getManufacturer());
         productSell.setMetalType(request.getMetalType());
         productSell.setPName(request.getPName());
         productSell.setProductCode(request.getProductCode());
         productSell.setProductCost(request.getProductCost());
         productSell.setPStatus(request.isPStatus());
+
         // Save ProductSell
         ProductSell productSell1 = productSellRepository.save(productSell);
         return getProductSellById2(productSell1.getProductID());

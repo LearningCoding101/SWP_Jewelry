@@ -3,7 +3,7 @@ package com.project.JewelryMS.model.ProductSell;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.Promotion;
 import lombok.Data;
-
+import java.util.Base64;
 @Data
 public class CreateProductSellRequest {
     private float carat;
@@ -12,7 +12,9 @@ public class CreateProductSellRequest {
     private float cost;
     private String pDescription;
     private String gemstoneType;
-    private byte[] image;
+
+    private String image;
+
     private String manufacturer;
     private String metalType;
     private String pName;
