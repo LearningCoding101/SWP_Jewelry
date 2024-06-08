@@ -32,27 +32,6 @@ public class StaffAccountService {
     @Autowired
     PasswordEncoder passwordEncoder;
     // Create
-    public StaffAccountResponse createStaffAccount(CreateStaffAccountRequest createStaffAccountRequest) {
-        Optional<Account> accountOptional = authenticationRepository.findById(createStaffAccountRequest.getAccount_id());
-        Optional<Shift> shiftOptional = shiftRepository.findById(createStaffAccountRequest.getShiftID());
-        if(accountOptional.isPresent() && shiftOptional.isPresent() ) {
-            Account account = accountOptional.get();
-            if (account.getRole()== RoleEnum.ROLE_STAFF) {
-                StaffAccount newStaffAccount = new StaffAccount();
-                newStaffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
-                newStaffAccount.setSalary(createStaffAccountRequest.getSalary());
-                newStaffAccount.setShift(shiftOptional.get());
-                newStaffAccount.setStartDate(createStaffAccountRequest.getStartDate());
-                newStaffAccount.setAccount(account);
-                StaffAccount staffAccount = staffAccountRepository.save(newStaffAccount);
-                return getStaffAccountById(staffAccount.getStaffID());
-            }else{
-                throw new RuntimeException("Account not have Staff Role");
-            }
-        }else{
-            throw new RuntimeException("Account ID not find");
-        }
-    }
 
     // Read all
     public List<StaffAccountResponse> readAllStaffAccounts() {

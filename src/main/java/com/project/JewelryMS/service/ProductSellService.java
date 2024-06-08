@@ -113,9 +113,7 @@ public class ProductSellService {
         if(gemstoneType.contains("Diamond")){
             gemStonePrice = 127000000.0F;
         }
-        if(metalType.contains("Gold 24k")){
             goldPrice = 4000000.0F;
-        }
         Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * PricingRatio());
         return Totalprice;
     }

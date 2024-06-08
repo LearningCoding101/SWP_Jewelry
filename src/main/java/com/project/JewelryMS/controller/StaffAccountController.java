@@ -22,13 +22,6 @@ public class StaffAccountController {
     @Autowired
     StaffAccountService staffAccountService;
 
-    // Create a new staff account
-    @PostMapping("staff/create")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<StaffAccountResponse> createStaffAccount(@RequestBody CreateStaffAccountRequest createStaffAccountRequest) {
-        StaffAccountResponse newStaffAccount = staffAccountService.createStaffAccount(createStaffAccountRequest);
-        return ResponseEntity.ok(newStaffAccount);
-    }
 
     // Read all staff accounts
     @GetMapping("staff/readall")
