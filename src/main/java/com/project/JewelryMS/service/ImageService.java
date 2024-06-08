@@ -1,12 +1,15 @@
 package com.project.JewelryMS.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Base64;
@@ -25,6 +28,16 @@ public class ImageService {
         catch (final IOException ioe)
         {
             throw new UncheckedIOException(ioe);
+        }
+    }
+
+    public String convertMultipartFileToBase64(MultipartFile file) {
+        try {
+            BufferedImage img = ImageIO.read(file.getInputStream());
+            String formatName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+            return imgToBase64String(img, formatName);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to convert file to Base64", e);
         }
     }
 
