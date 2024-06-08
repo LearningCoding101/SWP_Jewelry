@@ -26,8 +26,24 @@ public class PerformanceService {
     private StaffAccountRepository staffAccountRepository;
 
     public PerformanceResponse createPerformanceReport(CreatePerformanceRequest createPerformanceRequest) {
+//        Performance performance = new Performance();
+//
+//        performance.setDate(createPerformanceRequest.getDate());
+//        performance.setSalesMade(createPerformanceRequest.getSalesMade());
+//        performance.setRevenueGenerated(createPerformanceRequest.getRevenueGenerated());
+//        performance.setCustomerSignUp(createPerformanceRequest.getCustomerSignUp());
+//
+//        //Use the Staff Accounts
+//        StaffAccount staffAccount = createPerformanceRequest.getStaffAccount();
+//        if (staffAccount != null) {
+//            performance.setStaffAccount(staffAccount);
+//        } else {
+//            throw new RuntimeException("Staff account information is missing in the request");
+//        }
+//        return performanceRepository.save(performance);
+
         //the staffAccountRepository could have a JpaRepository of <Integer>
-        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(createPerformanceRequest.getStaffID());
+        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(Math.toIntExact((long) createPerformanceRequest.getStaffID()));
         if(staffOptional.isPresent()) {
             StaffAccount account = staffOptional.get();
             if (account != null) {//This if condition needs revision, should use to connect with Shift to accurately create a performance report

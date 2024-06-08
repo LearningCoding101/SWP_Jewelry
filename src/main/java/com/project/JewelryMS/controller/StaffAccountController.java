@@ -23,7 +23,7 @@ public class StaffAccountController {
     StaffAccountService staffAccountService;
 
     // Create a new staff account
-    @PostMapping("staff")
+    @PostMapping("staff/create")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccountResponse> createStaffAccount(@RequestBody CreateStaffAccountRequest createStaffAccountRequest) {
         StaffAccountResponse newStaffAccount = staffAccountService.createStaffAccount(createStaffAccountRequest);
@@ -31,7 +31,7 @@ public class StaffAccountController {
     }
 
     // Read all staff accounts
-    @GetMapping("staff")
+    @GetMapping("staff/readall")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<StaffAccountResponse>> readAllStaffAccounts() {
         List<StaffAccountResponse> staffAccounts = staffAccountService.readAllStaffAccounts();
@@ -39,7 +39,7 @@ public class StaffAccountController {
     }
 
     // Read a staff account by ID
-    @GetMapping("staff/{id}")
+    @GetMapping("staff/read/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccountResponse> getStaffAccountById(@PathVariable Integer id) {
         StaffAccountResponse staffAccount = staffAccountService.getStaffAccountById(id);
@@ -51,7 +51,7 @@ public class StaffAccountController {
     }
 
     // Update an existing staff account
-    @PutMapping("staff/{id}")
+    @PutMapping("staff/update/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffAccountResponse> updateStaffAccount(@PathVariable Integer id, @RequestBody StaffAccountRequest staffAccountRequest) {
         StaffAccountResponse updatedStaffAccount = staffAccountService.updateStaffAccount(id,staffAccountRequest);
@@ -59,7 +59,7 @@ public class StaffAccountController {
     }
 
     // Deactivate a staff account
-    @DeleteMapping("staff/{id}")
+    @DeleteMapping("staff/delete/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<String> deactivateStaffAccount(@PathVariable Integer id) {// Ensure the ID from the path is set in the request
         staffAccountService.deactivateStaffAccount(id);

@@ -28,6 +28,8 @@ public class StaffAccountResponse {
 
     private RoleEnum role;
 
+    private int status;
+
     private int shiftID;
 
     private Timestamp startTime;

@@ -74,6 +74,7 @@ public class AuthenticationAPI {
     }
     //Change password
     @PutMapping("change")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request){
 
         return authenticationService.changePassword(request);

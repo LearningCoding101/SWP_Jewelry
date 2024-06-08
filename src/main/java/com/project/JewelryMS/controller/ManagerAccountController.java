@@ -26,7 +26,7 @@ public class ManagerAccountController {
         return ResponseEntity.ok(managerAccountService.getAllManagerAccounts());
     }
     // Get a manager account by ID
-    @GetMapping("manager/{id}")
+    @GetMapping("manager/read/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ManagerAccountResponse> getManagerAccountById(@PathVariable Integer id) {
         ManagerAccountResponse managerAccount = managerAccountService.getManagerAccountById(id);
@@ -34,7 +34,7 @@ public class ManagerAccountController {
     }
 
     // Create a new manager account
-    @PostMapping("manager")
+    @PostMapping("manager/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ManagerAccountResponse> createManagerAccount(@RequestBody CreateManagerAccountRequest createManagerAccountRequest) {
         ManagerAccountResponse newManagerAccount = managerAccountService.createManagerAccount(createManagerAccountRequest);
@@ -42,7 +42,7 @@ public class ManagerAccountController {
     }
 
     // Update an existing manager account
-    @PutMapping("manager/{id}")
+    @PutMapping("manager/update/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<ManagerAccountResponse> updateManagerAccount(@PathVariable Integer id, @RequestBody ManagerAccountRequest managerAccountRequest) {
         ManagerAccountResponse updatedManagerAccount = managerAccountService.updateManagerAccount(id,managerAccountRequest);
@@ -50,7 +50,7 @@ public class ManagerAccountController {
     }
 
     // Deactivate a manager account
-    @DeleteMapping("manager/{id}")
+    @DeleteMapping("manager/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deactivateManagerAccount(@PathVariable Integer id) {
         return ResponseEntity.ok(managerAccountService.deactivateManagerAccount(id));
