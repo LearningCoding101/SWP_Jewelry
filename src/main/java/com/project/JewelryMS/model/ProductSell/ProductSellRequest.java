@@ -9,7 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSellRequest {
-    private long productID;
     private float carat;
     private long category_id;
     private List<Long> promotion_id;
@@ -17,12 +16,9 @@ public class ProductSellRequest {
     private float cost;
     private String pDescription;
     private String gemstoneType;
-    private byte[] image;
-    private String manufacturer;
+    private String image;
+    private float manufacturer;
     private String metalType;
     private String pName;
     private String productCode;
-    private int productCost;
-    private boolean pStatus;
-
 }
