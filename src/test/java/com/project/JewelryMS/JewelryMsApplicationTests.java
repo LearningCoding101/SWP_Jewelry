@@ -8,6 +8,10 @@ class JewelryMsApplicationTests {
 
 	@Test
 	void contextLoads() {
-	}
 
+	}
+	public static void main(String[] args){
+		String number = "7145000";
+		System.out.println(Float.parseFloat(number));
+	}
 }

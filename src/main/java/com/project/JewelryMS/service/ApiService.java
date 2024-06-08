@@ -49,21 +49,20 @@ public class ApiService {
         return modifiedString.toString();
     }
 
-    public Float getGoldPricecalculate(String url) {
+    public String getGoldPricecalculate(String url) {
         try {
             String jsonResponse = getGoldPrice(url);
             JsonNode root = jsonMapper.readTree(jsonResponse);
             JsonNode dataList = root.path("DataList").path("Data");
-
             for (JsonNode item : dataList) {
                 if (item.path("Tên giá vàng").asText().equals("VÀNG NGUYÊN LIỆU (Vàng thị trường)")) {
-                    return item.path("Giá bán thế giới").floatValue();
+                    return item.path("Giá bán thế giới").toString();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0.0F; // Return a default value if not found or an error occurs
+        return "Not Found"; // Return a default value if not found or an error occurs
     }
 
 

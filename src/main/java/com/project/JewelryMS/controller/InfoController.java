@@ -28,7 +28,7 @@ public class InfoController {
 
     @GetMapping("/Test")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Float> getGoldPriceTest(){
+    public ResponseEntity<String> getGoldPriceTest(){
         return ResponseEntity.ok(apiService.getGoldPricecalculate(goldUrl));
     }
 }

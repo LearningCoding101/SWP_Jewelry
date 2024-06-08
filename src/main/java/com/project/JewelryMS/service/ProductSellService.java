@@ -116,10 +116,8 @@ public class ProductSellService {
         Float Totalprice = 0.0F;
         Float gemStonePrice = 127000000.0F;
         Float goldPrice = 0.0F;
-        if(gemstoneType.contains("Diamond")){
             gemStonePrice =  127000000.0F;
-        }
-            goldPrice = apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v");
+            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
         Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
         return Totalprice;
     }
