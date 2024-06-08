@@ -7,7 +7,6 @@ import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("account")
+@RequestMapping("api/account")
 @SecurityRequirement(name = "api")
 public class AuthenticationAPI {
     @Autowired
@@ -75,7 +74,12 @@ public class AuthenticationAPI {
         return ResponseEntity.ok(accountResponse);
     }
     //Change password
+    @PutMapping("change")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request){
 
+        return authenticationService.changePassword(request);
+    }
 
     //ResetPassword
     @PostMapping("/reset")

@@ -43,7 +43,7 @@ public class PerformanceService {
 //        return performanceRepository.save(performance);
 
         //the staffAccountRepository could have a JpaRepository of <Integer>
-        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(createPerformanceRequest.getStaffID());
+        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(Math.toIntExact((long) createPerformanceRequest.getStaffID()));
         if(staffOptional.isPresent()) {
             StaffAccount account = staffOptional.get();
             if (account != null) {//This if condition needs revision, should use to connect with Shift to accurately create a performance report
