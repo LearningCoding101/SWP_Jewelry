@@ -16,16 +16,6 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-    @GetMapping("/managerprofile/{managerId}")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ManagerProfileResponse> viewManagerProfile(@PathVariable Long managerId) {
-        ManagerProfileResponse profile = profileService.viewManagerProfile(managerId);
-        if (profile != null) {
-            return ResponseEntity.ok(profile);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PutMapping("/managerprofile/{managerId}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -61,16 +51,6 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/staffprofile/{staffId}")
-    @PreAuthorize("hasRole('ROLE_STAFF')")
-    public ResponseEntity<StaffProfileResponse> viewStaffProfile(@PathVariable Integer staffId) {
-        StaffProfileResponse profile = profileService.viewStaffProfile(staffId);
-        if (profile != null) {
-            return ResponseEntity.ok(profile);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PutMapping("/staffprofile/{staffId}")
     @PreAuthorize("hasRole('ROLE_STAFF')")

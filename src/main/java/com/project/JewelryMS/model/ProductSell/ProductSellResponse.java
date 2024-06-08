@@ -17,12 +17,11 @@ public class ProductSellResponse {
     private float cost;
     private String Description;
     private String gemstoneType;
-    private byte[] image;
-    private String manufacturer;
+    private String image;
+    private float manufacturer;
     private String metalType;
     private String Name;
     private String productCode;
-    private int productCost;
     private boolean Status;
     private long category_id;
     private List<String> promotion_id;
