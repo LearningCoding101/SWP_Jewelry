@@ -1,3 +1,4 @@
+/*
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Category;
@@ -123,3 +124,4 @@ public class ImageController {
     }
 
 }
+*/

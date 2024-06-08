@@ -12,7 +12,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "Staff")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "account.staffAccount", })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "account.staffAccount", "shift.staffAccounts"})
 public class StaffAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
