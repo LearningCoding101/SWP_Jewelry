@@ -100,11 +100,11 @@ public class ProductSellService {
         productSell.setChi(request.getChi());
         productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufacturer()));
         productSell.setPDescription(request.getPDescription());
+        productSell.setPName(request.getPName());
         productSell.setGemstoneType(request.getGemstoneType());
         productSell.setImage(request.getImage());
         productSell.setManufacturer(request.getManufacturer());
         productSell.setMetalType(request.getMetalType());
-        productSell.setPName(request.getPName());
         productSell.setProductCode(request.getProductCode());
         productSell.setPStatus(true);
         // Save ProductSell
