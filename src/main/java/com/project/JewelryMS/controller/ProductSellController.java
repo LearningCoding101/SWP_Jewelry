@@ -23,7 +23,7 @@ public class ProductSellController {
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     @PostMapping("productsell/create")
     public ResponseEntity<ProductSellResponse> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
             ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
@@ -31,7 +31,7 @@ public class ProductSellController {
     }
 
     @GetMapping("productsell/readall")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
         List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();
         System.out.println("Read Product Sell ");
@@ -40,14 +40,14 @@ public class ProductSellController {
 
 
     @GetMapping("productsell/read/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<ProductSellResponse> getProductSellById(@PathVariable long id) {
         ProductSellResponse response = productSellService.getProductSellById2(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("productsell/update/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<ProductSellResponse> updateProductSell( @PathVariable long id, @RequestBody ProductSellRequest productSellRequest) {
             ProductSellResponse updatedProduct = productSellService.updateProductSell(id,productSellRequest);
             return ResponseEntity.ok(updatedProduct);
@@ -56,7 +56,7 @@ public class ProductSellController {
 
 
     @DeleteMapping("productsell/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@PathVariable long id){
 
