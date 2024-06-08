@@ -6,8 +6,11 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.RoleEnum;
+import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.*;
+import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
 import com.project.JewelryMS.repository.AuthenticationRepository;
+import com.project.JewelryMS.repository.StaffAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,18 +36,26 @@ public class AuthenticationService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    StaffAccountRepository staffAccountRepository;
 
-    public Account register(RegisterRequest registerRequest){
+    public CreateStaffAccountRequest register(CreateStaffAccountRequest createStaffAccountRequest){
         Account account = new Account();
-        account.setAccountName(registerRequest.getAccountName());
-        account.setEmail(registerRequest.getEmail());
-        account.setAPassword(passwordEncoder.encode(registerRequest.getAPassword()));
-        account.setAUsername(registerRequest.getAUsername());
-        account.setRole(RoleEnum.ROLE_ADMIN);
+        account.setAccountName(createStaffAccountRequest.getAccountName());
+        account.setEmail(createStaffAccountRequest.getEmail());
+        account.setAPassword(passwordEncoder.encode(createStaffAccountRequest.getPassword()));
+        account.setAUsername(createStaffAccountRequest.getUsername());
+        account.setRole(RoleEnum.ROLE_STAFF);
+        StaffAccount staffAccount = new StaffAccount();
+        staffAccount.setSalary(createStaffAccountRequest.getSalary());
+        staffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
+        staffAccount.setAccount(account);
         account.setStatus(1);
-        return authenticationRepository.save(account);
+        staffAccountRepository.save(staffAccount);
+        authenticationRepository.save(account);
+        return createStaffAccountRequest;
     }
-    public Boolean handleRegisterCheckEmail(RegisterRequest registerRequest){
+    public Boolean handleRegisterCheckEmail(CreateStaffAccountRequest registerRequest){
         String emailCheck = registerRequest.getEmail();
         if(emailService.validEmail(emailCheck)){
             return true;

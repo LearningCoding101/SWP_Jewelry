@@ -2,6 +2,7 @@ package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.model.*;
+import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
 import com.project.JewelryMS.service.AuthenticationService;
 import com.project.JewelryMS.service.EmailService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -54,11 +55,11 @@ public class AuthenticationAPI {
     }
     @PostMapping("register")
 
-    public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity register(@RequestBody CreateStaffAccountRequest createStaffAccountRequest){
         System.out.println("Reached");
-        Account account = null;
-        if(authenticationService.handleRegisterCheckEmail(registerRequest)){
-            account = authenticationService.register(registerRequest);
+        CreateStaffAccountRequest account = null;
+        if(authenticationService.handleRegisterCheckEmail(createStaffAccountRequest)){
+             account = authenticationService.register(createStaffAccountRequest);
         }
         if(account == null){
             return ResponseEntity.badRequest().body("Invalid Email or Information");
