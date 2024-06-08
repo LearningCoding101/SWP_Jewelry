@@ -49,6 +49,7 @@ public class AuthenticationService implements UserDetailsService {
         StaffAccount staffAccount = new StaffAccount();
         staffAccount.setSalary(createStaffAccountRequest.getSalary());
         staffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
+        staffAccount.setStartDate(createStaffAccountRequest.getStartDate());
         staffAccount.setAccount(account);
         account.setStatus(1);
         staffAccountRepository.save(staffAccount);

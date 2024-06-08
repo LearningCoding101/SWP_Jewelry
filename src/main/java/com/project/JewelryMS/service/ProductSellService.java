@@ -106,10 +106,10 @@ public class ProductSellService {
 
     public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturer){
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 0.0F;
+        Float gemStonePrice = 127000000.0F;
         Float goldPrice = 0.0F;
         if(gemstoneType.contains("Diamond")){
-            gemStonePrice = 127000000.0F;
+            gemStonePrice =  127000000.0F;
         }
             goldPrice = 4000000.0F;
         Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * PricingRatio());
