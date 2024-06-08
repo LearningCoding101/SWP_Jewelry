@@ -21,7 +21,4 @@ public class ProductSellRequest {
     private String metalType;
     private String pName;
     private String productCode;
-    private int productCost;
-    private boolean pStatus;
-
 }

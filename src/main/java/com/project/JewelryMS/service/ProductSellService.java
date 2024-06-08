@@ -189,8 +189,6 @@ public class ProductSellService {
         existingProductSell.setMetalType(productSellRequest.getMetalType());
         existingProductSell.setPName(productSellRequest.getPName());
         existingProductSell.setProductCode(productSellRequest.getProductCode());
-        existingProductSell.setPStatus(productSellRequest.isPStatus());
-
         // Update category
         Category category = categoryRepository.findById(productSellRequest.getCategory_id())
                 .orElseThrow(() -> new IllegalArgumentException("Category ID not found"));

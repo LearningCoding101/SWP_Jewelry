@@ -49,7 +49,7 @@ public class ProductSell {
     private String gemstoneType;
 
     @Lob
-    @Column(name = "image", columnDefinition = "LONGBLOB")
+    @Column(name = "image")
     private String image;
 
     @Column(name = "manufacturer")

@@ -30,7 +30,7 @@ public class ProductSellController {
             return ResponseEntity.ok(createdProduct);
     }
 
-    @GetMapping("productsell/read")
+    @GetMapping("productsell/readall")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
         List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();

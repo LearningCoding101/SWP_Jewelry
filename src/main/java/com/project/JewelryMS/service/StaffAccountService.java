@@ -107,6 +107,7 @@ public class StaffAccountService {
                 account.getAUsername(),
                 account.getAccountName(),
                 account.getRole(),
+                account.getStatus(),
                 existingStaffAccount.getShift().getShiftID(), // Assuming shift ID is unchanged
                 existingStaffAccount.getShift().getStartTime(), // Assuming start time is unchanged
                 existingStaffAccount.getShift().getRegister(), // Assuming register is unchanged
