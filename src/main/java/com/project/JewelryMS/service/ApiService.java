@@ -1,5 +1,6 @@
 package com.project.JewelryMS.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +48,25 @@ public class ApiService {
 
         return modifiedString.toString();
     }
+
+    public Float getGoldPricecalculate(String url) {
+        try {
+            String jsonResponse = getGoldPrice(url);
+            JsonNode root = jsonMapper.readTree(jsonResponse);
+            JsonNode dataList = root.path("DataList").path("Data");
+
+            for (JsonNode item : dataList) {
+                if (item.path("Tên giá vàng").asText().equals("VÀNG NGUYÊN LIỆU (Vàng thị trường)")) {
+                    return item.path("Giá bán thế giới").floatValue();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0F; // Return a default value if not found or an error occurs
+    }
+
+
+
 
 }

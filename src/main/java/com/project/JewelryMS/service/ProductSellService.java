@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProductSellService {
     private static final Logger logger = LoggerFactory.getLogger(ProductSellService.class);
+
+    private Float pricingRatio = 1.20F;
+
     @Autowired
     ProductSellRepository productSellRepository;
 
@@ -34,6 +37,9 @@ public class ProductSellService {
 
     @Autowired
     PromotionRepository promotionRepository;
+
+    @Autowired
+    ApiService apiService;
 
     @Autowired
     ImageService imageService;
@@ -113,13 +119,18 @@ public class ProductSellService {
         if(gemstoneType.contains("Diamond")){
             gemStonePrice =  127000000.0F;
         }
-            goldPrice = 4000000.0F;
-        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * PricingRatio());
+            goldPrice = apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v");
+        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
         return Totalprice;
     }
 
-    public Float PricingRatio(){
-        return 1.20F;
+    public Float GetPricingRatio() {
+        return pricingRatio;
+    }
+
+    public Float updatePricingRatio(Float newRatio) {
+        this.pricingRatio = newRatio;
+        return pricingRatio;
     }
 
     // Read all ProductSell entries
