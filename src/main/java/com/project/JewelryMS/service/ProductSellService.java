@@ -102,7 +102,12 @@ public class ProductSellService {
         productSell.setPDescription(request.getPDescription());
         productSell.setPName(request.getPName());
         productSell.setGemstoneType(request.getGemstoneType());
-        productSell.setImage(request.getImage());
+        try {
+            String imageUrl = imageService.uploadBase64ImageToImgbb(request.getImage());
+            productSell.setImage(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image: " + e.getMessage());
+        }
         productSell.setManufacturer(request.getManufacturer());
         productSell.setMetalType(request.getMetalType());
         productSell.setProductCode(request.getProductCode());
