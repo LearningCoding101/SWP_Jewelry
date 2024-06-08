@@ -56,7 +56,7 @@ public class ApiService {
             JsonNode dataList = root.path("DataList").path("Data");
             for (JsonNode item : dataList) {
                 if (item.path("Tên giá vàng").asText().equals("VÀNG NGUYÊN LIỆU (Vàng thị trường)")) {
-                    return item.path("Giá bán thế giới").toString();
+                    return item.path("Giá bán thế giới").asText();
                 }
             }
         } catch (Exception e) {
