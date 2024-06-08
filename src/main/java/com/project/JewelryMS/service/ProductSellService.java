@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProductSellService {
     private static final Logger logger = LoggerFactory.getLogger(ProductSellService.class);
+
+    private Float pricingRatio = 1.20F;
+
     @Autowired
     ProductSellRepository productSellRepository;
 
@@ -34,6 +37,9 @@ public class ProductSellService {
 
     @Autowired
     PromotionRepository promotionRepository;
+
+    @Autowired
+    ApiService apiService;
 
     @Autowired
     ImageService imageService;
@@ -94,11 +100,16 @@ public class ProductSellService {
         productSell.setChi(request.getChi());
         productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufacturer()));
         productSell.setPDescription(request.getPDescription());
+        productSell.setPName(request.getPName());
         productSell.setGemstoneType(request.getGemstoneType());
-        productSell.setImage(request.getImage());
+        try {
+            String imageUrl = imageService.uploadBase64ImageToImgbb(request.getImage());
+            productSell.setImage(imageUrl);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image: " + e.getMessage());
+        }
         productSell.setManufacturer(request.getManufacturer());
         productSell.setMetalType(request.getMetalType());
-        productSell.setPName(request.getPName());
         productSell.setProductCode(request.getProductCode());
         productSell.setPStatus(true);
         // Save ProductSell
@@ -108,18 +119,21 @@ public class ProductSellService {
 
     public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturer){
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 0.0F;
+        Float gemStonePrice = 127000000.0F;
         Float goldPrice = 0.0F;
-        if(gemstoneType.contains("Diamond")){
-            gemStonePrice = 127000000.0F;
-        }
-            goldPrice = 4000000.0F;
-        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * PricingRatio());
+            gemStonePrice =  127000000.0F;
+            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
         return Totalprice;
     }
 
-    public Float PricingRatio(){
-        return 1.20F;
+    public Float GetPricingRatio() {
+        return pricingRatio;
+    }
+
+    public Float updatePricingRatio(Float newRatio) {
+        this.pricingRatio = newRatio;
+        return pricingRatio;
     }
 
     // Read all ProductSell entries

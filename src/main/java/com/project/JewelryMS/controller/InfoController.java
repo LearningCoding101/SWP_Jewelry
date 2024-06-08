@@ -2,7 +2,10 @@ package com.project.JewelryMS.controller;
 
 
 import com.project.JewelryMS.service.ApiService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/Info")
+@SecurityRequirement(name = "api")
 public class InfoController {
     @Autowired
     private ApiService apiService;
@@ -20,5 +24,12 @@ public class InfoController {
     public String getGoldPrice(){
         System.out.println("Pinged /GoldPrice");
         return apiService.getGoldPrice(goldUrl);
+    }
+
+    @GetMapping("/Test")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Float> getGoldPriceTest(){
+        String price = apiService.getGoldPricecalculate(goldUrl);
+        return ResponseEntity.ok(Float.parseFloat(price));
     }
 }
