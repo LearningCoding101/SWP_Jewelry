@@ -9,6 +9,6 @@ public class CreateShiftRequest {
     private int register;
     private String shiftType;
     private Timestamp startTime;
-    private String status;
+    private Boolean status;
     private String workArea;
 }

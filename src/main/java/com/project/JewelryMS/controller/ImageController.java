@@ -2,12 +2,7 @@
 package com.project.JewelryMS.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.Image.ImgbbResponse;
-import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
-import com.project.JewelryMS.repository.CategoryRepository;
-import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.service.ImageService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +13,20 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/images")
 @SecurityRequirement(name = "api")
 public class ImageController {
-
-
-    private final String apiKey = "af69290db25a827d6f9ccd1adb503dbe";
-
     @Autowired
     private ImageService imageService;
+
+    private final String apiKey = "af69290db25a827d6f9ccd1adb503dbe";
 
     static class FilePathRequest {
         public String file;
@@ -87,4 +77,3 @@ public class ImageController {
     }
 
 }
-

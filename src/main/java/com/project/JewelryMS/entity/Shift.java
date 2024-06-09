@@ -35,13 +35,13 @@ public class Shift {
     private Timestamp startTime;
 
     @Column(name = "status")
-    private String status;
+    private Boolean status;
 
     @Column(name = "workArea")
     private String workArea;
 
-    //Suggestion: Change relations to Many to Many
-    @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("shift")
+    @ManyToMany(mappedBy = "shift", fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties("shift")
     private List<StaffAccount> staffAccounts;
+
 }

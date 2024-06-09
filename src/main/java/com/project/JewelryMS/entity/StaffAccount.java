@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,10 +26,18 @@ public class StaffAccount {
     @JsonIgnoreProperties
     private Account account;
 
-    @ManyToOne
-    @JoinColumn(name = "FK_shiftID", referencedColumnName = "shiftID")
-    @JsonIgnoreProperties
-    private Shift shift;
+//    @ManyToOne
+//    @JoinColumn(name = "FK_shiftID", referencedColumnName = "shiftID")
+//    @JsonIgnoreProperties
+//    private Shift shift;
+
+    @ManyToMany(mappedBy = "staffAccount", fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "staff_shift",
+            joinColumns = @JoinColumn(name = "staffID", referencedColumnName = "PK_staffID"),
+            inverseJoinColumns = @JoinColumn(name = "shiftID", referencedColumnName = "shiftID"))
+    @JsonIgnoreProperties("staffAccount")
+    private List<Shift> shift;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
