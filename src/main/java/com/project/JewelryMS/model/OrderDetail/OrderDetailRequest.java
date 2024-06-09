@@ -10,5 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailRequest {
-    private List<OrderDetail> orderDetails;
+    Long productSell_ID;
+    Integer quantity;
 }

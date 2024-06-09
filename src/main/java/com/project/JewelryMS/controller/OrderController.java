@@ -6,6 +6,7 @@ import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
+import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
 import com.project.JewelryMS.service.CustomerService;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.Order.OrderDetailService;
@@ -93,8 +94,14 @@ public class OrderController {
     }
 
     @PostMapping("SubTotal")
-    public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetail orderDetail) {
-        Float totalAmount = orderDetailService.calculateSubTotal(orderDetail);
+    public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
+        Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
+        return ResponseEntity.ok(totalAmount);
+    }
+
+    @PostMapping("/calculateTotal")
+    public ResponseEntity<Float> calculateTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
+        Float totalAmount = orderDetailService.calculateTotal(orderTotalRequest);
         return ResponseEntity.ok(totalAmount);
     }
 

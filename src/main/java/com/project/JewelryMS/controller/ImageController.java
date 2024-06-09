@@ -13,13 +13,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,40 +35,27 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    static class FilePathRequest {
-        public String file;
-    }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PostMapping("/uploadByPath")
-    public ResponseEntity<String> uploadImageByPath(@RequestBody FilePathRequest filePathRequest) {
-        File imageFile = new File(filePathRequest.file);
+    public ResponseEntity<String> uploadImageByPath(@RequestParam("file") MultipartFile file) {
 
-        if (!imageFile.exists() || imageFile.isDirectory()) {
-            return ResponseEntity.badRequest().body("Invalid image file path");
-        }
-
-        String base64Image;
+        String base64EncodedFile;
         try {
-            base64Image = imageService.convertFileToBase64(imageFile);
+            // Chuyển đổi MultipartFile thành base64
+            byte[] fileBytes = file.getBytes();
+            base64EncodedFile = Base64.getEncoder().encodeToString(fileBytes);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Failed to read the file: " + e.getMessage());
         }
 
         String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
-
-        // Create headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Create the body
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("image", base64Image);
-
+        body.add("image", base64EncodedFile);
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
                 ObjectMapper mapper = new ObjectMapper();
