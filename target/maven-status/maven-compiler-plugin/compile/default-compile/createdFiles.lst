@@ -42,12 +42,13 @@ com\project\JewelryMS\model\Shift\ShiftRequest.class
 com\project\JewelryMS\model\ImageRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
-com\project\JewelryMS\model\GuaranteeRequest.class
+com\project\JewelryMS\model\Guarantee\GuaranteeResponse.class
 com\project\JewelryMS\controller\StaffAccountController.class
 com\project\JewelryMS\entity\Customer.class
 com\project\JewelryMS\service\ApiService.class
 com\project\JewelryMS\service\GuaranteeService.class
 com\project\JewelryMS\repository\ProductSellRepository.class
+com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.class
 com\project\JewelryMS\service\ImageService.class
 com\project\JewelryMS\config\FirebaseConfig.class
 com\project\JewelryMS\exception\APIhandleException.class
@@ -99,7 +100,6 @@ com\project\JewelryMS\model\Profile\ViewShiftResponse.class
 com\project\JewelryMS\model\Performance\PerformanceRequest.class
 com\project\JewelryMS\model\Performance\DeletePerformanceRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
-com\project\JewelryMS\controller\ImageController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class
@@ -120,8 +120,8 @@ com\project\JewelryMS\service\Order\OrderHandlerService.class
 com\project\JewelryMS\model\Performance\CreatePerformanceRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\ResetPassRequest.class
+com\project\JewelryMS\model\Guarantee\GuaranteeRequest.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
-com\project\JewelryMS\model\CreateGuaranteeRequest.class
 com\project\JewelryMS\model\Profile\UpdateManagerResponse.class
 com\project\JewelryMS\repository\ProductBuyRepository.class
 com\project\JewelryMS\service\JWTservice.class

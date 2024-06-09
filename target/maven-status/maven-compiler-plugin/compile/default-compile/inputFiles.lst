@@ -44,12 +44,13 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\CategoryRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ChangePasswordRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\CodeService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\CreateCategoryRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\CreateGuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\GuaranteeRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ImageRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginGoogleRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginRequest.java

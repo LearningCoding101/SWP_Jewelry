@@ -9,9 +9,11 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateStaffAccountRequest {
-    private int shiftID;
     private String phoneNumber;
     private float salary;
     private Date startDate;
-    private long account_id;
+    private String email;
+    private String username;
+    private String password;
+    private String accountName;
 }

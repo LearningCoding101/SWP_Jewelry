@@ -1,13 +1,18 @@
+
 package com.project.JewelryMS.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
+import com.project.JewelryMS.model.Image.ImgbbResponse;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.service.ImageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,108 +23,68 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Base64;
 
 @RestController
 @RequestMapping("/images")
+@SecurityRequirement(name = "api")
 public class ImageController {
 
-    private final String apiKey = "bae68497dea95ef8d4911c8d98f34b5c";
+
+    private final String apiKey = "af69290db25a827d6f9ccd1adb503dbe";
 
     @Autowired
     private ImageService imageService;
 
-    @PostMapping("/uploadByUrl")
-    public ResponseEntity<?> uploadImageByUrl(@RequestBody String request) {
-        String imageUrl = request;
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            return ResponseEntity.badRequest().body("Image URL is required");
-        }
-
-        String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
-
-        // Create headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        // Create the body
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("image", imageUrl);
-
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-        // Return the response from ImgBB API
-        return ResponseEntity.ok(response.getBody());
+    static class FilePathRequest {
+        public String file;
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PostMapping("/uploadByPath")
+    public ResponseEntity<String> uploadImageByPath(@RequestBody FilePathRequest filePathRequest) {
+        File imageFile = new File(filePathRequest.file);
 
-    @PostMapping("/uploadByFile")
-    public ResponseEntity<?> uploadImageByFile(@RequestPart("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Image file is required");
+        if (!imageFile.exists() || imageFile.isDirectory()) {
+            return ResponseEntity.badRequest().body("Invalid image file path");
         }
 
-        String base64Image = imageService.convertMultipartFileToBase64(file);
+        String base64Image;
+        try {
+            base64Image = imageService.convertFileToBase64(imageFile);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Failed to read the file: " + e.getMessage());
+        }
 
         String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
 
         // Create headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         // Create the body
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("image", base64Image);
 
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-        // Return the response from Imgbb API
-        return ResponseEntity.ok(response.getBody());
-    }
-
-    //Test sections
-    @Autowired
-    private ProductSellRepository productSellRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestBody CreateProductSellRequest productSellDTO) {
-        // Convert image URL to byte[]
-
-        byte[] imageBytes = Base64.getDecoder().decode(productSellDTO.getImage());
-
-        // Find category by ID
-        Category category = categoryRepository.findById(productSellDTO.getCategory_id()).orElse(null);
-        if (category == null) {
-            return ResponseEntity.badRequest().body("Invalid category ID");
+        if (response.getStatusCode().is2xxSuccessful()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ImgbbResponse imgbbResponse = mapper.readValue(response.getBody(), ImgbbResponse.class);
+                String imageUrl = imgbbResponse.getData().getUrl();
+                return ResponseEntity.ok(imageUrl);
+            } catch (IOException e) {
+                return ResponseEntity.status(500).body("Failed to parse Imgbb response: " + e.getMessage());
+            }
+        } else {
+            return ResponseEntity.status(response.getStatusCode()).body("Failed to upload image");
         }
-
-        // Create and save product
-        ProductSell productSell = new ProductSell();
-        productSell.setCarat(productSellDTO.getCarat());
-        productSell.setCategory(category);
-        productSell.setChi(productSellDTO.getChi());
-        productSell.setCost(productSellDTO.getCost());
-        productSell.setPDescription(productSellDTO.getPDescription());
-        productSell.setGemstoneType(productSellDTO.getGemstoneType());
-        productSell.setImage(imageBytes);
-        productSell.setManufacturer(productSellDTO.getManufacturer());
-        productSell.setMetalType(productSellDTO.getMetalType());
-        productSell.setPName(productSellDTO.getPName());
-        productSell.setProductCode(productSellDTO.getProductCode());
-        productSell.setProductCost(productSellDTO.getProductCost());
-        productSell.setPStatus(productSellDTO.isPStatus());
-
-        productSellRepository.save(productSell);
-
-        return ResponseEntity.ok("Product created successfully");
     }
 
 }
+

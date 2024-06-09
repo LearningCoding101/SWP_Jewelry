@@ -1,5 +1,6 @@
 package com.project.JewelryMS.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,5 +42,6 @@ public class Shift {
 
     //Suggestion: Change relations to Many to Many
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("shift")
     private List<StaffAccount> staffAccounts;
 }

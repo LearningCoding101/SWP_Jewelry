@@ -64,4 +64,11 @@ public class ProductSellController {
         return ResponseEntity.ok("Product deleted successfully");
     }
 
+    @PostMapping("productsell/adjustRatio/{ratio}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<Float> AdjustRatio(@PathVariable Float ratio){
+        productSellService.updatePricingRatio(ratio);
+        return ResponseEntity.ok(ratio);
+    }
+
 }
