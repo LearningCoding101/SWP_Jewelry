@@ -102,7 +102,7 @@ public class ProductSellService {
         productSell.setPDescription(request.getPDescription());
         productSell.setPName(request.getPName());
         productSell.setGemstoneType(request.getGemstoneType());
-        // Gọi phương thức uploadImageByPath và truyền MultipartFile image
+        // Gọi phương thức uploadImageByPath và send MultipartFile file image
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
         productSell.setImage(imageUrl);
         productSell.setManufacturer(request.getManufacturer());
@@ -118,6 +118,7 @@ public class ProductSellService {
         Float Totalprice = 0.0F;
         Float gemStonePrice = 127000000.0F;
         Float goldPrice = 0.0F;
+            //Get API Gold from Info Gold
             goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
         Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
         return Totalprice;

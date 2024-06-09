@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/promotion")
+@RequestMapping("api/promotion")
 @SecurityRequirement(name = "api")
 public class PromotionController {
     @Autowired

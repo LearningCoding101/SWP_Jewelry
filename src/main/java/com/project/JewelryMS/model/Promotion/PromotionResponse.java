@@ -14,5 +14,6 @@ public class PromotionResponse {
     Date startDate;
     Date endDate;
     boolean status;
+    int discount;
     List<String> productSell_id;
 }

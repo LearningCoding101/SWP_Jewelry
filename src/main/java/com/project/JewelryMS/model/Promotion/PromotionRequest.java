@@ -9,4 +9,5 @@ public class PromotionRequest {
     String description;
     Date startDate;
     Date endDate;
+    int discount;
 }
