@@ -8,9 +8,11 @@ import com.project.JewelryMS.service.ImageService;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,6 +71,12 @@ public class ProductSellController {
     public ResponseEntity<Float> AdjustRatio(@PathVariable Float ratio){
         productSellService.updatePricingRatio(ratio);
         return ResponseEntity.ok(ratio);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<String> handleFileUploadException(MultipartException ex) {
+        return ResponseEntity.status(HttpStatus.REQUEST_ENTITY_TOO_LARGE)
+                .body("File quá lớn, không thể gửi được");
     }
 
 }

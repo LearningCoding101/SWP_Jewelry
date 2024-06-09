@@ -3,6 +3,7 @@ package com.project.JewelryMS.model.ProductSell;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.Promotion;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CreateProductSellRequest {
@@ -11,7 +12,7 @@ public class CreateProductSellRequest {
     private int chi;
     private String pDescription;
     private String gemstoneType;
-    private String image;
+    private MultipartFile image;
     private float manufacturer;
     private String metalType;
     private String pName;
