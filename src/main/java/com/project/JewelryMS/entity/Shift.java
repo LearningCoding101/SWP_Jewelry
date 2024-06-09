@@ -39,6 +39,7 @@ public class Shift {
     @Column(name = "workArea")
     private String workArea;
 
+    //Suggestion: Change relations to Many to Many
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     private List<StaffAccount> staffAccounts;
 }
