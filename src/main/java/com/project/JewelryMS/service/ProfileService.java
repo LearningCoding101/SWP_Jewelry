@@ -1,4 +1,4 @@
-package com.project.JewelryMS.service.Profile;
+package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.RoleEnum;
@@ -11,6 +11,7 @@ import com.project.JewelryMS.repository.StaffAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -103,18 +104,19 @@ public class ProfileService {
         if (staffOptional.isPresent()) {
             StaffAccount staffAccount = staffOptional.get();
             if (staffAccount.getShift() != null) {
-                Shift shift = staffAccount.getShift();
+                List<Shift> shift = staffAccount.getShift();
                 return new ViewShiftResponse(
                         staffAccount.getAccount().getEmail(),
                         staffAccount.getAccount().getUsername(),
                         staffAccount.getPhoneNumber(),
-                        shift.getShiftID(),
-                        shift.getStartTime(),
-                        shift.getRegister(),
-                        shift.getEndTime(),
-                        shift.getShiftType(),
-                        shift.getStatus(),
-                        shift.getWorkArea()
+                        shift
+//                        shift.getShiftID(),
+//                        shift.getStartTime(),
+//                        shift.getRegister(),
+//                        shift.getEndTime(),
+//                        shift.getShiftType(),
+//                        shift.getStatus(),
+//                        shift.getWorkArea()
                 );
             } else {
                 // If the staff doesn't have an assigned shift

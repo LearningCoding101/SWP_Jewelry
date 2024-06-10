@@ -87,13 +87,14 @@ public class StaffAccountService {
                 account.getAccountName(),
                 account.getRole(),
                 account.getStatus(),
-                existingStaffAccount.getShift().getShiftID(), // Assuming shift ID is unchanged
-                existingStaffAccount.getShift().getStartTime(), // Assuming start time is unchanged
-                existingStaffAccount.getShift().getRegister(), // Assuming register is unchanged
-                existingStaffAccount.getShift().getEndTime(), // Assuming end time is unchanged
-                existingStaffAccount.getShift().getShiftType(), // Assuming shift type is unchanged
-                existingStaffAccount.getShift().getStatus(), // Assuming status is unchanged
-                existingStaffAccount.getShift().getWorkArea() // Assuming work area is unchanged
+                existingStaffAccount.getShift()
+//                existingStaffAccount.getShift().getShiftID(),
+//                existingStaffAccount.getShift().getStartTime(), // Assuming start time is unchanged
+//                existingStaffAccount.getShift().getRegister(), // Assuming register is unchanged
+//                existingStaffAccount.getShift().getEndTime(), // Assuming end time is unchanged
+//                existingStaffAccount.getShift().getShiftType(), // Assuming shift type is unchanged
+//                existingStaffAccount.getShift().getStatus(), // Assuming status is unchanged
+//                existingStaffAccount.getShift().getWorkArea() // Assuming work area is unchanged
         );
     }
 
@@ -113,4 +114,6 @@ public class StaffAccountService {
             throw new RuntimeException("StaffAccount with ID " + id + " not found");
         }
     }
+
+
 }

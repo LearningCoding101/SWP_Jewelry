@@ -70,6 +70,4 @@ public class ProductSell {
     @OneToMany(mappedBy = "productSell")
     @JsonIgnoreProperties
     Set<OrderDetail> orderDetails;
-
-
 }

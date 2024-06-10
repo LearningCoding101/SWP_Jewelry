@@ -1,12 +1,14 @@
 package com.project.JewelryMS.model.Staff;
 
 import com.project.JewelryMS.entity.RoleEnum;
+import com.project.JewelryMS.entity.Shift;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,17 +32,19 @@ public class StaffAccountResponse {
 
     private int status;
 
-    private int shiftID;
-
-    private Timestamp startTime;
-
-    private int register;
-
-    private Timestamp endTime;
-
-    private String shiftType;
-
-    private String shiftstatus;
-
-    private String workArea;
+    //Shifts details
+    private List<Shift> shift;
+//    private int shiftID;
+//
+//    private Timestamp startTime;
+//
+//    private int register;
+//
+//    private Timestamp endTime;
+//
+//    private String shiftType;
+//
+//    private Boolean shiftstatus;
+//
+//    private String workArea;
 }
