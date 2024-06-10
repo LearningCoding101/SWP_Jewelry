@@ -1,10 +1,17 @@
 package com.project.JewelryMS.controller;
 
+import com.project.JewelryMS.model.Order.OrderData;
 import com.project.JewelryMS.service.VNPAYservice;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 
 @RestController
 @RequestMapping("vnpay")
@@ -24,24 +31,20 @@ public class VNPAYController {
                               HttpServletRequest request){
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
-        return "redirect:" + vnpayUrl;
+        return vnpayUrl;
     }
 
     // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
     @GetMapping("/vnpay-payment-return")
-    public String paymentCompleted(HttpServletRequest request, Model model){
-        int paymentStatus =vnPayService.orderReturn(request);
+    public ResponseEntity paymentCompleted(HttpServletRequest request, Model model){
+        int paymentStatus = vnPayService.orderReturn(request);
 
-        String orderInfo = request.getParameter("vnp_OrderInfo");
-        String paymentTime = request.getParameter("vnp_PayDate");
-        String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalPrice = request.getParameter("vnp_Amount");
+        String redirectUrl = paymentStatus == 1 ? "/ordersuccess" : "/orderfail";
+        System.out.println(redirectUrl);
 
-        model.addAttribute("orderId", orderInfo);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
-        model.addAttribute("transactionId", transactionId);
+        HttpHeaders headers = new HttpHeaders();
 
-        return paymentStatus == 1 ? "ordersuccess" : "orderfail";
+        headers.setLocation(URI.create("http://jewelryms.xyz/staff" + redirectUrl)); // Removed the "/" before redirectUrl
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 }
