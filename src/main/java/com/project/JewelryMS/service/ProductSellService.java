@@ -3,6 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.Promotion;
+import com.project.JewelryMS.model.ProductSell.AddPromotionsRequest;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
