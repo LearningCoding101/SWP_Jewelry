@@ -93,7 +93,7 @@ public class OrderController {
 
     }
 
-    @PostMapping("SubTotal")
+    @PostMapping("/SubTotal")
     public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
         Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
         return ResponseEntity.ok(totalAmount);
