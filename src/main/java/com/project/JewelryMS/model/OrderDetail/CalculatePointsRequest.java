@@ -10,6 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CalculatePointsRequest {
-    private long customerId;
-    private List<OrderDetail> orderDetails;
+    Float Total;
 }

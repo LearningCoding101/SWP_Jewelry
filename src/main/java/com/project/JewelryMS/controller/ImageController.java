@@ -37,7 +37,7 @@ public class ImageController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PostMapping("/uploadByPath")
-    public ResponseEntity<String> uploadImageByPath(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadImageByPath(@RequestBody MultipartFile file) {
 
         String base64EncodedFile;
         try {
