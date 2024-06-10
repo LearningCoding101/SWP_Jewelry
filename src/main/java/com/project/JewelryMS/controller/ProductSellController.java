@@ -1,9 +1,8 @@
 package com.project.JewelryMS.controller;
 
 
-import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
-import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
-import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
+import com.project.JewelryMS.entity.ProductSell;
+import com.project.JewelryMS.model.ProductSell.*;
 import com.project.JewelryMS.service.ImageService;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -73,5 +72,16 @@ public class ProductSellController {
         return ResponseEntity.ok(ratio);
     }
 
+    @PostMapping("/addPromotions")
+    public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
+        ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
+        return ResponseEntity.ok(updatedProductSell);
+    }
+
+    @PostMapping("/removePromotions")
+    public ResponseEntity<ProductSell> removePromotionsFromProductSell(@RequestBody RemovePromotionRequest request) {
+        ProductSell updatedProductSell = productSellService.removePromotionsFromProductSell(request);
+        return ResponseEntity.ok(updatedProductSell);
+    }
 
 }

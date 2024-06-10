@@ -1,20 +1,20 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.model.CategoryRequest;
-import com.project.JewelryMS.model.CreateCategoryRequest;
+import com.project.JewelryMS.model.Category.CategoryRequest;
+import com.project.JewelryMS.model.Category.CategoryResponse;
+import com.project.JewelryMS.model.Category.CreateCategoryRequest;
 import com.project.JewelryMS.service.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
-//@SecurityRequirement(name = "api")
+@RequestMapping("/api/category")
+@SecurityRequirement(name = "api")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
@@ -25,21 +25,26 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-    @GetMapping("/readAll")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Category>>readAllCategory(){
-        System.out.println("pinged readall");
-        return ResponseEntity.ok(categoryService.readAllCategory());
+    @GetMapping("/readall")
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.readAllCategory();
+        return ResponseEntity.ok(categories);
     }
 
-    @PostMapping("/delete")
+    @GetMapping("read/{id}")
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+        CategoryResponse categoryResponse = categoryService.readByIDCategory(id);
+        return ResponseEntity.ok(categoryResponse);
+    }
+
+    @DeleteMapping("/delete")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestBody Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequest){
         categoryService.updateCategory(categoryRequest);

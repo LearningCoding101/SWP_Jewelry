@@ -22,6 +22,9 @@ public class Category {
     @Column(name="description")
     private String description;
 
+    @Column(name="status")
+    private int status;
+
     @OneToMany(mappedBy = "category")
     @JsonIgnoreProperties("category")
     private List<ProductSell> productSell;

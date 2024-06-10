@@ -2,6 +2,7 @@ package com.project.JewelryMS.controller;
 
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.project.JewelryMS.entity.OrderDetail;
+import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
@@ -106,9 +107,11 @@ public class OrderController {
     }
 
 
-//    @PostMapping("calculate-points")
-//    public void calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
-//        customerService.calculateAndUpdatePoints(request);
-//    }
+    @PostMapping("calculate-customer-points")
+    public ResponseEntity<Integer> calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
+        return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
+    }
+
+
 
 }
