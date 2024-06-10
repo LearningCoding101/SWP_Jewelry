@@ -25,9 +25,9 @@ public class ProductSellController {
     @Autowired
     ProductSellService productSellService;
     // Create a new ProductSell
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     @PostMapping("/create")
-    public ResponseEntity<ProductSellResponse> createProductSell(@RequestBody CreateProductSellRequest createProductSellRequest) {
+    public ResponseEntity<ProductSellResponse> createProductSell(@ModelAttribute CreateProductSellRequest createProductSellRequest) {
             ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
             return ResponseEntity.ok(createdProduct);
     }
