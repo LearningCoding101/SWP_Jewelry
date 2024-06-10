@@ -29,40 +29,13 @@ public class CustomerService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-//    @Transactional
-//    public void calculateAndUpdatePoints(CalculatePointsRequest request) {
-//        long customerId = request.getCustomerId();
-//        List<OrderDetail> orderDetails = request.getOrderDetails();
-//
-//        Customer customer = customerRepository.findById(customerId)
-//                .orElseThrow(() -> new RuntimeException("Customer not found"));
-//
-//        float totalPoints = 0;
-//
-//        for (OrderDetail orderDetail : orderDetails) {
-//            ProductSell productSell = productSellRepository.findById(orderDetail.getProductSell().getProductID())
-//                    .orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//            float cost = productSell.getCost();
-//            int quantity = orderDetail.getQuantity();
-//            String gemstoneType = productSell.getGemstoneType();
-//            String metalType = productSell.getMetalType();
-//            if (gemstoneType != null && gemstoneType.equals("Diamond")) {
-//                totalPoints +=  ((cost * quantity) / 2000000);
-//            } else if (metalType != null) {
-//                if (metalType.equals("Jewelry Gold 24k")) {
-//                    totalPoints +=  ((cost * quantity) / 2000000);
-//                } else if (metalType.equals("Gold Bar")) {
-//                    totalPoints +=  ((cost * quantity) / 6000000);
-//                } else {
-//                    totalPoints +=  ((cost * quantity) / 1000000);
-//                }
-//            }
-//        }
-//        int totalPoint = Math.round(totalPoints);
-//        customer.setPointAmount(customer.getPointAmount() + totalPoint);
-//        customerRepository.save(customer);
-//    }
+    @Transactional
+    public Integer calculateAndUpdatePoints(CalculatePointsRequest request) {
+        Float total = request.getTotal();
+        Float point = total / 1000000;
+        Integer points = Math.round(point);
+        return points;
+    }
 
     public String getCustomerRank(Long id) {
         Optional<Customer> customerOptional = customerRepository.findById(id);
@@ -138,4 +111,35 @@ public class CustomerService {
         return customerRepository.findByStatus(true);
     }
 
+
+//        long customerId = request.getCustomerId();
+//        List<OrderDetail> orderDetails = request.getOrderDetails();
+//
+//        Customer customer = customerRepository.findById(customerId)
+//                .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//        float totalPoints = 0;
+//
+//        for (OrderDetail orderDetail : orderDetails) {
+//            ProductSell productSell = productSellRepository.findById(orderDetail.getProductSell().getProductID())
+//                    .orElseThrow(() -> new RuntimeException("Product not found"));
+//
+//            float cost = productSell.getCost();
+//            int quantity = orderDetail.getQuantity();
+//            String gemstoneType = productSell.getGemstoneType();
+//            String metalType = productSell.getMetalType();
+//            if (gemstoneType != null && gemstoneType.equals("Diamond")) {
+//                totalPoints +=  ((cost * quantity) / 2000000);
+//            } else if (metalType != null) {
+//                if (metalType.equals("Jewelry Gold 24k")) {
+//                    totalPoints +=  ((cost * quantity) / 2000000);
+//                } else if (metalType.equals("Gold Bar")) {
+//                    totalPoints +=  ((cost * quantity) / 6000000);
+//                } else {
+//                    totalPoints +=  ((cost * quantity) / 1000000);
+//                }
+//            }
+//        }
+//        int totalPoint = Math.round(totalPoints);
+//        customer.setPointAmount(customer.getPointAmount() + totalPoint);
 }

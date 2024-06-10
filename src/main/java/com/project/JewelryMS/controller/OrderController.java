@@ -106,9 +106,9 @@ public class OrderController {
     }
 
 
-//    @PostMapping("calculate-points")
-//    public void calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
-//        customerService.calculateAndUpdatePoints(request);
-//    }
+    @PostMapping("calculate-customer-points")
+    public ResponseEntity<Integer> calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
+        return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
+    }
 
 }
