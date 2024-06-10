@@ -4,6 +4,7 @@ import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.Promotion;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
+import com.project.JewelryMS.model.OrderDetail.OrderPromotionRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
 import com.project.JewelryMS.repository.OrderDetailRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
@@ -54,12 +55,25 @@ public class OrderDetailService {
         return totalAmount;
     }
 
-    public Float calculateTotal(OrderTotalRequest orderTotalRequest){
-        Promotion promotion = promotionRepository.findById(orderTotalRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
+    public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest){
+        Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
         Integer discount = promotion.getDiscount();
         Float percentage = discount/100.0F;
-        Float discountAmount = orderTotalRequest.getSubTotal() * percentage;
-        Float total =  orderTotalRequest.getSubTotal() - discountAmount;  // Tổng giá trị sau khi áp dụng giảm giá
+        Float totalAmount = 0.0F;
+        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
+        if(productSellOptional.isPresent()) {
+            ProductSell productSell = productSellOptional.get();
+            float productCost = productSell.getCost();
+            int quantity = orderPromotionRequest.getQuantity();
+            totalAmount = productCost * quantity;
+        }
+        return totalAmount * percentage;
+    }
+
+    public Float TotalOrder(OrderTotalRequest orderTotalRequest){
+        Float subtotal = orderTotalRequest.getSubTotal();
+        Float discountProuduct = orderTotalRequest.getDiscountProduct();
+        Float total = subtotal - discountProuduct;
         return total;
     }
 }
