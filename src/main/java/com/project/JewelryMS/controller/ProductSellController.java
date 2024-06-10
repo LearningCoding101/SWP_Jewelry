@@ -1,6 +1,7 @@
 package com.project.JewelryMS.controller;
 
 
+import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
 import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
@@ -73,5 +74,10 @@ public class ProductSellController {
         return ResponseEntity.ok(ratio);
     }
 
+    @PostMapping("/addPromotions")
+    public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
+        ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
+        return ResponseEntity.ok(updatedProductSell);
+    }
 
 }

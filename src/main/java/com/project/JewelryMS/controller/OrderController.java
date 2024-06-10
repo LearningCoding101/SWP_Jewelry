@@ -112,10 +112,6 @@ public class OrderController {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
     }
 
-    @PostMapping("/addPromotions")
-    public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
-        ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
-        return ResponseEntity.ok(updatedProductSell);
-    }
+
 
 }
