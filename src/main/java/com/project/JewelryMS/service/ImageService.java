@@ -6,6 +6,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,11 +34,7 @@ public class ImageService {
         }
     }
 
-    public String convertFileToBase64(File file) throws IOException {
-        BufferedImage img = ImageIO.read(file);
-        String formatName = getFileExtension(file);
-        return imgToBase64String(img, formatName);
-    }
+
 
     private String getFileExtension(File file) {
         String name = file.getName();
@@ -50,31 +47,25 @@ public class ImageService {
 
     private final String apiKey = "af69290db25a827d6f9ccd1adb503dbe";
 
-    public String uploadBase64ImageToImgbb(String image) throws IOException {
-        String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
+    public String uploadImageByPathService(MultipartFile file) {
 
-        File imageFile = new File(image);
-
-        String base64Image;
+        String base64EncodedFile;
         try {
-            base64Image = convertFileToBase64(imageFile);
+            // Chuyển đổi MultipartFile thành base64
+            byte[] fileBytes = file.getBytes();
+            base64EncodedFile = Base64.getEncoder().encodeToString(fileBytes);
         } catch (IOException e) {
-            throw new RuntimeException();
+            return "Failed to read the file: ";
         }
 
-        // Create headers
+        String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        // Create the body
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("image", base64Image);
-
+        body.add("image", base64EncodedFile);
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
                 ObjectMapper mapper = new ObjectMapper();
@@ -82,10 +73,10 @@ public class ImageService {
                 String imageUrl = imgbbResponse.getData().getUrl();
                 return imageUrl;
             } catch (IOException e) {
-                throw new RuntimeException("Fail to Upload Image");
+                return "Failed to parse Imgbb response";
             }
         } else {
-            throw new RuntimeException("Fail to Upload Image");
+            return "Failed to upload image";
         }
     }
 

@@ -47,7 +47,12 @@ public class PromotionService {
         promotion.setDescription(createPromotionRequest.getDescription());
         promotion.setStartDate(createPromotionRequest.getStartDate());
         promotion.setEndDate(createPromotionRequest.getEndDate());
-
+        if(createPromotionRequest.getDiscount()>=0 && createPromotionRequest.getDiscount()<=100) {
+            promotion.setDiscount(createPromotionRequest.getDiscount());
+            promotionRepository.save(promotion);
+        }else{
+            throw new RuntimeException("Can't Set Promotion <0 and >100");
+        }
         validateDateOrder(promotion.getStartDate(), promotion.getEndDate());
 
         // Check if the end date is before the current date
@@ -123,7 +128,12 @@ public class PromotionService {
             promotion.setDescription(promotionRequest.getDescription());
             promotion.setStartDate(promotionRequest.getStartDate());
             promotion.setEndDate(promotionRequest.getEndDate());
-            promotionRepository.save(promotion);
+            if(promotionRequest.getDiscount()>=0 && promotionRequest.getDiscount()<=100) {
+                promotion.setDiscount(promotionRequest.getDiscount());
+                promotionRepository.save(promotion);
+            }else{
+                throw new RuntimeException("Can't Set Promotion <0 and >100");
+            }
         }
     }
 
