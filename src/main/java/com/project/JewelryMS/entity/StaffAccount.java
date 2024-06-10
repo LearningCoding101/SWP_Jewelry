@@ -31,7 +31,7 @@ public class StaffAccount {
 //    @JsonIgnoreProperties
 //    private Shift shift;
 
-    @ManyToMany(mappedBy = "staffAccount", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER) //shouldn't have a mappedBy = "staffAccount"
     @JoinTable(
             name = "staff_shift",
             joinColumns = @JoinColumn(name = "staffID", referencedColumnName = "PK_staffID"),

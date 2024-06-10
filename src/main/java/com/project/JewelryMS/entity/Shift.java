@@ -40,7 +40,7 @@ public class Shift {
     @Column(name = "workArea")
     private String workArea;
 
-    @ManyToMany(mappedBy = "shift", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "shift", fetch = FetchType.EAGER)
 //    @JsonIgnoreProperties("shift")
     private List<StaffAccount> staffAccounts;
 

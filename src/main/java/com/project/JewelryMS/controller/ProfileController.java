@@ -1,7 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.model.Profile.*;
-import com.project.JewelryMS.service.Profile.ProfileService;
+import com.project.JewelryMS.service.ProfileService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
