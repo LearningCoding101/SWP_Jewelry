@@ -43,6 +43,24 @@ public class ProductSellService {
 
     @Autowired
     ImageService imageService;
+    public ProductSell addPromotionsToProductSell(AddPromotionsRequest request) {
+        Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSellId());
+        if (!productSellOpt.isPresent()) {
+            throw new IllegalArgumentException("ProductSell ID not found");
+        }
+
+        ProductSell productSell = productSellOpt.get();
+        List<Promotion> existingPromotions = productSell.getPromotion();
+        for (Long promotionId : request.getPromotionIds()) {
+            Optional<Promotion> promotionOpt = promotionRepository.findById(promotionId);
+            if (promotionOpt.isPresent() && !existingPromotions.contains(promotionOpt.get())) {
+                existingPromotions.add(promotionOpt.get());
+            }
+        }
+
+        productSell.setPromotion(existingPromotions);
+        return productSellRepository.save(productSell);
+    }
 
     public List<ProductSellResponse> getAllProductSellResponses() {
         List<ProductSellResponse> responses = new ArrayList<>();
