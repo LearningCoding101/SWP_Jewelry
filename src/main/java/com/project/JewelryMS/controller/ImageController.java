@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.Image.ImgbbResponse;
+import com.project.JewelryMS.model.ImageTestRequest;
 import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
@@ -35,14 +36,13 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     @PostMapping("/uploadByPath")
-    public ResponseEntity<String> uploadImageByPath(@RequestBody MultipartFile file) {
+    public ResponseEntity<String> uploadImageByPath(@ModelAttribute ImageTestRequest imageTestRequest) {
 
         String base64EncodedFile;
         try {
             // Chuyển đổi MultipartFile thành base64
-            byte[] fileBytes = file.getBytes();
+            byte[] fileBytes = imageTestRequest.getImage().getBytes();
             base64EncodedFile = Base64.getEncoder().encodeToString(fileBytes);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Failed to read the file: " + e.getMessage());
