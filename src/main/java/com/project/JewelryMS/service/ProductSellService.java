@@ -3,10 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.Promotion;
-import com.project.JewelryMS.model.ProductSell.AddPromotionsRequest;
-import com.project.JewelryMS.model.ProductSell.CreateProductSellRequest;
-import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
-import com.project.JewelryMS.model.ProductSell.ProductSellResponse;
+import com.project.JewelryMS.model.ProductSell.*;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.repository.PromotionRepository;
@@ -44,6 +41,23 @@ public class ProductSellService {
 
     @Autowired
     ImageService imageService;
+
+    public ProductSell removePromotionsFromProductSell(RemovePromotionRequest request) {
+        Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSellId());
+        if (!productSellOpt.isPresent()) {
+            throw new IllegalArgumentException("ProductSell ID not found");
+        }
+
+        ProductSell productSell = productSellOpt.get();
+        List<Promotion> existingPromotions = productSell.getPromotion();
+        for (Long promotionId : request.getPromotionIds()) {
+            existingPromotions.removeIf(promotion -> promotion.getPK_promotionID() == promotionId);
+        }
+
+        productSell.setPromotion(existingPromotions);
+        return productSellRepository.save(productSell);
+    }
+
     public ProductSell addPromotionsToProductSell(AddPromotionsRequest request) {
         Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSellId());
         if (!productSellOpt.isPresent()) {
