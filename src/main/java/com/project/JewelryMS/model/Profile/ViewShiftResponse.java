@@ -16,14 +16,14 @@ public class ViewShiftResponse {
     String username;
     String phone;
 
-    //Shift details
-    private List<Shift> shift;
+    //Shift Details
+    List<Shift> shift;
 
 //    int shiftID;
 //    Timestamp startTime;
 //    int register;
 //    Timestamp endTime;
 //    String shiftType;
-//    String status;
+//    Boolean status;
 //    String workArea;
 }

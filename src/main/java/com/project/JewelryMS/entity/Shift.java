@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,13 +37,16 @@ public class Shift {
     private Timestamp startTime;
 
     @Column(name = "status")
-    private Boolean status;
+    private String status;
 
     @Column(name = "workArea")
     private String workArea;
 
-    @ManyToMany(mappedBy = "shift", fetch = FetchType.EAGER)
-//    @JsonIgnoreProperties("shift")
+    @ManyToMany(mappedBy = "shift", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("shift")
     private List<StaffAccount> staffAccounts;
+
+    @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
+    Set<Staff_Shift> staffShifts;
 
 }

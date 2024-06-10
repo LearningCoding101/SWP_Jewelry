@@ -88,6 +88,7 @@ public class StaffAccountService {
                 account.getRole(),
                 account.getStatus(),
                 existingStaffAccount.getShift()
+//                existingStaffAccount.getShift().getShiftID(),
 //                existingStaffAccount.getShift().getStartTime(), // Assuming start time is unchanged
 //                existingStaffAccount.getShift().getRegister(), // Assuming register is unchanged
 //                existingStaffAccount.getShift().getEndTime(), // Assuming end time is unchanged
@@ -113,4 +114,6 @@ public class StaffAccountService {
             throw new RuntimeException("StaffAccount with ID " + id + " not found");
         }
     }
+
+
 }

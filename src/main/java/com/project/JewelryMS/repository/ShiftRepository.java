@@ -37,7 +37,7 @@ public interface ShiftRepository extends JpaRepository<Shift, Integer> {
     @Query("SELECT new com.project.JewelryMS.model.Shift.ShiftRequest(" +
             "s.shiftID, s.endTime, s.register, s.shiftType, s.startTime, s.status, s.workArea) " +
             "FROM Shift s WHERE s.status = :status")
-    List<ShiftRequest> findByStatus(@Param("status") Boolean status);
+    List<ShiftRequest> findByStatus(@Param("status") String status);
 
     // Find shifts by register
     @Query("SELECT new com.project.JewelryMS.model.Shift.ShiftRequest(" +

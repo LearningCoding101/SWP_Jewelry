@@ -109,7 +109,8 @@ public class ProfileService {
                         staffAccount.getAccount().getEmail(),
                         staffAccount.getAccount().getUsername(),
                         staffAccount.getPhoneNumber(),
-                        shift.stream().toList()
+                        shift
+//                        shift.getShiftID(),
 //                        shift.getStartTime(),
 //                        shift.getRegister(),
 //                        shift.getEndTime(),

@@ -61,7 +61,7 @@ public class ShiftService {
     }
 
     // Read Shifts by status
-    public List<ShiftRequest> getShiftsByStatus(Boolean status) {
+    public List<ShiftRequest> getShiftsByStatus(String status) {
         return shiftRepository.findByStatus(status);
     }
 
@@ -99,7 +99,7 @@ public class ShiftService {
         if (shiftOptional.isPresent()) {
             Shift shift = shiftOptional.get();
             if (shift != null) {
-                Boolean status=false;
+                String status="Unapplicable";
                 shift.setStatus(status);
                 shiftRepository.save(shift);
             } else {
@@ -109,4 +109,8 @@ public class ShiftService {
             throw new RuntimeException("Shift ID" + deleteShiftRequest.getShiftID()+ " not found");
         }
     }
+
+
+
+
 }

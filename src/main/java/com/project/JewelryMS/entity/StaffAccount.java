@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,7 +32,7 @@ public class StaffAccount {
 //    @JsonIgnoreProperties
 //    private Shift shift;
 
-    @ManyToMany(fetch = FetchType.EAGER) //shouldn't have a mappedBy = "staffAccount"
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "staff_shift",
             joinColumns = @JoinColumn(name = "staffID", referencedColumnName = "PK_staffID"),
@@ -47,5 +48,9 @@ public class StaffAccount {
 
     @Column(name = "startDate")
     private Date startDate;
+
+    @OneToMany(mappedBy = "staffAccount")
+    @JsonIgnoreProperties
+    Set<Staff_Shift> staffShifts;
 
 }

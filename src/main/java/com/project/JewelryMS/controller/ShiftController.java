@@ -65,7 +65,7 @@ public class ShiftController {
     // Read Shifts by status
     @GetMapping("/read/status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<List<ShiftRequest>> getShiftsByStatus(@RequestParam("status") Boolean status) {
+    public ResponseEntity<List<ShiftRequest>> getShiftsByStatus(@RequestParam("status") String status) {
         return ResponseEntity.ok(shiftService.getShiftsByStatus(status));
     }
 

@@ -32,7 +32,7 @@ public class StaffAccountResponse {
 
     private int status;
 
-    //List of Shifts
+    //Shifts details
     private List<Shift> shift;
 //    private int shiftID;
 //
@@ -44,7 +44,7 @@ public class StaffAccountResponse {
 //
 //    private String shiftType;
 //
-//    private String shiftstatus;
+//    private Boolean shiftstatus;
 //
 //    private String workArea;
 }
