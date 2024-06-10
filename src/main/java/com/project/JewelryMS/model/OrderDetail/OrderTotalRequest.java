@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class OrderTotalRequest {
     Float subTotal;
-    Long PromotionID;
+    Float DiscountProduct;
 }
