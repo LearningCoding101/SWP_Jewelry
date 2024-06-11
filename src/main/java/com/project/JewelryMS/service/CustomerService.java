@@ -2,8 +2,10 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Customer;
 import com.project.JewelryMS.entity.OrderDetail;
+import com.project.JewelryMS.entity.Performance;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.Customer.CreateCustomerRequest;
+import com.project.JewelryMS.model.Customer.CustomerDeleteRequest;
 import com.project.JewelryMS.model.Customer.CustomerRequest;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
 import com.project.JewelryMS.model.Customer.ViewCustomerPointRequest;
@@ -116,12 +118,20 @@ public class CustomerService {
         }
     }
 
-    public void deleteCustomerById(long id) {
-        Optional<Customer> customerUpdate = customerRepository.findById(id);
-        customerUpdate.ifPresent(customer -> {
-            customer.setStatus(false); // Set status to false
-            customerRepository.save(customer);
-        });
+    public void deleteCustomerById(CustomerDeleteRequest customerDeleteRequest) {
+        Optional<Customer> customerOptional = customerRepository.findById(customerDeleteRequest.getPK_CustomerID());
+        if (customerOptional.isPresent()) {
+            Customer customer = customerOptional.get();
+            if (customer != null) {
+                boolean status=false;
+                customer.setStatus(status);
+                customerRepository.save(customer);
+            } else {
+                throw new RuntimeException("Customer with ID:  " + customerDeleteRequest.getPK_CustomerID()+ " not found");
+            }
+        } else {
+            throw new RuntimeException("Customer ID" + customerDeleteRequest.getPK_CustomerID()+ " not found");
+        }
     }
 
 
