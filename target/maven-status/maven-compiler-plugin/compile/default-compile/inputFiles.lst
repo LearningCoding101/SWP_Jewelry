@@ -42,11 +42,13 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\JewelryMsApplication.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountIDRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountResponseGG.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\CategoryRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CreateCategoryRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ChangePasswordRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\CodeService.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\CreateCategoryRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
@@ -69,6 +71,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\CalculatePointsRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\CreatePerformanceRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\DeletePerformanceRequest.java
@@ -76,9 +79,11 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\AddPromotionsRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\CreateProductSellRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\ProductSellRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\ProductSellResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\AdminProfileResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\ManagerProfileResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\StaffProfileResponse.java

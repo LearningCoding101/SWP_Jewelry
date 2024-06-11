@@ -3,6 +3,7 @@ package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Customer;
 import com.project.JewelryMS.model.Customer.CreateCustomerRequest;
+import com.project.JewelryMS.model.Customer.CustomerDeleteRequest;
 import com.project.JewelryMS.model.Customer.CustomerRequest;
 import com.project.JewelryMS.model.Customer.ViewCustomerPointRequest;
 import com.project.JewelryMS.service.CustomerService;
@@ -68,8 +69,8 @@ public class CustomerController {
     //Delete section
     @PatchMapping("/delete-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> deleteCustomer(@RequestBody long id){
-        customerService.deleteCustomerById(id);
+    public ResponseEntity<String> deleteCustomer(@RequestBody CustomerDeleteRequest request){
+        customerService.deleteCustomerById(request);
         return ResponseEntity.ok("Customer details marked as inactive successfully");
     }
 
