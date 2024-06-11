@@ -48,5 +48,4 @@ public class Shift {
 
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     Set<Staff_Shift> staffShifts;
-
 }
