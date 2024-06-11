@@ -13,11 +13,25 @@ import java.sql.Timestamp;
 //import java.security.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShiftService {
     @Autowired
     ShiftRepository shiftRepository;
+
+    // Helper method to convert a Shift entity to a ShiftRequest DTO
+    private ShiftRequest toShiftRequest(Shift shift) {
+        return new ShiftRequest(
+                shift.getShiftID(),
+                shift.getEndTime(),
+                shift.getRegister(),
+                shift.getShiftType(),
+                shift.getStartTime(),
+                shift.getStatus(),
+                shift.getWorkArea()
+        );
+    }
 
     // Create Shift
     public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
@@ -31,48 +45,76 @@ public class ShiftService {
         newShift.setWorkArea(createShiftRequest.getWorkArea());
 
         Shift newShiftAddition= shiftRepository.save(newShift);
-        return getShiftById(newShiftAddition.getShiftID());
+        return toShiftRequest(newShiftAddition);
     }
 
     // Read all Shifts
     public List<ShiftRequest> readAllShifts() {
-        return shiftRepository.listAll();
+        List<Shift> shifts = shiftRepository.listAll();
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shift by ID
     public ShiftRequest getShiftById(Integer id) {
-        Optional<ShiftRequest> shiftOptional = shiftRepository.findByShiftId(id);
-        return shiftOptional.orElse(null);
+        Shift shift = shiftRepository.findByShiftId(id);
+        return shift != null ? toShiftRequest(shift) : null;
     }
 
     // Read Shifts by start time
     public List<ShiftRequest> getShiftsByStartTime(Timestamp startTime) {
-        return shiftRepository.findByStartTime(startTime);
+        List<Shift> shifts = shiftRepository.findByStartTime(startTime);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shifts by end time
     public List<ShiftRequest> getShiftsByEndTime(Timestamp endTime) {
-        return shiftRepository.findByEndTime(endTime);
+        List<Shift> shifts = shiftRepository.findByEndTime(endTime);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shifts by shift type
     public List<ShiftRequest> getShiftsByShiftType(String shiftType) {
-        return shiftRepository.findByShiftType(shiftType);
+        List<Shift> shifts = shiftRepository.findByShiftType(shiftType);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shifts by status
     public List<ShiftRequest> getShiftsByStatus(String status) {
-        return shiftRepository.findByStatus(status);
+        List<Shift> shifts = shiftRepository.findByStatus(status);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shifts by register
     public List<ShiftRequest> getShiftsByRegister(int register) {
-        return shiftRepository.findByRegister(register);
+        List<Shift> shifts = shiftRepository.findByRegister(register);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     // Read Shifts by work area
     public List<ShiftRequest> getShiftsByWorkArea(String workArea) {
-        return shiftRepository.findByWorkArea(workArea);
+        List<Shift> shifts = shiftRepository.findByWorkArea(workArea);
+
+        return shifts.stream()
+                .map(this::toShiftRequest)
+                .collect(Collectors.toList());
     }
 
     public Shift updateShiftDetails(ShiftRequest shiftRequest) {
@@ -109,8 +151,5 @@ public class ShiftService {
             throw new RuntimeException("Shift ID" + deleteShiftRequest.getShiftID()+ " not found");
         }
     }
-
-
-
-
 }
+
