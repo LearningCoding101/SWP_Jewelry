@@ -35,28 +35,28 @@ public class ShiftController {
     }
 
     // Read Shift by ID
-    @GetMapping("readbyid")
+    @GetMapping("readById")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<ShiftRequest> getShiftById(@RequestParam("id") int id) {
         return ResponseEntity.ok(shiftService.getShiftById(id));
     }
 
     // Read Shifts by start time
-    @GetMapping("/read/starttime")
+    @GetMapping("/read/startTime")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<ShiftRequest>> getShiftsByStartTime(@RequestParam("startTime") Timestamp startTime) {
         return ResponseEntity.ok(shiftService.getShiftsByStartTime(startTime));
     }
 
     // Read Shifts by end time
-    @GetMapping("/read/endtime")
+    @GetMapping("/read/endTime")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<ShiftRequest>> getShiftsByEndTime(@RequestParam("endTime") Timestamp endTime) {
         return ResponseEntity.ok(shiftService.getShiftsByEndTime(endTime));
     }
 
     // Read Shifts by shift type
-    @GetMapping("/read/shifttype")
+    @GetMapping("/read/shiftType")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<ShiftRequest>> getShiftsByShiftType(@RequestParam("shiftType") String shiftType) {
         return ResponseEntity.ok(shiftService.getShiftsByShiftType(shiftType));
@@ -77,7 +77,7 @@ public class ShiftController {
     }
 
     // Read Shifts by work area
-    @GetMapping("/read/workarea")
+    @GetMapping("/read/workArea")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<ShiftRequest>> getShiftsByWorkArea(@RequestParam("workArea") String workArea) {
         return ResponseEntity.ok(shiftService.getShiftsByWorkArea(workArea));
