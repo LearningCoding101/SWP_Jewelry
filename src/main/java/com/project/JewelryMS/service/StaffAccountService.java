@@ -43,6 +43,7 @@ public class StaffAccountService {
                 .collect(Collectors.toList());
     }
 
+    // Read by ID
     public StaffAccountResponse getStaffAccountById(Integer id) {
         Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
         return staffAccountOptional.map(this::mapToStaffAccountResponse).orElse(null);
@@ -60,9 +61,9 @@ public class StaffAccountService {
         response.setEmail(staffAccount.getAccount().getEmail());
         response.setUsername(staffAccount.getAccount().getUsername());
 
-        if (staffAccount.getShift() != null && !staffAccount.getShift().isEmpty()) {
-            List<StaffAccountResponse.ShiftResponse> shifts = staffAccount.getShift().stream()
-                    .map(this::mapToShiftResponse)
+        if (staffAccount.getStaffShifts() != null && !staffAccount.getStaffShifts().isEmpty()) {
+            List<StaffAccountResponse.ShiftResponse> shifts = staffAccount.getStaffShifts().stream()
+                    .map(staffShift -> mapToShiftResponse(staffShift.getShift()))
                     .collect(Collectors.toList());
             response.setShift(shifts);
         } else {

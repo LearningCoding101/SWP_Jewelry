@@ -99,32 +99,32 @@ public class ProfileService {
         return null;
     }
 
-    public ViewShiftResponse viewShiftProfile(Integer staffId) {
-        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(staffId);
-        if (staffOptional.isPresent()) {
-            StaffAccount staffAccount = staffOptional.get();
-            if (staffAccount.getShift() != null) {
-                List<Shift> shift = staffAccount.getShift();
-                return new ViewShiftResponse(
-                        staffAccount.getAccount().getEmail(),
-                        staffAccount.getAccount().getUsername(),
-                        staffAccount.getPhoneNumber(),
-                        shift
-//                        shift.getShiftID(),
-//                        shift.getStartTime(),
-//                        shift.getRegister(),
-//                        shift.getEndTime(),
-//                        shift.getShiftType(),
-//                        shift.getStatus(),
-//                        shift.getWorkArea()
-                );
-            } else {
-                // If the staff doesn't have an assigned shift
-                return null;
-            }
-        }
-        return null; // Staff not found
-    }
+//    public ViewShiftResponse viewShiftProfile(Integer staffId) {
+//        Optional<StaffAccount> staffOptional = staffAccountRepository.findById(staffId);
+//        if (staffOptional.isPresent()) {
+//            StaffAccount staffAccount = staffOptional.get();
+//            if (staffAccount.getStaffShifts() != null) {
+//                List<Shift> shift = staffAccount.getShift();
+//                return new ViewShiftResponse(
+//                        staffAccount.getAccount().getEmail(),
+//                        staffAccount.getAccount().getUsername(),
+//                        staffAccount.getPhoneNumber(),
+//                        shift
+////                        shift.getShiftID(),
+////                        shift.getStartTime(),
+////                        shift.getRegister(),
+////                        shift.getEndTime(),
+////                        shift.getShiftType(),
+////                        shift.getStatus(),
+////                        shift.getWorkArea()
+//                );
+//            } else {
+//                // If the staff doesn't have an assigned shift
+//                return null;
+//            }
+//        }
+//        return null; // Staff not found
+//    }
 
 
 }

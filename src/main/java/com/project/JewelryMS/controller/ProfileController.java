@@ -64,15 +64,15 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/staffshift/{staffId}")
-    @PreAuthorize("hasRole('ROLE_STAFF')")
-    public ResponseEntity<ViewShiftResponse> viewStaffShiftProfile(@PathVariable Integer staffId) {
-        ViewShiftResponse response = profileService.viewShiftProfile(staffId);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build(); // Staff not found or doesn't have a shift
-        }
-    }
+//    @GetMapping("/staffshift/{staffId}")
+//    @PreAuthorize("hasRole('ROLE_STAFF')")
+//    public ResponseEntity<ViewShiftResponse> viewStaffShiftProfile(@PathVariable Integer staffId) {
+//        ViewShiftResponse response = profileService.viewShiftProfile(staffId);
+//        if (response != null) {
+//            return ResponseEntity.ok(response);
+//        } else {
+//            return ResponseEntity.notFound().build(); // Staff not found or doesn't have a shift
+//        }
+//    }
 
 }

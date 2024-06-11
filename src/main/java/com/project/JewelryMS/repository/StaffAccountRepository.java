@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface StaffAccountRepository extends JpaRepository<StaffAccount, Integer> {
 
-        @Query("SELECT sa FROM StaffAccount sa JOIN sa.account a WHERE a.role = 'ROLE_STAFF' AND a.status = 1")
+   @Query("SELECT sa FROM StaffAccount sa JOIN sa.account a WHERE a.role = 'ROLE_STAFF' AND a.status = 1")
         List<StaffAccount> findAllStaffAccountsByRoleStaff();
 
-        @Query("SELECT sa FROM StaffAccount sa JOIN sa.account a WHERE a.role = 'ROLE_STAFF' AND a.status = 1 AND sa.staffID = :id")
+   @Query("SELECT sa FROM StaffAccount sa JOIN sa.account a WHERE a.role = 'ROLE_STAFF' AND a.status = 1 AND sa.staffID = :id")
         Optional<StaffAccount> findIDStaffAccount(@Param("id") Integer id);
 }

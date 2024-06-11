@@ -100,6 +100,7 @@ public class ProductSellService {
 
                 if (productSell.getCategory() != null) {
                     response.setCategory_id(productSell.getCategory().getId());
+                    response.setCategory_name(productSell.getCategory().getName());
                 }
                 int id = (int) productSell.getProductID();
                 List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((productSell.getProductID()));
@@ -171,23 +172,21 @@ public class ProductSellService {
         return productSellRepository.findAll();
     }
 
+    public ProductSell getProductSellById(long id) {
+        Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
+        if(productSellOptional.isPresent()){
+            ProductSell productSell = productSellOptional.get();
+            return productSell;
+        }
+        return productSellOptional.get();
+    }
+
     public ProductSellResponse getProductSellById2(long id) {
         ProductSell productSell = productSellRepository.findByIdWithCategoryAndPromotion(id)
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
         return mapToProductSellResponse(productSell);
     }
-
-    public ProductSell getProductSellById(long id) {
-            Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
-            if(productSellOptional.isPresent()){
-                ProductSell productSell = productSellOptional.get();
-                return productSell;
-            }
-            return productSellOptional.get();
-    }
-
-
 
     private ProductSellResponse mapToProductSellResponse(ProductSell productSell) {
         ProductSellResponse response = new ProductSellResponse();
@@ -206,6 +205,7 @@ public class ProductSellService {
 
         if (productSell.getCategory() != null) {
             response.setCategory_id(productSell.getCategory().getId());
+            response.setCategory_name(productSell.getCategory().getName());
         }
 
         List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId(productSell.getProductID());
