@@ -95,23 +95,31 @@ public class OrderController {
 
     }
 
-    @PostMapping("/SubTotal")
+    @GetMapping("/SubTotal")
     public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
         Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @PostMapping("/DiscountProduct")
-    public ResponseEntity<Float> calculateTotal(@RequestBody OrderPromotionRequest orderPromotionRequest) {
+    @GetMapping("/DiscountProduct")
+    public ResponseEntity<Float> calculateDiscount(@RequestBody OrderPromotionRequest orderPromotionRequest) {
         Float totalAmount = orderDetailService.calculateDiscountProduct(orderPromotionRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @PostMapping("/Total")
-    public ResponseEntity<Float> calculateTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
-        Float totalAmount = orderDetailService.TotalOrder(orderTotalRequest);
+    @GetMapping("/OrderDetailsTotal")
+    public ResponseEntity<Float> calculateOrderDetailTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
+        Float totalAmount = orderDetailService.TotalOrderDetails(orderTotalRequest);
         return ResponseEntity.ok(totalAmount);
     }
+
+    @PostMapping("/OrderTotal")
+    public ResponseEntity<TotalOrderResponse> calculateOrderTotal(@RequestBody List<TotalOrderRequest> totalOrderRequests) {
+        TotalOrderResponse totalOrderResponse = orderDetailService.totalOrder(totalOrderRequests);
+        return ResponseEntity.ok(totalOrderResponse);
+    }
+
+
 
 
     @PostMapping("calculate-customer-points")
