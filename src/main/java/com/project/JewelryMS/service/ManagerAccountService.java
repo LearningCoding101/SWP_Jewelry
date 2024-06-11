@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ManagerAccountService {
@@ -26,12 +27,30 @@ public class ManagerAccountService {
     @Autowired
     AuthenticationRepository authenticationRepository;
 
+    // Get all manager accounts
     public List<ManagerAccountResponse> getAllManagerAccounts() {
-        return managerAccountRepository.findAllManagerAccounts();
+        List<Account> accounts = managerAccountRepository.findAllManagerAccounts();
+        return accounts.stream()
+                .map(this::mapToManagerAccountResponse)
+                .collect(Collectors.toList());
     }
 
+    // Get manager account by ID
     public ManagerAccountResponse getManagerAccountById(Integer id) {
-        return managerAccountRepository.findManagerAccountById(id);
+        Optional<Account> accountOptional = managerAccountRepository.findManagerAccountById(id);
+        return accountOptional.map(this::mapToManagerAccountResponse).orElse(null);
+    }
+
+    // Mapper method to convert Account to ManagerAccountResponse
+    private ManagerAccountResponse mapToManagerAccountResponse(Account account) {
+        return new ManagerAccountResponse(
+                account.getPK_userID(),
+                account.getEmail(),
+                account.getAUsername(),
+                account.getAccountName(),
+                account.getRole(),
+                account.getStatus()
+        );
     }
 
     public ManagerAccountResponse createManagerAccount(CreateManagerAccountRequest createManagerAccountRequest){
