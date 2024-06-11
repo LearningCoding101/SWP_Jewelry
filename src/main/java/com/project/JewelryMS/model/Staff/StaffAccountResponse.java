@@ -15,36 +15,27 @@ import java.util.List;
 @NoArgsConstructor
 public class StaffAccountResponse {
     private int staffID;
-
     private String phoneNumber;
-
     private float salary;
-
     private Date startDate;
-
-    private String Email;
-
-    private String aUsername;
-
     private String accountName;
-
     private RoleEnum role;
-
     private int status;
+    private String email;
+    private String username;
+    private List<ShiftResponse> shift;
 
-    //Shifts details
-    private List<Shift> shift;
-//    private int shiftID;
-//
-//    private Timestamp startTime;
-//
-//    private int register;
-//
-//    private Timestamp endTime;
-//
-//    private String shiftType;
-//
-//    private Boolean shiftstatus;
-//
-//    private String workArea;
+    // Getters and Setters
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ShiftResponse {
+        private int shiftID;
+        private Timestamp endTime;
+        private int register;
+        private String shiftType;
+        private Timestamp startTime;
+        private String status;
+        private String workArea;
+    }
 }

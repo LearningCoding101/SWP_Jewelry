@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="Staff_Shift")
 public class Staff_Shift implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

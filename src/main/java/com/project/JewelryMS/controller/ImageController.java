@@ -50,11 +50,16 @@ public class ImageController {
 
         String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
         HttpHeaders headers = new HttpHeaders();
+        //set Content type Header. The data sent in the HTTP request body will be URL encoded.
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        //A MultiValueMap is created to hold the form data that will be sent in the request body.
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("image", base64EncodedFile);
+        // HttpEntity object is created, which encapsulates both the headers and the body of the HTTP request.
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
+        //Make Http Request
         RestTemplate restTemplate = new RestTemplate();
+        //Send Http Request restTemplate.exchange
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             try {
