@@ -80,7 +80,6 @@ public class CustomerService {
     public void updateCustomerDetails(CustomerRequest customerRequest) {
         Optional<Customer> customerUpdate = customerRepository.findById(customerRequest.getPK_CustomerID());
         if(customerUpdate.isPresent()){
-
             Customer customer = customerUpdate.get();
             customer.setEmail(customerRequest.getEmail());
             customer.setPhoneNumber(customerRequest.getPhoneNumber());

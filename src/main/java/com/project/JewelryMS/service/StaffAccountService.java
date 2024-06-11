@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StaffAccountService {
@@ -35,19 +37,57 @@ public class StaffAccountService {
 
     // Read all
     public List<StaffAccountResponse> readAllStaffAccounts() {
-        return staffAccountRepository.findAllStaffAccountsByRoleStaff();
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
+        return staffAccounts.stream()
+                .map(this::mapToStaffAccountResponse)
+                .collect(Collectors.toList());
     }
 
-    // Read by ID
     public StaffAccountResponse getStaffAccountById(Integer id) {
-        Optional<StaffAccountResponse> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
-        return staffAccountOptional.orElse(null);
+        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
+        return staffAccountOptional.map(this::mapToStaffAccountResponse).orElse(null);
+    }
+
+    private StaffAccountResponse mapToStaffAccountResponse(StaffAccount staffAccount) {
+        StaffAccountResponse response = new StaffAccountResponse();
+        response.setStaffID(staffAccount.getStaffID());
+        response.setPhoneNumber(staffAccount.getPhoneNumber());
+        response.setSalary(staffAccount.getSalary());
+        response.setStartDate(staffAccount.getStartDate());
+        response.setAccountName(staffAccount.getAccount().getAccountName());
+        response.setRole(staffAccount.getAccount().getRole());
+        response.setStatus(staffAccount.getAccount().getStatus());
+        response.setEmail(staffAccount.getAccount().getEmail());
+        response.setUsername(staffAccount.getAccount().getUsername());
+
+        if (staffAccount.getShift() != null && !staffAccount.getShift().isEmpty()) {
+            List<StaffAccountResponse.ShiftResponse> shifts = staffAccount.getShift().stream()
+                    .map(this::mapToShiftResponse)
+                    .collect(Collectors.toList());
+            response.setShift(shifts);
+        } else {
+            response.setShift(Collections.emptyList());
+        }
+
+        return response;
+    }
+
+    private StaffAccountResponse.ShiftResponse mapToShiftResponse(Shift shift) {
+        StaffAccountResponse.ShiftResponse shiftResponse = new StaffAccountResponse.ShiftResponse();
+        shiftResponse.setShiftID(shift.getShiftID());
+        shiftResponse.setEndTime(shift.getEndTime());
+        shiftResponse.setRegister(shift.getRegister());
+        shiftResponse.setShiftType(shift.getShiftType());
+        shiftResponse.setStartTime(shift.getStartTime());
+        shiftResponse.setStatus(shift.getStatus());
+        shiftResponse.setWorkArea(shift.getWorkArea());
+        return shiftResponse;
     }
 
 
     // Update
     @Transactional
-    public StaffAccountResponse updateStaffAccount(Integer id, StaffAccountRequest staffAccountRequest) {
+    public String updateStaffAccount(Integer id, StaffAccountRequest staffAccountRequest) {
         Optional<StaffAccount> existingStaffAccountOpt = staffAccountRepository.findById(id);
         if (!existingStaffAccountOpt.isPresent()) {
             throw new RuntimeException("StaffAccount with ID " + id + " not found");
@@ -77,25 +117,7 @@ public class StaffAccountService {
         staffAccountRepository.save(existingStaffAccount);
 
         // Prepare and return the response
-        return new StaffAccountResponse(
-                existingStaffAccount.getStaffID(),
-                existingStaffAccount.getPhoneNumber(),
-                existingStaffAccount.getSalary(),
-                existingStaffAccount.getStartDate(),
-                account.getEmail(),
-                account.getAUsername(),
-                account.getAccountName(),
-                account.getRole(),
-                account.getStatus(),
-                existingStaffAccount.getShift()
-//                existingStaffAccount.getShift().getShiftID(),
-//                existingStaffAccount.getShift().getStartTime(), // Assuming start time is unchanged
-//                existingStaffAccount.getShift().getRegister(), // Assuming register is unchanged
-//                existingStaffAccount.getShift().getEndTime(), // Assuming end time is unchanged
-//                existingStaffAccount.getShift().getShiftType(), // Assuming shift type is unchanged
-//                existingStaffAccount.getShift().getStatus(), // Assuming status is unchanged
-//                existingStaffAccount.getShift().getWorkArea() // Assuming work area is unchanged
-        );
+        return "Update Staff Successfully";
     }
 
     // Method to "delete" a StaffAccount by updating the Account status

@@ -46,8 +46,8 @@ public class StaffAccountController {
     // Update an existing staff account
     @PutMapping("staff/update/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<StaffAccountResponse> updateStaffAccount(@PathVariable Integer id, @RequestBody StaffAccountRequest staffAccountRequest) {
-        StaffAccountResponse updatedStaffAccount = staffAccountService.updateStaffAccount(id,staffAccountRequest);
+    public ResponseEntity<String> updateStaffAccount(@PathVariable Integer id, @RequestBody StaffAccountRequest staffAccountRequest) {
+        String updatedStaffAccount = staffAccountService.updateStaffAccount(id,staffAccountRequest);
         return ResponseEntity.ok(updatedStaffAccount);
     }
 
