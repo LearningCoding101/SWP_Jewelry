@@ -42,10 +42,6 @@ public class Shift {
     @Column(name = "workArea")
     private String workArea;
 
-    @ManyToMany(mappedBy = "shift", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("shift")
-    private List<StaffAccount> staffAccounts;
-
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     Set<Staff_Shift> staffShifts;
 

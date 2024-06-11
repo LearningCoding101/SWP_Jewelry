@@ -24,5 +24,6 @@ public class ProductSellResponse {
     private String productCode;
     private boolean Status;
     private long category_id;
+    private String category_name;
     private List<String> promotion_id;
 }
