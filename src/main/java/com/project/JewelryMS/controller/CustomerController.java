@@ -67,7 +67,7 @@ public class CustomerController {
 
 
     //Delete section
-    @PatchMapping("/delete-status")
+    @DeleteMapping("/delete-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> deleteCustomer(@RequestBody CustomerDeleteRequest request){
         customerService.deleteCustomerById(request);
