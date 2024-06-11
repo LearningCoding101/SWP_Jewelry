@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,11 +17,11 @@ public interface ShiftRepository extends JpaRepository<Shift, Integer> {
 
     // Find shifts by start time
     @Query("SELECT s FROM Shift s WHERE s.startTime = :startTime")
-    List<Shift> findByStartTime(@Param("startTime") Timestamp startTime);
+    List<Shift> findByStartTime(@Param("startTime") Date startTime);
 
     // Find shifts by end time
     @Query("SELECT s FROM Shift s WHERE s.endTime = :endTime")
-    List<Shift> findByEndTime(@Param("endTime") Timestamp endTime);
+    List<Shift> findByEndTime(@Param("endTime") Date endTime);
 
     // Find shifts by shift type
     @Query("SELECT s FROM Shift s WHERE s.shiftType = :shiftType")
