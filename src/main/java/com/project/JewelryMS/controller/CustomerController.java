@@ -22,7 +22,7 @@ public class CustomerController {
 
     //Create section
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Customer> createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
         Customer customer = customerService.createCustomer(createCustomerRequest);
         return ResponseEntity.ok(customer);
@@ -30,34 +30,35 @@ public class CustomerController {
 
     //Read section
     @GetMapping("/list-all")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<Customer>>readAllCustomer(){
         List<Customer> customerList = customerService.readAllCustomer();
         return ResponseEntity.ok(customerList);
     }
 
     @GetMapping("/rank/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> getCustomerRank(@PathVariable("CustomerID") Long id) {
         String rank = customerService.getCustomerRank(id);
         return ResponseEntity.ok(rank);
     }
 
     @GetMapping("/list-by-id")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Customer> readCustomerFromId(@RequestParam Long id){
         Customer customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
 
     @GetMapping("/list-by-number")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Customer> readCustomerFromPhoneNumber(@RequestParam String id){
         Customer customer = customerService.getCustomerByPhoneNumber(id);
         return ResponseEntity.ok(customer);
     }
 
     @GetMapping("/list-active-customer")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<Customer>> readAllActiveCustomer() {
         List<Customer> customerList = customerService.readAllActiveCustomers(); // Filter active customers
         return ResponseEntity.ok(customerList);
@@ -66,7 +67,7 @@ public class CustomerController {
 
     //Delete section
     @PatchMapping("/delete-status")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> deleteCustomer(@RequestBody long id){
         customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer details marked as inactive successfully");
@@ -75,14 +76,14 @@ public class CustomerController {
 
     //Update section
     @PutMapping("/update-customer-details")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> updateCustomer(@RequestBody CustomerRequest customerRequest){
         customerService.updateCustomerDetails(customerRequest);
         return ResponseEntity.ok("Customer Details updated successfully");
     }
 
     @PatchMapping("/update-customer-points")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> updateCustomerPoints(@RequestBody ViewCustomerPointRequest viewPointsRequest){
         customerService.updateCustomerPoints(viewPointsRequest);
         return ResponseEntity.ok("Customer points updated successfully");
