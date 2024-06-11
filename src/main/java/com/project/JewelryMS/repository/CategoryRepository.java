@@ -11,9 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query("SELECT new com.project.JewelryMS.model.Category.CategoryResponse(c.id, c.description, c.name) FROM Category c WHERE c.status = 1")
-    List<CategoryResponse> findAllCategories();
+    @Query("SELECT c FROM Category c WHERE c.status = 1")
+    List<Category> findAllCategories();
 
-    @Query("SELECT new com.project.JewelryMS.model.Category.CategoryResponse(c.id, c.description, c.name) FROM Category c WHERE c.id = :id AND c.status = 1")
-    Optional<CategoryResponse> findCategoryById(Long id);
+    @Query("SELECT c FROM Category c WHERE c.id = :id AND c.status = 1")
+    Optional<Category> findCategoryById(Long id);
 }

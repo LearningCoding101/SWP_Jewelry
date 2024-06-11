@@ -7,16 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ManagerAccountRepository extends JpaRepository<Account, Integer> {
-    @Query("SELECT new com.project.JewelryMS.model.Manager.ManagerAccountResponse(a.PK_userID, a.email, a.aUsername, a.accountName, a.role, a.status) " +
-            "FROM Account a " +
-            "WHERE a.role = com.project.JewelryMS.entity.RoleEnum.ROLE_MANAGER AND a.status = 1")
-    List<ManagerAccountResponse> findAllManagerAccounts();
+    @Query("SELECT a FROM Account a WHERE a.role = ROLE_MANAGER AND a.status = 1")
+    List<Account> findAllManagerAccounts();
 
-    @Query("SELECT new com.project.JewelryMS.model.Manager.ManagerAccountResponse(a.PK_userID, a.email, a.aUsername, a.accountName, a.role, a.status) " +
-            "FROM Account a " +
-            "WHERE a.role = com.project.JewelryMS.entity.RoleEnum.ROLE_MANAGER AND a.PK_userID = :id AND a.status = 1")
-    ManagerAccountResponse findManagerAccountById(Integer id);
+    @Query("SELECT a FROM Account a WHERE a.role = ROLE_MANAGER AND a.PK_userID = :id AND a.status = 1")
+    Optional<Account> findManagerAccountById(Integer id);
 }
