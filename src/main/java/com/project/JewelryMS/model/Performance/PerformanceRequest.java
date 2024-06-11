@@ -15,6 +15,4 @@ public class PerformanceRequest {
 
     //no need to request staff id in the update
 //    private int staffID;
-
-
 }
