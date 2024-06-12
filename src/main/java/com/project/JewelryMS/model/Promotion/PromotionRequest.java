@@ -7,7 +7,7 @@ public class PromotionRequest {
     long PK_promotionID;
     String code;
     String description;
-    Date startDate;
-    Date endDate;
+    String startDate;
+    String endDate;
     int discount;
 }

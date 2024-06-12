@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 //import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class PromotionController {
     @GetMapping("/list-by-date")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<Promotion>> listPromotionsByDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date targetDate) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime targetDate) {
         List<Promotion> promotions = promotionService.getPromotionsByDate(targetDate);
         return ResponseEntity.ok(promotions);
     }
