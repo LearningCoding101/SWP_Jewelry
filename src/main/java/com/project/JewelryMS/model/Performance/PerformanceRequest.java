@@ -8,7 +8,7 @@ import java.util.Date;
 public class PerformanceRequest {
     long PK_performanceID;
 
-    private Date date;
+    private String date;
     private int salesMade;
     private double revenueGenerated;
     private int customerSignUp;

@@ -8,7 +8,7 @@ import java.util.Date;
 public class CreatePromotionRequest {
     String code;
     String description;
-    Date startDate;
-    Date endDate;
+    String startDate;
+    String endDate;
     int discount;
 }

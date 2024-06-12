@@ -11,8 +11,8 @@ public class PromotionResponse {
     long promotionID;
     String code;
     String description;
-    Date startDate;
-    Date endDate;
+    String startDate;
+    String endDate;
     boolean status;
     int discount;
     List<String> productSell_id;

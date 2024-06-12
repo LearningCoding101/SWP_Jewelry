@@ -55,8 +55,8 @@ public class PerformanceController {
 
     @GetMapping("/list-by-date")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date targetDate){
-        List<PerformanceResponse> performance = performanceService.getPerformanceByDate(targetDate);
+    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate(@RequestParam String targetDateStr){
+        List<PerformanceResponse> performance = performanceService.getPerformanceByDate(targetDateStr);
         return ResponseEntity.ok(performance);
     }
 

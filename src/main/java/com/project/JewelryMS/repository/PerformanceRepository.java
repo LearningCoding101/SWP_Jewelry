@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long> {
-    @Query("SELECT p FROM Performance p WHERE DATE_FORMAT(p.date, '%Y-%m-%d') = :date")
-    List<Performance> findByDate(@Param("date") String date);
+    @Query("SELECT p FROM Performance p WHERE p.date = :date")
+    List<Performance> findByDate(@Param("date") LocalDateTime date);
 
     @Query("SELECT p FROM Performance p WHERE p.PK_performanceID = :PK_performanceID")
     Performance findByPerformanceId(@Param("PK_performanceID") long PK_performanceID);
