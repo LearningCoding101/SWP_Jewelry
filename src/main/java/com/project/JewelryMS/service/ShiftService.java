@@ -9,9 +9,13 @@ import com.project.JewelryMS.repository.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Date;
 //import java.security.Timestamp;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,14 +24,52 @@ public class ShiftService {
     @Autowired
     ShiftRepository shiftRepository;
 
+//    // Helper method to convert a Shift entity to a ShiftRequest DTO
+//    private ShiftRequest toShiftRequest(Shift shift) {
+//        return new ShiftRequest(
+//                shift.getShiftID(),
+//                shift.getEndTime(),
+//                shift.getRegister(),
+//                shift.getShiftType(),
+//                shift.getStartTime(),
+//                shift.getStatus(),
+//                shift.getWorkArea()
+//        );
+//    }
+//
+//    // Create Shift
+//    public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
+//        Shift newShift = new Shift();
+//
+//        newShift.setEndTime(createShiftRequest.getEndTime());
+//        newShift.setRegister(createShiftRequest.getRegister());
+//        newShift.setShiftType(createShiftRequest.getShiftType());
+//        newShift.setStartTime(createShiftRequest.getStartTime());
+//        newShift.setStatus(createShiftRequest.getStatus());
+//        newShift.setWorkArea(createShiftRequest.getWorkArea());
+//
+//        Shift newShiftAddition= shiftRepository.save(newShift);
+//        return toShiftRequest(newShiftAddition);
+//    }
+
     // Helper method to convert a Shift entity to a ShiftRequest DTO
     private ShiftRequest toShiftRequest(Shift shift) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
+
+        String formattedStartDate = shift.getStartTime().toLocalDate().format(dateFormatter);
+        String formattedStartTime = shift.getStartTime().toLocalTime().format(timeFormatter);
+        String dayOfWeek = shift.getStartTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+        String formattedEndDate = shift.getEndTime().toLocalDate().format(dateFormatter);
+        String formattedEndTime = shift.getEndTime().toLocalTime().format(timeFormatter);
+
         return new ShiftRequest(
                 shift.getShiftID(),
-                shift.getEndTime(),
+                formattedEndDate + " " + formattedEndTime,
                 shift.getRegister(),
                 shift.getShiftType(),
-                shift.getStartTime(),
+                formattedStartDate + " " + formattedStartTime + " (" + dayOfWeek + ")",
                 shift.getStatus(),
                 shift.getWorkArea()
         );
@@ -35,12 +77,17 @@ public class ShiftService {
 
     // Create Shift
     public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+
+        LocalDateTime startTime = LocalDateTime.parse(createShiftRequest.getStartTime(), formatter);
+        LocalDateTime endTime = LocalDateTime.parse(createShiftRequest.getEndTime(), formatter);
+
         Shift newShift = new Shift();
 
-        newShift.setEndTime(createShiftRequest.getEndTime());
+        newShift.setEndTime(endTime);
         newShift.setRegister(createShiftRequest.getRegister());
         newShift.setShiftType(createShiftRequest.getShiftType());
-        newShift.setStartTime(createShiftRequest.getStartTime());
+        newShift.setStartTime(startTime);
         newShift.setStatus(createShiftRequest.getStatus());
         newShift.setWorkArea(createShiftRequest.getWorkArea());
 
@@ -48,36 +95,27 @@ public class ShiftService {
         return toShiftRequest(newShiftAddition);
     }
 
-    // Read all Shifts
-    public List<ShiftRequest> readAllShifts() {
-        List<Shift> shifts = shiftRepository.listAll();
-
-        return shifts.stream()
-                .map(this::toShiftRequest)
-                .collect(Collectors.toList());
-    }
-
-    // Read Shift by ID
-    public ShiftRequest getShiftById(Integer id) {
-        Shift shift = shiftRepository.findByShiftId(id);
-        return shift != null ? toShiftRequest(shift) : null;
-    }
-
     // Read Shifts by start time
-    public List<ShiftRequest> getShiftsByStartTime(Timestamp startTime) {
+    public List<ShiftRequest> getShiftsByStartTime(String startTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime startTime = LocalDateTime.parse(startTimeStr, formatter);
+
         List<Shift> shifts = shiftRepository.findByStartTime(startTime);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
     // Read Shifts by end time
-    public List<ShiftRequest> getShiftsByEndTime(Timestamp endTime) {
+    public List<ShiftRequest> getShiftsByEndTime(String endTimeStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime endTime = LocalDateTime.parse(endTimeStr, formatter);
+
         List<Shift> shifts = shiftRepository.findByEndTime(endTime);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +124,7 @@ public class ShiftService {
         List<Shift> shifts = shiftRepository.findByShiftType(shiftType);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
@@ -95,7 +133,7 @@ public class ShiftService {
         List<Shift> shifts = shiftRepository.findByStatus(status);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
@@ -104,7 +142,7 @@ public class ShiftService {
         List<Shift> shifts = shiftRepository.findByRegister(register);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
@@ -113,20 +151,46 @@ public class ShiftService {
         List<Shift> shifts = shiftRepository.findByWorkArea(workArea);
 
         return shifts.stream()
-                .map(this::toShiftRequest)
+                .map(this::toShiftRequest) // This will apply the date formatting
                 .collect(Collectors.toList());
     }
 
+    // Read all Shifts
+    public List<ShiftRequest> readAllShifts() {
+        List<Shift> shifts = shiftRepository.findAll();
+
+        return shifts.stream()
+                .map(this::toShiftRequest) // This will apply the date formatting
+                .collect(Collectors.toList());
+    }
+
+    // Read Shift by ID
+    public ShiftRequest getShiftById(Integer id) {
+        Optional<Shift> shiftOptional = shiftRepository.findById(id);
+        if (shiftOptional.isPresent()) {
+            Shift shift = shiftOptional.get();
+            return toShiftRequest(shift); // This will apply the date formatting
+        } else {
+            throw new RuntimeException("Shift ID:  " + id + " not found");
+        }
+    }
+
+
+    // Update Shift details
     public Shift updateShiftDetails(ShiftRequest shiftRequest) {
         Optional<Shift> shiftUpdate = shiftRepository.findById(shiftRequest.getShiftID());
 
         if(shiftUpdate.isPresent()){
             Shift shift = shiftUpdate.get();
 
-            shift.setEndTime(shiftRequest.getEndTime());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+            LocalDateTime startTime = LocalDateTime.parse(shiftRequest.getStartTime(), formatter);
+            LocalDateTime endTime = LocalDateTime.parse(shiftRequest.getEndTime(), formatter);
+
+            shift.setEndTime(endTime);
             shift.setRegister(shiftRequest.getRegister());
             shift.setShiftType(shiftRequest.getShiftType());
-            shift.setStartTime(shiftRequest.getStartTime());
+            shift.setStartTime(startTime);
             shift.setStatus(shiftRequest.getStatus());
             shift.setWorkArea(shiftRequest.getWorkArea());
 
@@ -136,6 +200,7 @@ public class ShiftService {
         }
     }
 
+    // Delete Shift by ID
     public void deleteShiftById(DeleteShiftRequest deleteShiftRequest) {
         Optional<Shift> shiftOptional = shiftRepository.findById(deleteShiftRequest.getShiftID());
         if (shiftOptional.isPresent()) {

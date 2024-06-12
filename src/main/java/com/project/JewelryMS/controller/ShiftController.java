@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -44,14 +46,14 @@ public class ShiftController {
     // Read Shifts by start time
     @GetMapping("/read/startTime")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<List<ShiftRequest>> getShiftsByStartTime(@RequestParam("startTime") Timestamp startTime) {
+    public ResponseEntity<List<ShiftRequest>> getShiftsByStartTime(@RequestParam("startTime") String startTime) {
         return ResponseEntity.ok(shiftService.getShiftsByStartTime(startTime));
     }
 
     // Read Shifts by end time
     @GetMapping("/read/endTime")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<List<ShiftRequest>> getShiftsByEndTime(@RequestParam("endTime") Timestamp endTime) {
+    public ResponseEntity<List<ShiftRequest>> getShiftsByEndTime(@RequestParam("endTime") String endTime) {
         return ResponseEntity.ok(shiftService.getShiftsByEndTime(endTime));
     }
 
