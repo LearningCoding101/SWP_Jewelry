@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-//import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,7 +24,7 @@ public class PromotionController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     @GetMapping("/productSellIdsByPromotionId")
     public List<PromotionResponse> getProductSellIdsByPromotionId() {
-        return promotionService.ReadAllPromotionwithProductID();
+        return promotionService.ReadAllPromotionWithProductID();
     }
     //Create section
     @PostMapping("/create")

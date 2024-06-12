@@ -30,7 +30,7 @@ public class PromotionService {
         return formattedDate + " " + formattedTime + " (" + dayOfWeek + ")";
     }
 
-    public List<PromotionResponse> ReadAllPromotionwithProductID(){
+    public List<PromotionResponse> ReadAllPromotionWithProductID(){
         List<Promotion> promotionList = promotionRepository.findAllPromotion();
         List<PromotionResponse> responses = new ArrayList<>();
         for(Promotion p : promotionList){
@@ -73,11 +73,7 @@ public class PromotionService {
         validateDateOrder(promotion.getStartDate(), promotion.getEndDate());
 
         LocalDateTime currentDate = LocalDateTime.now();
-        if (promotion.getEndDate().isBefore(currentDate)) {
-            promotion.setStatus(false);
-        } else {
-            promotion.setStatus(true);
-        }
+        promotion.setStatus(!promotion.getEndDate().isBefore(currentDate));
 
         return promotionRepository.save(promotion);
     }
@@ -151,7 +147,7 @@ public class PromotionService {
     }
 
     private void validateEndDate(Promotion promotion, LocalDateTime newEndDate) {
-        if (promotion.getEndDate().compareTo(newEndDate) > 0) {
+        if (promotion.getEndDate().isAfter(newEndDate)) {
             throw new IllegalArgumentException("End date cannot be earlier than the current end date");
         }
     }
@@ -165,14 +161,14 @@ public class PromotionService {
     }
 
     private void validateDateOrder(LocalDateTime startDate, LocalDateTime endDate) {
-        if (endDate.compareTo(startDate) < 0) {
+        if (endDate.isBefore(startDate)) {
             throw new IllegalArgumentException("End date cannot be before the start date");
         }
     }
 
     private void validateDateDifference(LocalDateTime startDate, LocalDateTime endDate) {
-        long diffInMillies = Math.abs(endDate.getDayOfYear() - startDate.getDayOfYear());
-        long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        long diffInMilliseconds = Math.abs(endDate.getDayOfYear() - startDate.getDayOfYear());
+        long diffInDays = TimeUnit.DAYS.convert(diffInMilliseconds, TimeUnit.MILLISECONDS);
         if (diffInDays < 3) {
             throw new IllegalArgumentException("End date should be apart from the start date for at least 3 days");
         }
