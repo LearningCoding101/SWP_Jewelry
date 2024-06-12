@@ -7,9 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -25,7 +24,7 @@ public class Shift {
     private int shiftID;
 
     @Column(name = "endTime")
-    private Timestamp endTime;
+    private LocalDateTime endTime;
 
     @Column(name = "register")
     private int register;
@@ -34,7 +33,7 @@ public class Shift {
     private String shiftType;
 
     @Column(name = "startTime")
-    private Timestamp startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "status")
     private String status;
@@ -44,5 +43,4 @@ public class Shift {
 
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     Set<Staff_Shift> staffShifts;
-
 }

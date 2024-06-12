@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GuaranteeService {
@@ -20,6 +21,17 @@ public class GuaranteeService {
     GuaranteeRepository guaranteeRepository;
     @Autowired
     ProductSellRepository productSellRepository;
+
+    // Helper method to convert a Guarantee entity to a GuaranteeResponse DTO
+    private GuaranteeResponse toGuaranteeResponse(Guarantee guarantee) {
+        return new GuaranteeResponse(
+                guarantee.getPK_guaranteeID(),
+                guarantee.getProductSell().getProductID(),
+                guarantee.getPolicyType(),
+                guarantee.getCoverage(),
+                guarantee.isStatus()
+        );
+    }
 
     public GuaranteeResponse createGuarantee(CreateGuaranteeRequest createGuaranteeRequest) {
         Optional<ProductSell> productSellOptional = productSellRepository.findById(createGuaranteeRequest.getFK_productID());
@@ -31,18 +43,23 @@ public class GuaranteeService {
             guarantee.setCoverage(createGuaranteeRequest.getCoverage());
 
             Guarantee newGuarantee = guaranteeRepository.save(guarantee);
-            return getGuaranteeResponseById(newGuarantee.getPK_guaranteeID());
+            return toGuaranteeResponse(newGuarantee);
         } else {
             throw new RuntimeException("Product ID not exist");
         }
     }
 
     public GuaranteeResponse getGuaranteeResponseById(long id) {
-        return guaranteeRepository.findByGuaranteeId(id).orElse(null);
+        Guarantee guarantee = guaranteeRepository.findByGuaranteeId(id);
+        return guarantee != null ? toGuaranteeResponse(guarantee) : null;
     }
 
     public List<GuaranteeResponse> readAllGuaranteeResponses() {
-        return guaranteeRepository.listAllGuarantees();
+        List<Guarantee> guarantees = guaranteeRepository.listAllGuarantees();
+
+        return guarantees.stream()
+                .map(this::toGuaranteeResponse)
+                .collect(Collectors.toList());
     }
 
     public void updateGuaranteeDetails(GuaranteeRequest guaranteeRequest) {
@@ -53,7 +70,6 @@ public class GuaranteeService {
             guarantee.setProductSell(productSellRepository.findById(guaranteeRequest.getFK_productID()).orElse(null));
             guarantee.setCoverage(guaranteeRequest.getCoverage());
             guarantee.setPolicyType(guaranteeRequest.getPolicyType());
-
 
             guaranteeRepository.save(guarantee);
         }
@@ -68,22 +84,40 @@ public class GuaranteeService {
     }
 
     public List<GuaranteeResponse> readAllActiveGuaranteePolicies() {
-        return guaranteeRepository.findByStatus(true);
+        List<Guarantee> guarantees = guaranteeRepository.findByStatus(true);
+
+        return guarantees.stream()
+                .map(this::toGuaranteeResponse)
+                .collect(Collectors.toList());
     }
 
     public List<GuaranteeResponse> readAllInactiveGuaranteePolicies() {
-        return guaranteeRepository.findByStatus(false);
+        List<Guarantee> guarantees = guaranteeRepository.findByStatus(false);
+
+        return guarantees.stream()
+                .map(this::toGuaranteeResponse)
+                .collect(Collectors.toList());
     }
 
     public List<GuaranteeResponse> readAllGuaranteesByPolicyType(String policyType) {
-        return guaranteeRepository.listAllGuaranteesByPolicyType(policyType);
+        List<Guarantee> guarantees = guaranteeRepository.listAllGuaranteesByPolicyType(policyType);
+
+        return guarantees.stream()
+                .map(this::toGuaranteeResponse)
+                .collect(Collectors.toList());
     }
 
     public List<GuaranteeResponse> readAllGuaranteesByCoverage(String coverage) {
-        return guaranteeRepository.listAllGuaranteesByCoverage(coverage);
+        List<Guarantee> guarantees = guaranteeRepository.listAllGuaranteesByCoverage(coverage);
+
+        return guarantees.stream()
+                .map(this::toGuaranteeResponse)
+                .collect(Collectors.toList());
     }
 
     public GuaranteeResponse readGuaranteeByProductId(long productId) {
-        return guaranteeRepository.findByProductId(productId).orElse(null);
+        Guarantee guarantee = guaranteeRepository.findByProductId(productId);
+        return guarantee != null ? toGuaranteeResponse(guarantee) : null;
     }
 }
+

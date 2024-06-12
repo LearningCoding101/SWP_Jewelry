@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PerformanceService {
@@ -25,28 +26,24 @@ public class PerformanceService {
     @Autowired
     private StaffAccountRepository staffAccountRepository;
 
-    public PerformanceResponse createPerformanceReport(CreatePerformanceRequest createPerformanceRequest) {
-//        Performance performance = new Performance();
-//
-//        performance.setDate(createPerformanceRequest.getDate());
-//        performance.setSalesMade(createPerformanceRequest.getSalesMade());
-//        performance.setRevenueGenerated(createPerformanceRequest.getRevenueGenerated());
-//        performance.setCustomerSignUp(createPerformanceRequest.getCustomerSignUp());
-//
-//        //Use the Staff Accounts
-//        StaffAccount staffAccount = createPerformanceRequest.getStaffAccount();
-//        if (staffAccount != null) {
-//            performance.setStaffAccount(staffAccount);
-//        } else {
-//            throw new RuntimeException("Staff account information is missing in the request");
-//        }
-//        return performanceRepository.save(performance);
+    // Helper method to convert a Performance entity to a PerformanceResponse DTO
+    private PerformanceResponse toPerformanceResponse(Performance performance) {
+        return new PerformanceResponse(
+                performance.getPK_performanceID(),
+                performance.getStaffAccount().getStaffID(),
+                performance.getDate(),
+                performance.getSalesMade(),
+                performance.getRevenueGenerated(),
+                performance.getCustomerSignUp(),
+                performance.isStatus()
+        );
+    }
 
-        //the staffAccountRepository could have a JpaRepository of <Integer>
+    public PerformanceResponse createPerformanceReport(CreatePerformanceRequest createPerformanceRequest) {
         Optional<StaffAccount> staffOptional = staffAccountRepository.findById(Math.toIntExact((long) createPerformanceRequest.getStaffID()));
         if(staffOptional.isPresent()) {
             StaffAccount account = staffOptional.get();
-            if (account != null) {//This if condition needs revision, should use to connect with Shift to accurately create a performance report
+            if (account != null) {
                 Performance performance = new Performance();
 
                 performance.setDate(createPerformanceRequest.getDate());
@@ -57,7 +54,7 @@ public class PerformanceService {
                 performance.setStaffAccount(account);
 
                 Performance newPerformance = performanceRepository.save(performance);
-                return getPerformanceByStaffID(newPerformance.getStaffAccount().getStaffID());
+                return toPerformanceResponse(newPerformance);
             }else{
                 throw new RuntimeException("...");
             }
@@ -67,40 +64,38 @@ public class PerformanceService {
     }
 
     public PerformanceResponse getPerformanceById(long id) {
-        Optional<PerformanceResponse> staffAccountOptional = performanceRepository.findByPerformanceId(id);
-        return staffAccountOptional.orElse(null);
+        Performance performance = performanceRepository.findByPerformanceId(id);
+        return performance != null ? toPerformanceResponse(performance) : null;
     }
 
     public PerformanceResponse getPerformanceByStaffID(long id) {
-        Optional<PerformanceResponse> staffAccountOptional = performanceRepository.findByStaffId(id);
-        return staffAccountOptional.orElse(null);
+        Performance performance = performanceRepository.findByStaffId(id);
+        return performance != null ? toPerformanceResponse(performance) : null;
     }
 
     public List<PerformanceResponse> getPerformanceByDate(Date date) {
-        // Convert the Date to a formatted String (yyyy-MM-dd)
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = dateFormat.format(date);
 
-        // Call the repository method with the formatted date
-        List<PerformanceResponse> performance = performanceRepository.findByDate(formattedDate);
+        List<Performance> performances = performanceRepository.findByDate(formattedDate);
 
-        return performance;
+        return performances.stream()
+                .map(this::toPerformanceResponse)
+                .collect(Collectors.toList());
     }
-
-
 
     public List<PerformanceResponse> readAllPerformanceReport() {
-        return performanceRepository.listAll();
+        List<Performance> performances = performanceRepository.listAll();
+
+        return performances.stream()
+                .map(this::toPerformanceResponse)
+                .collect(Collectors.toList());
     }
 
-    //Note: Updates should be automatically during the current shift/daytime
-    //This is just a basic iteration on how Performance will be created, and should be updated once the shift is ready
     public Performance updatePerformanceReportDetails(PerformanceRequest performanceRequest) {
         Optional<Performance> performanceUpdate = performanceRepository.findById(performanceRequest.getPK_performanceID());
 
-
         if(performanceUpdate.isPresent()){
-
             Performance performance = performanceUpdate.get();
 
             performance.setDate(performanceRequest.getDate());
@@ -114,20 +109,6 @@ public class PerformanceService {
         }
     }
 
-    /*
-    Note:
-    By default the status is true, if the manager decide it is not right
-    (Reasons can be wrong station, misconduct)
-    Then, the manager can decide if the Performance report is invalid
-    */
-//Unused version
-//    public void deletePerformanceById(long id) {
-//        Optional<Performance> performanceUpdate = performanceRepository.findById(id);
-//        performanceUpdate.ifPresent(report -> {
-//            report.setStatus(false); // Set status to false
-//            performanceRepository.save(report);
-//        });
-//    }
     public void deletePerformanceById(DeletePerformanceRequest deletePerformanceReportRequest) {
         Optional<Performance> performanceOptional = performanceRepository.findById(deletePerformanceReportRequest.getPK_performanceID());
         if (performanceOptional.isPresent()) {
@@ -144,17 +125,12 @@ public class PerformanceService {
         }
     }
 
-//    public void deletePerformanceByStaffID(long id) {
-//        Optional<PerformanceResponse> performanceUpdate = performanceRepository.findByStaffID(id);
-//        performanceUpdate.ifPresent(report -> {
-//            report.setStatus(false); // Set status to false
-//            performanceRepository.save(report);
-//        });
-//    }
-
     public List<PerformanceResponse> readAllConfirmedPerformanceReport() {
-        // Retrieve only reports considered to be valid(status = true)
-        return performanceRepository.findByStatus(true);
-    }
+        List<Performance> performances = performanceRepository.findByStatus(true);
 
+        return performances.stream()
+                .map(this::toPerformanceResponse)
+                .collect(Collectors.toList());
+    }
 }
+
