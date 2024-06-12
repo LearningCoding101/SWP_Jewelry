@@ -48,8 +48,8 @@ public class ProductSellController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<ProductSellResponse> updateProductSell( @PathVariable long id, @RequestBody ProductSellRequest productSellRequest) {
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<ProductSellResponse> updateProductSell( @PathVariable long id, @ModelAttribute ProductSellRequest productSellRequest) {
             ProductSellResponse updatedProduct = productSellService.updateProductSell(id,productSellRequest);
             return ResponseEntity.ok(updatedProduct);
     }
@@ -57,7 +57,7 @@ public class ProductSellController {
 
 
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteCategory(@PathVariable long id){
 
@@ -66,18 +66,18 @@ public class ProductSellController {
     }
 
     @PostMapping("/adjustRatio/{ratio}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<Float> AdjustRatio(@PathVariable Float ratio){
         productSellService.updatePricingRatio(ratio);
         return ResponseEntity.ok(ratio);
     }
-
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     @PostMapping("/addPromotions")
     public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
         ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
         return ResponseEntity.ok(updatedProductSell);
     }
-
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     @PostMapping("/removePromotions")
     public ResponseEntity<ProductSell> removePromotionsFromProductSell(@RequestBody RemovePromotionRequest request) {
         ProductSell updatedProductSell = productSellService.removePromotionsFromProductSell(request);

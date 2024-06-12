@@ -15,16 +15,16 @@ import java.util.Optional;
 public interface ProductSellRepository extends JpaRepository<ProductSell, Long> {
     @Query("SELECT ps FROM ProductSell ps " +
             "LEFT JOIN FETCH ps.category c " +
-            "LEFT JOIN FETCH ps.promotion")
+            "LEFT JOIN FETCH ps.promotion p ")
     List<ProductSell> findAllWithCategoryAndPromotion();
 
-    @Query("SELECT p.PK_promotionID FROM Promotion p JOIN p.productSell ps WHERE ps.productID = :productSellId")
+    @Query("SELECT p.PK_promotionID FROM Promotion p JOIN p.productSell ps WHERE ps.PK_productID = :productSellId")
     List<Long> findPromotionIdsByProductSellId(@Param("productSellId") long productSellId);
 
     @Query("SELECT ps FROM ProductSell ps " +
             "LEFT JOIN FETCH ps.category c " +
             "LEFT JOIN FETCH ps.promotion p " +
-            "WHERE ps.productID = :productSellId")
+            "WHERE ps.PK_productID = :productSellId ")
     Optional<ProductSell> findByIdWithCategoryAndPromotion(@Param("productSellId") long productSellId);
 
 

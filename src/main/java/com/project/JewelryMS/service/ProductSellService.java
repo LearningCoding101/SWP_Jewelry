@@ -228,7 +228,8 @@ public class ProductSellService {
         existingProductSell.setCost(productSellRequest.getCost());
         existingProductSell.setPDescription(productSellRequest.getPDescription());
         existingProductSell.setGemstoneType(productSellRequest.getGemstoneType());
-        existingProductSell.setImage(productSellRequest.getImage());
+        String imageUrl = imageService.uploadImageByPathService(productSellRequest.getImage());
+        existingProductSell.setImage(imageUrl);
         existingProductSell.setManufacturer(productSellRequest.getManufacturer());
         existingProductSell.setMetalType(productSellRequest.getMetalType());
         existingProductSell.setPName(productSellRequest.getPName());
