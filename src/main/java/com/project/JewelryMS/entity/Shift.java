@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class Shift {
     private int shiftID;
 
     @Column(name = "endTime")
-    private Date endTime; //No longer needed the use of Timestamp, Date is a better option
+    private LocalDateTime endTime;
 
     @Column(name = "register")
     private int register;
@@ -32,7 +33,7 @@ public class Shift {
     private String shiftType;
 
     @Column(name = "startTime")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "status")
     private String status;

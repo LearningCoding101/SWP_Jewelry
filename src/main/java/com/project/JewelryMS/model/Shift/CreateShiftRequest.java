@@ -3,14 +3,15 @@ package com.project.JewelryMS.model.Shift;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 public class CreateShiftRequest {
-    private Date endTime;
+    private String endTime;
     private int register;
     private String shiftType;
-    private Date startTime;
+    private String startTime;
     private String status;
     private String workArea;
 }

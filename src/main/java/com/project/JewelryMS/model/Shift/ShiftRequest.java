@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.sql.Timestamp;
 @Data
@@ -11,10 +12,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class ShiftRequest {
     private int shiftID;
-    private Date endTime;
+    private String endTime;
     private int register;
     private String shiftType;
-    private Date startTime;
+    private String startTime;
     private String status;
     private String workArea;
 }
