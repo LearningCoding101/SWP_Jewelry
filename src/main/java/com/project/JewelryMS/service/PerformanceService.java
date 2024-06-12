@@ -13,8 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,10 +32,16 @@ public class PerformanceService {
 
     // Helper method to convert a Performance entity to a PerformanceResponse DTO
     private PerformanceResponse toPerformanceResponse(Performance performance) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
+        String formattedDate = performance.getDate().toLocalDate().format(dateFormatter);
+        String formattedTime = performance.getDate().toLocalTime().format(timeFormatter);
+        String dayOfWeek = performance.getDate().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
         return new PerformanceResponse(
                 performance.getPK_performanceID(),
                 performance.getStaffAccount().getStaffID(),
-                performance.getDate(),
+                formattedDate + " " + formattedTime + " (" + dayOfWeek + ")",
                 performance.getSalesMade(),
                 performance.getRevenueGenerated(),
                 performance.getCustomerSignUp(),
@@ -40,13 +50,16 @@ public class PerformanceService {
     }
 
     public PerformanceResponse createPerformanceReport(CreatePerformanceRequest createPerformanceRequest) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime date = LocalDateTime.parse(createPerformanceRequest.getDate(), formatter);
+
         Optional<StaffAccount> staffOptional = staffAccountRepository.findById(Math.toIntExact((long) createPerformanceRequest.getStaffID()));
         if(staffOptional.isPresent()) {
             StaffAccount account = staffOptional.get();
             if (account != null) {
                 Performance performance = new Performance();
 
-                performance.setDate(createPerformanceRequest.getDate());
+                performance.setDate(date);
                 performance.setSalesMade(createPerformanceRequest.getSalesMade());
                 performance.setRevenueGenerated(createPerformanceRequest.getRevenueGenerated());
                 performance.setCustomerSignUp(createPerformanceRequest.getCustomerSignUp());
@@ -73,11 +86,11 @@ public class PerformanceService {
         return performance != null ? toPerformanceResponse(performance) : null;
     }
 
-    public List<PerformanceResponse> getPerformanceByDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = dateFormat.format(date);
+    public List<PerformanceResponse> getPerformanceByDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
 
-        List<Performance> performances = performanceRepository.findByDate(formattedDate);
+        List<Performance> performances = performanceRepository.findByDate(date);
 
         return performances.stream()
                 .map(this::toPerformanceResponse)
@@ -93,12 +106,15 @@ public class PerformanceService {
     }
 
     public Performance updatePerformanceReportDetails(PerformanceRequest performanceRequest) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime date = LocalDateTime.parse(performanceRequest.getDate(), formatter);
+
         Optional<Performance> performanceUpdate = performanceRepository.findById(performanceRequest.getPK_performanceID());
 
         if(performanceUpdate.isPresent()){
             Performance performance = performanceUpdate.get();
 
-            performance.setDate(performanceRequest.getDate());
+            performance.setDate(date);
             performance.setSalesMade(performanceRequest.getSalesMade());
             performance.setRevenueGenerated(performanceRequest.getRevenueGenerated());
             performance.setCustomerSignUp(performanceRequest.getCustomerSignUp());

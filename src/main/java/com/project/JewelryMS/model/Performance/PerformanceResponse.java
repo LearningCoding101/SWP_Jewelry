@@ -19,7 +19,7 @@ public class PerformanceResponse {
 
 
     //other performance details
-    private Date date;
+    private String date;
     private int salesMade;
     private double revenueGenerated;
     private int customerSignUp;
