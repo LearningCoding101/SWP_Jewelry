@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class PromotionService {
@@ -30,28 +32,31 @@ public class PromotionService {
         return formattedDate + " " + formattedTime + " (" + dayOfWeek + ")";
     }
 
-    public List<PromotionResponse> ReadAllPromotionWithProductID(){
-        List<Promotion> promotionList = promotionRepository.findAllPromotion();
-        List<PromotionResponse> responses = new ArrayList<>();
-        for(Promotion p : promotionList){
-            PromotionResponse promotionResponse = new PromotionResponse();
-            promotionResponse.setPromotionID(p.getPK_promotionID());
-            promotionResponse.setCode(p.getCode());
-            promotionResponse.setDescription(p.getDescription());
-            promotionResponse.setStartDate(formatDate(p.getStartDate()));
-            promotionResponse.setEndDate(formatDate(p.getEndDate()));
-            promotionResponse.setStatus(p.isStatus());
-            List<Long> listPromotion = promotionRepository.findProductSellIdsByPromotionId(p.getPK_promotionID());
-            List<String> promotionIds = new ArrayList<>();
-            for (Long promotionId : listPromotion) {
-                promotionIds.add(String.valueOf(promotionId));
-            }
-            promotionResponse.setProductSell_id(promotionIds);
-            responses.add(promotionResponse);
+    // Helper method to convert a Promotion entity to a PromotionResponse DTO
+    private PromotionResponse toPromotionResponse(Promotion promotion) {
+        PromotionResponse promotionResponse = new PromotionResponse();
+        promotionResponse.setPromotionID(promotion.getPK_promotionID());
+        promotionResponse.setCode(promotion.getCode());
+        promotionResponse.setDescription(promotion.getDescription());
+        promotionResponse.setStartDate(formatDate(promotion.getStartDate()));
+        promotionResponse.setEndDate(formatDate(promotion.getEndDate()));
+        promotionResponse.setStatus(promotion.isStatus());
+        // Assuming you have a method in your repository to get productSellIds by promotionId
+        List<Long> listPromotion = promotionRepository.findProductSellIdsByPromotionId(promotion.getPK_promotionID());
+        List<String> promotionIds = new ArrayList<>();
+        for (Long promotionId : listPromotion) {
+            promotionIds.add(String.valueOf(promotionId));
         }
-        return responses;
+        promotionResponse.setProductSell_id(promotionIds);
+        return promotionResponse;
     }
 
+    public List<PromotionResponse> ReadAllPromotionWithProductID(){
+        List<Promotion> promotionList = promotionRepository.findAllPromotion();
+        return promotionList.stream()
+                .map(this::toPromotionResponse)
+                .collect(Collectors.toList());
+    }
 
     public Promotion createPromotion(CreatePromotionRequest createPromotionRequest) {
         Promotion promotion = new Promotion();
@@ -78,34 +83,41 @@ public class PromotionService {
         return promotionRepository.save(promotion);
     }
 
-    public Promotion getPromotionById(long PK_promotionID) {
-        return promotionRepository.findById(PK_promotionID).orElse(null);
+    public PromotionResponse getPromotionById(long PK_promotionID) {
+        Promotion promotion = promotionRepository.findById(PK_promotionID).orElse(null);
+        return promotion != null ? toPromotionResponse(promotion) : null;
     }
 
-    public List<Promotion> getPromotionByCode(String code) {
-        return promotionRepository.findByCode(code);
+    public List<PromotionResponse> getPromotionByCode(String code) {
+        List<Promotion> promotions = promotionRepository.findByCode(code);
+        return promotions.stream()
+                .map(this::toPromotionResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<Promotion> readAllPromotion() {
+    public List<PromotionResponse> readAllPromotion() {
         List<Promotion> allPromotions = promotionRepository.findAll();
-        updatePromotionStatusBasedOnEndDate(allPromotions);
-        return allPromotions;
+        return allPromotions.stream()
+                .map(this::toPromotionResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<Promotion> readAllActivePromotion() {
+    public List<PromotionResponse> readAllActivePromotion() {
         List<Promotion> activePromotions = promotionRepository.findByStatus(true);
-        updatePromotionStatusBasedOnEndDate(activePromotions);
-        return activePromotions;
+        return activePromotions.stream()
+                .map(this::toPromotionResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<Promotion> getPromotionsByDate(LocalDateTime targetDate) {
+    public List<PromotionResponse> getPromotionsByDate(LocalDateTime targetDate) {
         List<Promotion> allPromotions = promotionRepository.findAll();
         updatePromotionStatusBasedOnEndDate(allPromotions);
 
         return allPromotions.stream()
                 .filter(promotion -> promotion.getStartDate().isBefore(targetDate)
                         && promotion.getEndDate().isAfter(targetDate))
-                .toList();
+                .map(this::toPromotionResponse)
+                .collect(Collectors.toList());
     }
 
     private void updatePromotionStatusBasedOnEndDate(List<Promotion> promotions) {
@@ -166,13 +178,21 @@ public class PromotionService {
         }
     }
 
+//    private void validateDateDifference(LocalDateTime startDate, LocalDateTime endDate) {
+//        long diffInMilliseconds = Math.abs(endDate.getDayOfYear() - startDate.getDayOfYear());
+//        long diffInDays = TimeUnit.DAYS.convert(diffInMilliseconds, TimeUnit.MILLISECONDS);
+//        if (diffInDays < 3) {
+//            throw new IllegalArgumentException("End date should be apart from the start date for at least 3 days");
+//        }
+//    }//This method is incorrectly performed
+
     private void validateDateDifference(LocalDateTime startDate, LocalDateTime endDate) {
-        long diffInMilliseconds = Math.abs(endDate.getDayOfYear() - startDate.getDayOfYear());
-        long diffInDays = TimeUnit.DAYS.convert(diffInMilliseconds, TimeUnit.MILLISECONDS);
+        long diffInDays = ChronoUnit.DAYS.between(startDate, endDate);
         if (diffInDays < 3) {
             throw new IllegalArgumentException("End date should be apart from the start date for at least 3 days");
         }
     }
+
 
     public void deletePromotionById(long id) {
         Optional<Promotion> promotionUpdate = promotionRepository.findById(id);
@@ -182,4 +202,5 @@ public class PromotionService {
         });
     }
 }
+
 
