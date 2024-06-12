@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
+//import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class StaffAccountResponse {
     @NoArgsConstructor
     public static class ShiftResponse {
         private int shiftID;
-        private Timestamp endTime;
+        private Date endTime;
         private int register;
         private String shiftType;
-        private Timestamp startTime;
+        private Date startTime;
         private String status;
         private String workArea;
     }
