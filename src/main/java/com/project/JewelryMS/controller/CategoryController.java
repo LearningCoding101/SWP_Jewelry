@@ -4,6 +4,7 @@ import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.model.Category.CategoryRequest;
 import com.project.JewelryMS.model.Category.CategoryResponse;
 import com.project.JewelryMS.model.Category.CreateCategoryRequest;
+import com.project.JewelryMS.model.ProductSell.ProductSellRequest;
 import com.project.JewelryMS.service.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +38,17 @@ public class CategoryController {
         return ResponseEntity.ok(categoryResponse);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteCategory(@RequestBody Long id){
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateCategory(@RequestBody CategoryRequest categoryRequest){
-        categoryService.updateCategory(categoryRequest);
+    public ResponseEntity<String> updateCategory(@PathVariable long id, @RequestBody CategoryRequest categoryRequest){
+        categoryService.updateCategory(id,categoryRequest);
         return ResponseEntity.ok("Category updated successfully");
     }
 }
