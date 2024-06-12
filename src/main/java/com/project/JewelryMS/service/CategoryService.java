@@ -58,8 +58,8 @@ public class CategoryService {
     public List<Category> findAllCategories(){
         return categoryRepository.findAll();
     }
-    public void updateCategory(CategoryRequest categoryRequest){
-        Optional<Category> categoryOpt = categoryRepository.findById(categoryRequest.getId());
+    public void updateCategory(Long id, CategoryRequest categoryRequest){
+        Optional<Category> categoryOpt = categoryRepository.findById(id);
         if(categoryOpt.isPresent()){
             Category category = categoryOpt.get();
             category.setName(categoryRequest.getName());
