@@ -24,19 +24,6 @@ public class ShiftService {
     @Autowired
     ShiftRepository shiftRepository;
 
-//    // Helper method to convert a Shift entity to a ShiftRequest DTO
-//    private ShiftRequest toShiftRequest(Shift shift) {
-//        return new ShiftRequest(
-//                shift.getShiftID(),
-//                shift.getEndTime(),
-//                shift.getRegister(),
-//                shift.getShiftType(),
-//                shift.getStartTime(),
-//                shift.getStatus(),
-//                shift.getWorkArea()
-//        );
-//    }
-//
 //    // Create Shift
 //    public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
 //        Shift newShift = new Shift();
