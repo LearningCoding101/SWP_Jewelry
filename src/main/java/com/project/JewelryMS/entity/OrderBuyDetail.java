@@ -27,4 +27,6 @@ public class OrderBuyDetail implements Serializable{
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductBuy productBuy;
 
+    Integer quantity;
+
 }

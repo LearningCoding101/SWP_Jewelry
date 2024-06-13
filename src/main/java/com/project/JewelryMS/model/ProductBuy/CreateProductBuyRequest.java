@@ -9,11 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductBuyRequest {
-    private String pbName;
-    private String categoryName;
+    private String name;
+    private String Category;
     private String metalType;
     private String gemstoneType;
     private MultipartFile image;
-    private Integer chi;
-    private Integer carat;
+    private Integer metalWeight;
+    private Integer gemstoneWeight;
 }

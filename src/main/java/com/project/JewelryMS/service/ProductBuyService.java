@@ -27,10 +27,10 @@ public class ProductBuyService {
     private ImageService imageService;
     public CreateProductBuyResponse createProductBuy(CreateProductBuyRequest request) {
         ProductBuy productBuy = new ProductBuy();
-        productBuy.setPbName(request.getPbName());
+        productBuy.setPbName(request.getName());
 
         // Find the category by name
-        Optional<Category> categoryOpt = categoryRepository.findCategoryByName(request.getCategoryName());
+        Optional<Category> categoryOpt = categoryRepository.findCategoryByName(request.getCategory());
         if (categoryOpt.isPresent()) {
             productBuy.setCategory(categoryOpt.get());
         } else {
@@ -41,9 +41,9 @@ public class ProductBuyService {
         productBuy.setGemstoneType(request.getGemstoneType());
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
         productBuy.setImage(imageUrl);
-        productBuy.setChi(request.getChi());
-        productBuy.setCarat(request.getCarat());
-        productBuy.setPbCost(calculateProductBuyCost(request.getChi(), request.getCarat(), request.getGemstoneType(), request.getMetalType()));
+        productBuy.setChi(request.getMetalWeight());
+        productBuy.setCarat(request.getGemstoneWeight());
+        productBuy.setPbCost(calculateProductBuyCost(request.getMetalWeight(), request.getGemstoneWeight(), request.getGemstoneType(), request.getMetalType()));
 
         ProductBuy savedProductBuy = productBuyRepository.save(productBuy);
 

@@ -46,6 +46,7 @@ public class OrderController {
 
         return ResponseEntity.ok("");
     }
+
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value
