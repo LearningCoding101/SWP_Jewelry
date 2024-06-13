@@ -18,13 +18,14 @@ import java.net.URI;
 public class VNPAYController {
     @Autowired
     private VNPAYservice vnPayService;
-
+    @CrossOrigin
     @GetMapping({"", "/"})
     public String home(){
         return "createOrder";
     }
 
     // Chuyển hướng người dùng đến cổng thanh toán VNPAY
+    @CrossOrigin
     @PostMapping("/submitOrder")
     public String submidOrder(@RequestParam("amount") int orderTotal,
                               @RequestParam("orderInfo") String orderInfo,
@@ -36,6 +37,7 @@ public class VNPAYController {
 
     // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
     @GetMapping("/vnpay-payment-return")
+    @CrossOrigin
     public ResponseEntity paymentCompleted(HttpServletRequest request, Model model){
         int paymentStatus = vnPayService.orderReturn(request);
 

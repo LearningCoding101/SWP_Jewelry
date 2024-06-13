@@ -23,7 +23,7 @@ public class Category {
     private String description;
 
     @Column(name="status")
-    private int status;
+    private int status; // 0: active
 
     @OneToMany(mappedBy = "category")
     @JsonIgnoreProperties("category")
