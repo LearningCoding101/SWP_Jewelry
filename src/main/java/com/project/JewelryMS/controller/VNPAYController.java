@@ -1,6 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.model.Order.OrderData;
+import com.project.JewelryMS.service.Order.OrderHandlerService;
 import com.project.JewelryMS.service.VNPAYservice;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class VNPAYController {
     @Autowired
     private VNPAYservice vnPayService;
     @Autowired
-
+    private OrderHandlerService orderHandlerService;
 
     @CrossOrigin
     @GetMapping({"", "/"})
@@ -46,14 +47,9 @@ public class VNPAYController {
 
         String redirectUrl = paymentStatus == 1 ? "/ordersuccess" : "/orderfail";
         if(paymentStatus == 1){
-
-
-
-
+            orderHandlerService.updateOrderStatus(request.getParameter("vnp_OrderInfo"));
         }
-
         HttpHeaders headers = new HttpHeaders();
-
         headers.setLocation(URI.create("http://jewelryms.xyz/staff" + redirectUrl)); // Removed the "/" before redirectUrl
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }

@@ -194,4 +194,19 @@ public class OrderHandlerService {
 
     }
 
+    public void updateOrderStatus(String info){
+        int orderID = Integer.parseInt(info.replace("Thanh toan ", "").trim());
+
+        PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
+        System.out.println(orderToUpdate.toString());
+        orderToUpdate.setStatus(3);
+        System.out.println(orderToUpdate.toString());
+
+        orderService.saveOrder(orderToUpdate);
+
+
+
+    }
+
+
 }
