@@ -97,7 +97,6 @@ public class OrderController {
 
     @GetMapping("get-all-order")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-
     public ResponseEntity<List<OrderResponse>> getAllOrderTest(){
         System.out.println("reached getAllOrder");
         return ResponseEntity.ok(orderHandlerService.getAllOrder());
