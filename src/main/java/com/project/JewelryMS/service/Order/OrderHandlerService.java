@@ -3,10 +3,7 @@ package com.project.JewelryMS.service.Order;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.PurchaseOrder;
 import com.project.JewelryMS.entity.OrderDetail;
-import com.project.JewelryMS.model.Order.CreateOrderDetailRequest;
-import com.project.JewelryMS.model.Order.CreateOrderRequest;
-import com.project.JewelryMS.model.Order.OrderResponse;
-import com.project.JewelryMS.model.Order.ProductResponse;
+import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
@@ -205,6 +202,24 @@ public class OrderHandlerService {
         orderService.saveOrder(orderToUpdate);
 
 
+    }
+
+    public boolean updateOrderStatusCash(ConfirmCashPaymentRequest request){
+        float paidAmount = request.getAmount();
+        float askPrice = request.getTotal();
+        if(paidAmount < askPrice){
+            return false;
+        } else {
+            PurchaseOrder orderToUpdate = orderService.getOrderById(request.getOrderID());
+            if(orderToUpdate != null){
+                System.out.println(orderToUpdate.toString());
+                orderToUpdate.setStatus(3);
+                System.out.println(orderToUpdate.toString());
+                return orderService.saveOrder(orderToUpdate) != null;
+            } else{
+                return false;
+            }
+        }
 
     }
 

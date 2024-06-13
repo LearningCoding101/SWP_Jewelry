@@ -64,6 +64,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\CreateManagerAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\ManagerAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\ManagerAccountResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderDetailRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderWrapper.java
