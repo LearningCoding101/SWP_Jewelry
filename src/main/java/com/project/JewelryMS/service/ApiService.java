@@ -55,8 +55,24 @@ public class ApiService {
             JsonNode root = jsonMapper.readTree(jsonResponse);
             JsonNode dataList = root.path("DataList").path("Data");
             for (JsonNode item : dataList) {
-                if (item.path("Tên giá vàng").asText().equals("VÀNG NGUYÊN LIỆU (Vàng thị trường)")) {
-                    return item.path("Giá bán thế giới").asText();
+                if (item.path("Tên giá vàng").asText().equals("VÀNG MIẾNG VRTL (Vàng Rồng Thăng Long)")) {
+                    return item.path("Giá mua ra").asText();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Not Found"; // Return a default value if not found or an error occurs
+    }
+
+    public String getGoldBuyPricecalculate(String url) {
+        try {
+            String jsonResponse = getGoldPrice(url);
+            JsonNode root = jsonMapper.readTree(jsonResponse);
+            JsonNode dataList = root.path("DataList").path("Data");
+            for (JsonNode item : dataList) {
+                if (item.path("Tên giá vàng").asText().equals("VÀNG MIẾNG VRTL (Vàng Rồng Thăng Long)")) {
+                    return item.path("Giá mua vào").asText();
                 }
             }
         } catch (Exception e) {
