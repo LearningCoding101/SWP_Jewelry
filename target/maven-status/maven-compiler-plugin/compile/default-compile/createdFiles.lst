@@ -22,6 +22,7 @@ com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\controller\ProfileController.class
 com\project\JewelryMS\model\Shift\CreateShiftRequest.class
 com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.class
+com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.class
 com\project\JewelryMS\service\Order\OrderService.class
 com\project\JewelryMS\entity\Performance.class
 com\project\JewelryMS\controller\ShiftController.class
@@ -86,6 +87,7 @@ com\project\JewelryMS\model\LoginGoogleRequest.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\model\AccountResponseGG.class
 com\project\JewelryMS\service\ShiftService.class
+com\project\JewelryMS\entity\OrderBuyDetail.class
 com\project\JewelryMS\model\Order\CreateOrderWrapper.class
 com\project\JewelryMS\model\CodeService.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.class

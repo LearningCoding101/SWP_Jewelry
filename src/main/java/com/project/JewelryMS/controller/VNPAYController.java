@@ -18,6 +18,9 @@ import java.net.URI;
 public class VNPAYController {
     @Autowired
     private VNPAYservice vnPayService;
+    @Autowired
+
+
     @CrossOrigin
     @GetMapping({"", "/"})
     public String home(){
@@ -42,7 +45,12 @@ public class VNPAYController {
         int paymentStatus = vnPayService.orderReturn(request);
 
         String redirectUrl = paymentStatus == 1 ? "/ordersuccess" : "/orderfail";
-        System.out.println(redirectUrl);
+        if(paymentStatus == 1){
+
+
+
+
+        }
 
         HttpHeaders headers = new HttpHeaders();
 
