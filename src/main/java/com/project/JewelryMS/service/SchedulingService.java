@@ -81,6 +81,7 @@ public class SchedulingService {
 //        return matrix;
 //    }
 
+    //This shall need explanation
     public int[][] getScheduleMatrix() {
         List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
         int daysOfWeek = 7; // 7 days in a week
