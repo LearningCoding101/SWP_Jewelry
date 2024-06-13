@@ -29,4 +29,8 @@ public class Category {
     @JsonIgnoreProperties("category")
     private List<ProductSell> productSell;
 
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnoreProperties("category")
+    private List<ProductBuy> productBuy;
 }

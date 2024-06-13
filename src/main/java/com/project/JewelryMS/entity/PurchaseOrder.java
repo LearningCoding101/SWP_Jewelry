@@ -20,6 +20,9 @@ public class PurchaseOrder implements Serializable {
 
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderDetail> orderDetails = new HashSet<>();
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("orderBuyDetails")
+    Set<OrderBuyDetail> orderBuyDetails = new HashSet<>();
     String paymentType;
     Float totalAmount;
     Date purchaseDate;
