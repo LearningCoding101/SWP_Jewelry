@@ -1,19 +1,19 @@
 package com.project.JewelryMS.model.ProductBuy;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateProductBuyRequest {
-    private Long orderID;
-    private Long productSellID;
-    private Long categoryID;
-    private Float appraisalValue;
-    private String condition;
-    private Float weight;
-    private String description;
+    private String name;
+    private String Category;
     private String metalType;
     private String gemstoneType;
-    private String productCode;
-    private String manufacturer;
-    private Integer amount;
-    private byte[] image;
-    private Integer chi;
-    private Integer carat;
+    private MultipartFile image;
+    private Integer metalWeight;
+    private Integer gemstoneWeight;
 }

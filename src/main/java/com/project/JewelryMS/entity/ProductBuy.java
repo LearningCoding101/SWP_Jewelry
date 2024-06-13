@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="ProductBuy")
 @Data
@@ -14,29 +17,18 @@ import lombok.NoArgsConstructor;
 public class ProductBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long buyID;
+    @Column(name="PK_ProductBuyID")
+    private Long PK_ProductBuyID;
 
-    @OneToOne
-    @JoinColumn(name = "FK_OrderDetailID", referencedColumnName = "PK_ODID")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private OrderDetail orderDetail;
+    @OneToMany(mappedBy = "productBuy")
+    @JsonIgnoreProperties
+    Set<OrderBuyDetail> orderBuyDetails = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Category category;
+    @Column(name="pbName")
+    private String pbName;
 
-    @Column(name = "appraisalValue")
-    private Float appraisalValue;
-
-    @Column(name = "pcondition")
-    private String pcondition;
-
-    @Column(name = "weight")
-    private Float weight;
-
-    @Column(name="description")
-    private String description;
+    @Column(name="pbCost")
+    private Float pbCost;
 
     @Column(name = "metalType")
     private String metalType;
@@ -44,18 +36,8 @@ public class ProductBuy {
     @Column(name = "gemstoneType")
     private String gemstoneType;
 
-    @Column(name = "productCode")
-    private String productCode;
-
-    @Column(name = "manufacturer")
-    private String manufacturer;
-
-    @Column(name = "amount")
-    private Integer amount;
-
-    @Lob
     @Column(name = "image")
-    private byte[] image;
+    private String image;
 
     @Column(name= "chi")
     private Integer chi;
@@ -63,6 +45,14 @@ public class ProductBuy {
     @Column(name = "carat")
     private Integer carat;
 
-    @Column(name = "pbstatus")
-    private boolean pbstatus;
+    @Column(name = "pbStatus")
+    private boolean pbStatus;
+
+    @Column(name = "paymentStatus")
+    private boolean paymentStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Category category;
 }
