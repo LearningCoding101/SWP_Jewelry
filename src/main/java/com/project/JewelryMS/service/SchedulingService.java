@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -56,5 +58,27 @@ public class SchedulingService {
     public Staff_Shift assignShiftToStaff(int shiftId, int staffId) {
         return assignStaffToShift(staffId, shiftId);
     }
-}
 
+    public int[][] getScheduleMatrix() {
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
+        List<Shift> shifts = shiftRepository.findAll();
+
+        int[][] matrix = new int[staffAccounts.size()][shifts.size()];
+
+        for (int i = 0; i < staffAccounts.size(); i++) {
+            for (int j = 0; j < shifts.size(); j++) {
+                final int finalI = i;
+                final int finalJ = j;
+                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().equals(shifts.get(finalJ)))) {
+                    matrix[finalI][finalJ] = 1;
+                } else {
+                    matrix[finalI][finalJ] = 0;
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+
+}
