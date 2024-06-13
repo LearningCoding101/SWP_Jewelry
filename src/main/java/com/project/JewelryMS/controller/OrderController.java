@@ -16,6 +16,7 @@ import com.project.JewelryMS.service.Order.OrderHandlerService;
 import com.project.JewelryMS.service.QRService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -128,6 +129,16 @@ public class OrderController {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
     }
 
+    @PatchMapping("/cash-confirm")
+    public ResponseEntity confirmCashPayment(@RequestBody ConfirmCashPaymentRequest request){
+        boolean isUpdated = orderHandlerService.updateOrderStatusCash(request);
 
+        if (isUpdated) {
+            return ResponseEntity.ok("Đơn hàng thanh toán thành công");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đơn hàng thanh toán thất bại");
+        }
+
+    }
 
 }
