@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -59,17 +60,38 @@ public class SchedulingService {
         return assignStaffToShift(staffId, shiftId);
     }
 
+//    public int[][] getScheduleMatrix() {
+//        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
+//        List<Shift> shifts = shiftRepository.findAll();
+//
+//        int[][] matrix = new int[staffAccounts.size()][shifts.size()];
+//
+//        for (int i = 0; i < staffAccounts.size(); i++) {
+//            for (int j = 0; j < shifts.size(); j++) {
+//                final int finalI = i;
+//                final int finalJ = j;
+//                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().equals(shifts.get(finalJ)))) {
+//                    matrix[finalI][finalJ] = 1;
+//                } else {
+//                    matrix[finalI][finalJ] = 0;
+//                }
+//            }
+//        }
+//
+//        return matrix;
+//    }
+
     public int[][] getScheduleMatrix() {
         List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
-        List<Shift> shifts = shiftRepository.findAll();
+        int daysOfWeek = 7; // 7 days in a week
 
-        int[][] matrix = new int[staffAccounts.size()][shifts.size()];
+        int[][] matrix = new int[staffAccounts.size()][daysOfWeek];
 
         for (int i = 0; i < staffAccounts.size(); i++) {
-            for (int j = 0; j < shifts.size(); j++) {
+            for (int j = 0; j < daysOfWeek; j++) {
                 final int finalI = i;
                 final int finalJ = j;
-                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().equals(shifts.get(finalJ)))) {
+                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().getStartTime().getDayOfWeek().getValue() == finalJ + 1)) {
                     matrix[finalI][finalJ] = 1;
                 } else {
                     matrix[finalI][finalJ] = 0;
@@ -80,5 +102,48 @@ public class SchedulingService {
         return matrix;
     }
 
+    // Method to assign multiple staff to a shift
+    @Transactional
+    public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
+        List<Staff_Shift> staffShifts = new ArrayList<>();
+        for (int staffId : staffIds) {
+            Staff_Shift staffShift = assignStaffToShift(staffId, shiftId);
+            staffShifts.add(staffShift);
+        }
+        return staffShifts;
+    }
 
+    // Method to assign multiple shifts to a staff
+    @Transactional
+    public List<Staff_Shift> assignMultipleShiftsToStaff(int staffId, List<Integer> shiftIds) {
+        List<Staff_Shift> staffShifts = new ArrayList<>();
+        for (int shiftId : shiftIds) {
+            Staff_Shift staffShift = assignStaffToShift(staffId, shiftId);
+            staffShifts.add(staffShift);
+        }
+        return staffShifts;
+    }
+
+    // Method to remove a staff member from a shift
+    @Transactional
+    public void removeStaffFromShift(int staffId, int shiftId) {
+        // Fetch the staff and shift entities from the database
+        StaffAccount staff = staffAccountRepository.findById(staffId)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+        Shift shift = shiftRepository.findById(shiftId)
+                .orElseThrow(() -> new RuntimeException("Shift not found"));
+
+        // Find the Staff_Shift entity that links the staff member and the shift
+        Staff_Shift staffShift = staffShiftRepository.findByStaffAccountAndShift(staff, shift)
+                .orElseThrow(() -> new RuntimeException("Staff is not assigned to this shift"));
+
+        // Delete the Staff_Shift entity from the database
+        staffShiftRepository.delete(staffShift);
+    }
+
+    // Method to remove a shift from a staff member
+    @Transactional
+    public void removeShiftFromStaff(int shiftId, int staffId) {
+        removeStaffFromShift(staffId, shiftId);
+    }
 }
