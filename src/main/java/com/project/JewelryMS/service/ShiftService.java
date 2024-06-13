@@ -27,14 +27,12 @@ public class ShiftService {
 //    // Create Shift
 //    public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
 //        Shift newShift = new Shift();
-//
 //        newShift.setEndTime(createShiftRequest.getEndTime());
 //        newShift.setRegister(createShiftRequest.getRegister());
 //        newShift.setShiftType(createShiftRequest.getShiftType());
 //        newShift.setStartTime(createShiftRequest.getStartTime());
 //        newShift.setStatus(createShiftRequest.getStatus());
 //        newShift.setWorkArea(createShiftRequest.getWorkArea());
-//
 //        Shift newShiftAddition= shiftRepository.save(newShift);
 //        return toShiftRequest(newShiftAddition);
 //    }
