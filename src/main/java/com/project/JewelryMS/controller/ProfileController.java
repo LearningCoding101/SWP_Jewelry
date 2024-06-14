@@ -16,8 +16,7 @@ public class ProfileController {
     @Autowired
     ProfileService profileService;
 
-
-    @PutMapping("/managerprofile/{managerId}")
+    @PutMapping("/managers/{managerId}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<UpdateManagerResponse> updateManagerProfile(@PathVariable Long managerId,
                                                                       @RequestBody UpdateManagerResponse updateManagerRequest) {
@@ -29,7 +28,7 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/adminprofile/{adminId}")
+    @GetMapping("/admins/{adminId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<AdminProfileResponse> viewAdminProfile(@PathVariable Long adminId) {
         AdminProfileResponse profile = profileService.viewAdminProfile(adminId);
@@ -39,8 +38,9 @@ public class ProfileController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/admins/{adminId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/adminprofile/{adminId}")
     public ResponseEntity<UpdateAdminResponse> updateAdminProfile(@PathVariable Long adminId,
                                                                   @RequestBody UpdateAdminResponse updateAdminRequest) {
         UpdateAdminResponse updatedProfile = profileService.updateAdminProfile(adminId, updateAdminRequest);
@@ -51,8 +51,7 @@ public class ProfileController {
         }
     }
 
-
-    @PutMapping("/staffprofile/{staffId}")
+    @PutMapping("/staff/{staffId}")
     @PreAuthorize("hasRole('ROLE_STAFF')")
     public ResponseEntity<UpdateStaffResponse> updateStaffProfile(@PathVariable Integer staffId,
                                                                   @RequestBody UpdateStaffResponse updateStaffRequest) {
@@ -63,16 +62,5 @@ public class ProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-
-//    @GetMapping("/staffshift/{staffId}")
-//    @PreAuthorize("hasRole('ROLE_STAFF')")
-//    public ResponseEntity<ViewShiftResponse> viewStaffShiftProfile(@PathVariable Integer staffId) {
-//        ViewShiftResponse response = profileService.viewShiftProfile(staffId);
-//        if (response != null) {
-//            return ResponseEntity.ok(response);
-//        } else {
-//            return ResponseEntity.notFound().build(); // Staff not found or doesn't have a shift
-//        }
-//    }
 
 }

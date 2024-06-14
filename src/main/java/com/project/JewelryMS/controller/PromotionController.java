@@ -21,12 +21,14 @@ import java.util.List;
 public class PromotionController {
     @Autowired
     PromotionService promotionService;
+
+    @GetMapping("/product-sell-ids")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    @GetMapping("/productSellIdsByPromotionId")
     public List<PromotionResponse> getProductSellIdsByPromotionId() {
         return promotionService.ReadAllPromotionWithProductID();
     }
-    //Create section
+
+    // Create a new promotion
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Promotion> createPromotion(@RequestBody CreatePromotionRequest createPromotionRequest) {
@@ -34,55 +36,60 @@ public class PromotionController {
         return ResponseEntity.ok(promotion);
     }
 
-    //Read section
-    @GetMapping("/list-all")
+    // Read all promotions
+    @GetMapping("/list")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PromotionResponse>>readAllPromotion(){
+    public ResponseEntity<List<PromotionResponse>> readAllPromotions() {
         List<PromotionResponse> promotionList = promotionService.readAllPromotion();
         return ResponseEntity.ok(promotionList);
     }
 
-    @GetMapping("/list-by-id")
+    // Read a promotion by ID
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<PromotionResponse> readPromotionById(@RequestParam Long id){
+    public ResponseEntity<PromotionResponse> readPromotionById(@PathVariable Long id) {
         PromotionResponse promotion = promotionService.getPromotionById(id);
         return ResponseEntity.ok(promotion);
     }
 
-    @GetMapping("/list-by-code")
+    // Read promotions by code
+    @GetMapping("/code/{code}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PromotionResponse>> readPromotionByCode(@RequestParam String id){
-        List<PromotionResponse> promotionList = promotionService.getPromotionByCode(id);
+    public ResponseEntity<List<PromotionResponse>> readPromotionsByCode(@PathVariable String code) {
+        List<PromotionResponse> promotionList = promotionService.getPromotionByCode(code);
         return ResponseEntity.ok(promotionList);
     }
 
-    @GetMapping("/list-active")
+    // Read all active promotions
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PromotionResponse>> readAllActivePromotion() {
+    public ResponseEntity<List<PromotionResponse>> readAllActivePromotions() {
         List<PromotionResponse> promotionList = promotionService.readAllActivePromotion();
         return ResponseEntity.ok(promotionList);
     }
 
-    @GetMapping("/list-by-date")
+    // Read promotions by date
+    @GetMapping("/date")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<PromotionResponse>> listPromotionsByDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime targetDate) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime targetDate) {
         List<PromotionResponse> promotions = promotionService.getPromotionsByDate(targetDate);
         return ResponseEntity.ok(promotions);
     }
 
-    //Delete section
-    @PatchMapping("/delete-status")
+    // Delete a promotion by ID
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> deletePromotion(@RequestBody long id){
+    public ResponseEntity<String> deletePromotion(@PathVariable long id) {
         promotionService.deletePromotionById(id);
         return ResponseEntity.ok("Promotion details marked as inactive successfully");
     }
 
-    //Update section
-    @PutMapping("/update-promotion-details")
+    // Update promotion details
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> updatePromotionDetails(@RequestBody PromotionRequest promotionRequest){
+    public ResponseEntity<String> updatePromotionDetails(@PathVariable long id, @RequestBody PromotionRequest promotionRequest) {
+        promotionRequest.setPK_promotionID(id); // Set the ID from the path into the request object
         promotionService.updatePromotionDetails(promotionRequest);
         return ResponseEntity.ok("Promotion Details updated successfully");
     }

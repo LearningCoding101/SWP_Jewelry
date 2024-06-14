@@ -125,8 +125,8 @@ public class PerformanceService {
         }
     }
 
-    public void deletePerformanceById(DeletePerformanceRequest deletePerformanceReportRequest) {
-        Optional<Performance> performanceOptional = performanceRepository.findById(deletePerformanceReportRequest.getPK_performanceID());
+    public void deletePerformanceById(Long id) {
+        Optional<Performance> performanceOptional = performanceRepository.findById(id);
         if (performanceOptional.isPresent()) {
             Performance performance = performanceOptional.get();
             if (performance != null) {
@@ -134,10 +134,10 @@ public class PerformanceService {
                 performance.setStatus(status);
                 performanceRepository.save(performance);
             } else {
-                throw new RuntimeException("Performance Report with ID:  " + deletePerformanceReportRequest.getPK_performanceID() + " not found");
+                throw new RuntimeException("Performance Report with ID:  " + id + " not found");
             }
         } else {
-            throw new RuntimeException("Performance ID" + deletePerformanceReportRequest.getPK_performanceID()+ " not found");
+            throw new RuntimeException("Performance ID" + id+ " not found");
         }
     }
 

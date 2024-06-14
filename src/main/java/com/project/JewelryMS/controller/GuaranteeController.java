@@ -18,81 +18,94 @@ import java.util.List;
 public class GuaranteeController {
 
     @Autowired
-    GuaranteeService guaranteeService;
+    private GuaranteeService guaranteeService;
 
-    // Create section
-    @PostMapping("/create")
+    // Create a new guarantee
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<GuaranteeResponse> createGuarantee(@RequestBody CreateGuaranteeRequest createGuaranteeRequest) {
         GuaranteeResponse guarantee = guaranteeService.createGuarantee(createGuaranteeRequest);
         return ResponseEntity.ok(guarantee);
     }
 
-    // Read section
-    @GetMapping("/list-all")
+    // Get all guarantees
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<GuaranteeResponse>> readAllGuarantees() {
         List<GuaranteeResponse> guaranteeList = guaranteeService.readAllGuaranteeResponses();
         return ResponseEntity.ok(guaranteeList);
     }
 
-    @GetMapping("/list-id")
+    // Get a single guarantee by ID
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<GuaranteeResponse> readGuaranteeById(@RequestParam Long id) {
+    public ResponseEntity<GuaranteeResponse> readGuaranteeById(@PathVariable Long id) {
         GuaranteeResponse guarantee = guaranteeService.getGuaranteeResponseById(id);
         return ResponseEntity.ok(guarantee);
     }
 
-    @GetMapping("/list-active")
+    // Get all active guarantees
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<GuaranteeResponse>> readAllActiveGuarantees() {
         List<GuaranteeResponse> activeGuarantees = guaranteeService.readAllActiveGuaranteePolicies();
         return ResponseEntity.ok(activeGuarantees);
     }
 
-    @GetMapping("/list-inactive")
+    // Get all inactive guarantees
+    @GetMapping("/inactive")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<GuaranteeResponse>> readAllInactiveGuarantees() {
         List<GuaranteeResponse> inactiveGuarantees = guaranteeService.readAllInactiveGuaranteePolicies();
         return ResponseEntity.ok(inactiveGuarantees);
     }
 
-    @GetMapping("/list-policy-type")
+    // Get guarantees by policy type
+    @GetMapping("/by-policy-type")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<GuaranteeResponse>> readGuaranteesByPolicyType(@RequestParam String policyType) {
         List<GuaranteeResponse> guaranteesByPolicyType = guaranteeService.readAllGuaranteesByPolicyType(policyType);
         return ResponseEntity.ok(guaranteesByPolicyType);
     }
 
-    @GetMapping("/list-coverage")
+    // Get guarantees by coverage
+    @GetMapping("/by-coverage")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<GuaranteeResponse>> readGuaranteesByCoverage(@RequestParam String coverage) {
         List<GuaranteeResponse> guaranteesByCoverage = guaranteeService.readAllGuaranteesByCoverage(coverage);
         return ResponseEntity.ok(guaranteesByCoverage);
     }
 
-    @GetMapping("/list-product-id")
+    // Get guarantee by product ID
+    @GetMapping("/by-product-id")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<GuaranteeResponse> readGuaranteeByProductId(@RequestParam Long productId) {
         GuaranteeResponse guarantee = guaranteeService.readGuaranteeByProductId(productId);
         return ResponseEntity.ok(guarantee);
     }
 
-    // Delete section
-    @PatchMapping("/delete-status")
+    // Mark a guarantee as inactive
+    @PatchMapping("/{id}/delete-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> deleteGuarantee(@RequestParam long id) {
+    public ResponseEntity<String> deleteGuarantee(@PathVariable Long id) {
         guaranteeService.deleteGuaranteePolicyById(id);
         return ResponseEntity.ok("Guarantee policy details marked as inactive successfully");
     }
 
-    // Update section
+    // Update guarantee details
     @PutMapping("/update-details")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<String> updateGuaranteeDetails(@RequestBody GuaranteeRequest guaranteeRequest) {
         guaranteeService.updateGuaranteeDetails(guaranteeRequest);
         return ResponseEntity.ok("Guarantee policy details updated successfully");
     }
-//1 more api to apply guarantee to product can be created/used here
+
+    // Apply a guarantee to a product
+//    @PostMapping("/{id}/apply-to-product")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+//    public ResponseEntity<String> applyGuaranteeToProduct(@PathVariable Long id, @RequestParam Long productId) {
+//        guaranteeService.applyGuaranteeToProduct(id, productId);
+//        return ResponseEntity.ok("Guarantee applied to product successfully");
+//    }
 
 }

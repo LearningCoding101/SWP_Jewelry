@@ -100,7 +100,7 @@ public class ProductBuyService {
     }
 
 
-    public String DeleteProductBuy(Long id){
+    public String deleteProductBuy(Long id){
         Optional<ProductBuy> productBuyOptional = productBuyRepository.findById(id);
         if(productBuyOptional.isPresent()){
             ProductBuy productBuy = productBuyOptional.get();

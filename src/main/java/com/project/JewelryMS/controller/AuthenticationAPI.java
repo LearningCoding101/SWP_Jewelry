@@ -53,7 +53,6 @@ public class AuthenticationAPI {
         return ResponseEntity.ok("test");
     }
     @PostMapping("register")
-
     public ResponseEntity register(@RequestBody CreateStaffAccountRequest createStaffAccountRequest){
         System.out.println("Reached");
         CreateStaffAccountRequest account = null;
