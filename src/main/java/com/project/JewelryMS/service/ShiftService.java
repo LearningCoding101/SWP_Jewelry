@@ -151,7 +151,7 @@ public class ShiftService {
 
     // Read Shift by ID
     public ShiftRequest getShiftById(Integer id) {
-        Optional<Shift> shiftOptional = shiftRepository.findById(id);
+        Optional<Shift> shiftOptional = shiftRepository.findById((long)id);
         if (shiftOptional.isPresent()) {
             Shift shift = shiftOptional.get();
             return toShiftRequest(shift); // This will apply the date formatting
@@ -163,7 +163,7 @@ public class ShiftService {
 
     // Update Shift details
     public Shift updateShiftDetails(ShiftRequest shiftRequest) {
-        Optional<Shift> shiftUpdate = shiftRepository.findById(shiftRequest.getShiftID());
+        Optional<Shift> shiftUpdate = shiftRepository.findById((long)shiftRequest.getShiftID());
 
         if(shiftUpdate.isPresent()){
             Shift shift = shiftUpdate.get();
@@ -186,8 +186,8 @@ public class ShiftService {
     }
 
     // Delete Shift by ID
-    public void deleteShiftById(DeleteShiftRequest deleteShiftRequest) {
-        Optional<Shift> shiftOptional = shiftRepository.findById(deleteShiftRequest.getShiftID());
+    public void deleteShiftById(Long id) {
+        Optional<Shift> shiftOptional = shiftRepository.findById(id);
         if (shiftOptional.isPresent()) {
             Shift shift = shiftOptional.get();
             if (shift != null) {
@@ -195,10 +195,10 @@ public class ShiftService {
                 shift.setStatus(status);
                 shiftRepository.save(shift);
             } else {
-                throw new RuntimeException("Shift ID:  " + deleteShiftRequest.getShiftID() + " not found");
+                throw new RuntimeException("Shift ID:  " + id + " not found");
             }
         } else {
-            throw new RuntimeException("Shift ID" + deleteShiftRequest.getShiftID()+ " not found");
+            throw new RuntimeException("Shift ID" + id+ " not found");
         }
     }
 }

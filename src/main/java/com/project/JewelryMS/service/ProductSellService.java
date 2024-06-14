@@ -256,7 +256,7 @@ public class ProductSellService {
         return mapToProductSellResponse(existingProductSell);
     }
 
-    public void DeleteProduct(long id){
+    public void deleteProduct(long id){
         Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
         if(productSellOptional.isPresent()){
             ProductSell productSell = productSellOptional.get();
