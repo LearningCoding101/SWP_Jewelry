@@ -66,7 +66,7 @@ public class OrderController {
     }
 
     @GetMapping("get-orderBuy/{id}")
-    public ResponseEntity<List<ProductBuyResponse>> getProductBuyByOrderId(@PathVariable Long orderId) {
+    public ResponseEntity<List<ProductBuyResponse>> getProductBuyByOrderId(@PathVariable(name = "id") Long orderId) {
         List<ProductBuyResponse> productBuys = orderHandlerService.getProductBuyByOrderId(orderId);
         return ResponseEntity.ok(productBuys);
     }
