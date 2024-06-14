@@ -2,6 +2,7 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
+import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
@@ -97,6 +98,16 @@ public class ProductBuyService {
         response.setGemstoneType(productBuy.getGemstoneType());
         response.setCost(productBuy.getPbCost());
         return response;
+    }
+
+
+    public ProductBuy getProductBuyById2(long id) {
+        Optional<ProductBuy> productBuyOptional = productBuyRepository.findById(id);
+        if(productBuyOptional.isPresent()){
+            ProductBuy productBuy = productBuyOptional.get();
+            return productBuy;
+        }
+        return productBuyOptional.get();
     }
 
 

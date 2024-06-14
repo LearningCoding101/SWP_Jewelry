@@ -46,6 +46,32 @@ public class OrderController {
 
         return ResponseEntity.ok("");
     }
+    //Product Buy Section
+    @PostMapping("initializePB")
+    public ResponseEntity saleCreateBuyOrder(@RequestBody CreateOrderBuyWrapper order){
+        orderHandlerService.handleCreateOrderBuyWithDetails(order.getOrderRequest(), order.getBuyDetailList());
+        return ResponseEntity.ok("Create Successfully");
+    }
+
+    @PostMapping("append-productBuy")
+    public ResponseEntity<Void> addOrderBuyDetail(@RequestParam Long orderId, @RequestParam Long productBuyId) {
+        orderHandlerService.addOrderBuyDetail(orderId, productBuyId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("get-all-orderBuy")
+    public ResponseEntity<List<OrderBuyResponse>> getAllBuyOrders() {
+        List<OrderBuyResponse> buyOrders = orderHandlerService.getAllBuyOrder();
+        return ResponseEntity.ok(buyOrders);
+    }
+
+    @GetMapping("get-orderBuy/{id}")
+    public ResponseEntity<List<ProductBuyResponse>> getProductBuyByOrderId(@PathVariable Long orderId) {
+        List<ProductBuyResponse> productBuys = orderHandlerService.getProductBuyByOrderId(orderId);
+        return ResponseEntity.ok(productBuys);
+    }
+
+    //Product Buy Section
 
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {

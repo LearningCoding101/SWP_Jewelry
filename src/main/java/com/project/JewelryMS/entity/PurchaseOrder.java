@@ -15,14 +15,16 @@ import java.util.Set;
 @JsonIgnoreProperties("orderDetails")
 public class PurchaseOrder implements Serializable {
     @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long PK_OrderID;
 
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<OrderDetail> orderDetails = new HashSet<>();
+
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("orderBuyDetails")
     Set<OrderBuyDetail> orderBuyDetails = new HashSet<>();
+
     String paymentType;
     Float totalAmount;
     Date purchaseDate;
