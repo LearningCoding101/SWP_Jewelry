@@ -56,7 +56,7 @@ public class ProductBuyService {
         Float gemStonePrice = 125000000.0F;
         Float goldPrice = 0.0F;
         //Get API Gold from Info Gold
-        goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+        goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v")) / 10.0F;
         Float TotalGemPrice = (gemStonePrice * carat) * 0.8F;
         Totalprice =  (TotalGemPrice + goldPrice * chi );
         return Totalprice;
