@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,16 +18,16 @@ import java.util.Date;
 public class Performance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long PK_performanceID;
+    private long PK_performanceID;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_staffID", referencedColumnName = "PK_staffID")
     @JsonIgnoreProperties
     private StaffAccount staffAccount;
 
-    Date date;
-    int salesMade;
-    double revenueGenerated;
-    int customerSignUp;
-    boolean status = true;
+    private LocalDateTime date;
+    private int salesMade;
+    private double revenueGenerated;
+    private int customerSignUp;
+    private boolean status = true;
 }

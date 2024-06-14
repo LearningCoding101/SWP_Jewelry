@@ -1,6 +1,7 @@
 package com.project.JewelryMS.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,7 @@ public class StaffAccount {
 
     @OneToMany(mappedBy = "staffAccount")
     @JsonIgnoreProperties
+    @JsonManagedReference
     Set<Staff_Shift> staffShifts;
 
 }

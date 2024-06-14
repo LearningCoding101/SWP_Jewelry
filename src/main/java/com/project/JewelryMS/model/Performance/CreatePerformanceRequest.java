@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class CreatePerformanceRequest {
-    private Date date;
+    private String date;
     private int salesMade;
     private double revenueGenerated;
     private int customerSignUp;
