@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -82,26 +83,37 @@ public class SchedulingService {
 //    }
 
     //This shall need explanation
-    public int[][] getScheduleMatrix() {
-        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
-        int daysOfWeek = 7; // 7 days in a week
+    public Map<LocalDate, List<StaffAccount>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
+        // Initialize the matrix
+        Map<LocalDate, List<StaffAccount>> matrix = new HashMap<>();
 
-        int[][] matrix = new int[staffAccounts.size()][daysOfWeek];
+        // Get all staff accounts
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
 
-        for (int i = 0; i < staffAccounts.size(); i++) {
-            for (int j = 0; j < daysOfWeek; j++) {
-                final int finalI = i;
-                final int finalJ = j;
-                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().getStartTime().getDayOfWeek().getValue() == finalJ + 1)) {
-                    matrix[finalI][finalJ] = 1;
-                } else {
-                    matrix[finalI][finalJ] = 0;
+        // Iterate over each date in the range
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            // Initialize the list for the current date
+            matrix.put(date, new ArrayList<>());
+
+            // Iterate over each staff account
+            for (StaffAccount staff : staffAccounts) {
+                // Get all shifts for the current staff account
+                Set<Shift> shifts = staff.getStaffShifts().stream()
+                        .map(Staff_Shift::getShift)
+                        .collect(Collectors.toSet());
+
+                // Check if the staff has a shift on the current date
+                LocalDate finalDate = date;
+                if (shifts.stream().anyMatch(shift -> shift.getStartTime().toLocalDate().equals(finalDate))) {
+                    // If so, add the staff to the list for the current date
+                    matrix.get(date).add(staff);
                 }
             }
         }
 
         return matrix;
     }
+
 
     // Method to assign multiple staff to a shift
     @Transactional
