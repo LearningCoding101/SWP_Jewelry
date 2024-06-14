@@ -33,7 +33,7 @@ public class StaffAccountController {
 
     // Read a staff account by ID
     @GetMapping("staff/read/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<StaffAccountResponse> getStaffAccountById(@PathVariable Integer id) {
         StaffAccountResponse staffAccount = staffAccountService.getStaffAccountById(id);
         if (staffAccount != null) {
