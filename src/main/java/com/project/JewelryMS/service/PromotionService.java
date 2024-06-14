@@ -116,8 +116,8 @@ public class PromotionService {
         updatePromotionStatusBasedOnEndDate(allPromotions);
 
         return allPromotions.stream()
-                .filter(promotion -> promotion.getStartDate().isBefore(targetDate)
-                        && promotion.getEndDate().isAfter(targetDate))
+                .filter(promotion -> (promotion.getStartDate().isBefore(targetDate) || promotion.getStartDate().isEqual(targetDate))
+                        && (promotion.getEndDate().isAfter(targetDate) || promotion.getEndDate().isEqual(targetDate)))
                 .map(this::toPromotionResponse)
                 .collect(Collectors.toList());
     }
