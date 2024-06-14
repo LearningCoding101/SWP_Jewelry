@@ -23,65 +23,61 @@ public class ProductSellController {
 
     @Autowired
     ProductSellService productSellService;
+
     // Create a new ProductSell
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ProductSellResponse> createProductSell(@ModelAttribute CreateProductSellRequest createProductSellRequest) {
-            ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
-            return ResponseEntity.ok(createdProduct);
+        ProductSellResponse createdProduct = productSellService.createProductSell(createProductSellRequest);
+        return ResponseEntity.ok(createdProduct);
     }
 
-    @GetMapping("/readall")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<List<ProductSellResponse>> readAllProductSell(){
-        List<ProductSellResponse> allProductSell= productSellService.getAllProductSellResponses();
+    // Get all ProductSells
+    @GetMapping
+    public ResponseEntity<List<ProductSellResponse>> readAllProductSell() {
+        List<ProductSellResponse> allProductSell = productSellService.getAllProductSellResponses();
         System.out.println("Read Product Sell ");
         return ResponseEntity.ok(allProductSell);
     }
 
-
-    @GetMapping("/read/{id}")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    // Get a ProductSell by ID
+    @GetMapping("/{id}")
     public ResponseEntity<ProductSellResponse> getProductSellById(@PathVariable long id) {
         ProductSellResponse response = productSellService.getProductSellById2(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update/{id}")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<ProductSellResponse> updateProductSell( @PathVariable long id, @ModelAttribute ProductSellRequest productSellRequest) {
-            ProductSellResponse updatedProduct = productSellService.updateProductSell(id,productSellRequest);
-            return ResponseEntity.ok(updatedProduct);
+    // Update a ProductSell by ID
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductSellResponse> updateProductSell(@PathVariable long id, @ModelAttribute ProductSellRequest productSellRequest) {
+        ProductSellResponse updatedProduct = productSellService.updateProductSell(id, productSellRequest);
+        return ResponseEntity.ok(updatedProduct);
     }
 
-
-
-    @DeleteMapping("delete/{id}")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteCategory(@PathVariable long id){
-
-        productSellService.DeleteProduct(id);
+    // Delete a ProductSell by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProductSell(@PathVariable long id) {
+        productSellService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
 
-    @PostMapping("/adjustRatio/{ratio}")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public ResponseEntity<Float> AdjustRatio(@PathVariable Float ratio){
+    // Adjust pricing ratio
+    @PostMapping("/adjust-ratio/{ratio}")
+    public ResponseEntity<Float> adjustRatio(@PathVariable Float ratio) {
         productSellService.updatePricingRatio(ratio);
         return ResponseEntity.ok(ratio);
     }
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    @PostMapping("/addPromotions")
+
+    // Add promotions to a ProductSell
+    @PostMapping("/promotions")
     public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
         ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
         return ResponseEntity.ok(updatedProductSell);
     }
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    @PostMapping("/removePromotions")
+
+    // Remove promotions from a ProductSell
+    @DeleteMapping("/promotions")
     public ResponseEntity<ProductSell> removePromotionsFromProductSell(@RequestBody RemovePromotionRequest request) {
         ProductSell updatedProductSell = productSellService.removePromotionsFromProductSell(request);
         return ResponseEntity.ok(updatedProductSell);
     }
-
 }

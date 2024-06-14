@@ -18,37 +18,43 @@ import java.util.List;
 @SecurityRequirement(name = "api")
 public class CategoryController {
     @Autowired
-    CategoryService categoryService;
-    @PostMapping("/create")
+    private CategoryService categoryService;
+
+    // Create a new category
+    @PostMapping
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest createCategoryRequest) {
         Category category = categoryService.createCategory(createCategoryRequest);
         return ResponseEntity.ok(category);
     }
 
-    @GetMapping("/readall")
+    // Get all categories
+    @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = categoryService.readAllCategory();
         return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("read/{id}")
+    // Get a single category by ID
+    @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
         CategoryResponse categoryResponse = categoryService.readByIDCategory(id);
         return ResponseEntity.ok(categoryResponse);
     }
 
-    @DeleteMapping("/delete/{id}")
+    // Delete a category by ID
+    @DeleteMapping("/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("Category deleted successfully");
     }
 
-    @PutMapping("/update/{id}")
+    // Update a category by ID
+    @PutMapping("/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateCategory(@PathVariable long id, @RequestBody CategoryRequest categoryRequest){
-        categoryService.updateCategory(id,categoryRequest);
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
+        categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok("Category updated successfully");
     }
 }

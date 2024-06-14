@@ -23,6 +23,7 @@ com\project\JewelryMS\controller\ProfileController.class
 com\project\JewelryMS\model\Shift\CreateShiftRequest.class
 com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.class
 com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.class
+com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
 com\project\JewelryMS\service\Order\OrderService.class
 com\project\JewelryMS\entity\Performance.class
 com\project\JewelryMS\controller\ShiftController.class

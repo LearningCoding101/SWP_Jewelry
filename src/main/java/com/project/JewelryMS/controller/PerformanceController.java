@@ -23,68 +23,65 @@ public class PerformanceController {
     @Autowired
     PerformanceService performanceService;
 
-    //Create section
-    @PostMapping("/create")
+    // Create section
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<PerformanceResponse> createPerformanceReport(@RequestBody CreatePerformanceRequest createPerformanceReport) {
         PerformanceResponse performance = performanceService.createPerformanceReport(createPerformanceReport);
         return ResponseEntity.ok(performance);
     }
 
-    //Read section
-    @GetMapping("/list-all")
+    // Read section
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PerformanceResponse>>readAllCustomer(){
+    public ResponseEntity<List<PerformanceResponse>> readAllPerformanceReports() {
         List<PerformanceResponse> performanceList = performanceService.readAllPerformanceReport();
         return ResponseEntity.ok(performanceList);
     }
 
-    @GetMapping("/list-by-id")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<PerformanceResponse> readPerformanceFromId(@RequestParam Long id){
+    public ResponseEntity<PerformanceResponse> readPerformanceFromId(@PathVariable Long id) {
         PerformanceResponse performance = performanceService.getPerformanceById(id);
         return ResponseEntity.ok(performance);
     }
 
-    @GetMapping("/list-by-staff")
+    @GetMapping("/staff/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<PerformanceResponse> readPerformanceByStaff(@RequestParam Long id){
+    public ResponseEntity<PerformanceResponse> readPerformanceByStaff(@PathVariable Long id) {
         PerformanceResponse performance = performanceService.getPerformanceByStaffID(id);
         return ResponseEntity.ok(performance);
     }
 
-    @GetMapping("/list-by-date")
+    @GetMapping("/date")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate(@RequestParam String targetDateStr){
+    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate(@RequestParam String targetDateStr) {
         List<PerformanceResponse> performance = performanceService.getPerformanceByDate(targetDateStr);
         return ResponseEntity.ok(performance);
     }
 
-    @GetMapping("/list-report-valid")
+    @GetMapping("/active-reports")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<PerformanceResponse>> readAllActiveReports() {
-        List<PerformanceResponse> customerList = performanceService.readAllConfirmedPerformanceReport(); // Filter active customers
-        return ResponseEntity.ok(customerList);
+        List<PerformanceResponse> performanceList = performanceService.readAllConfirmedPerformanceReport();
+        return ResponseEntity.ok(performanceList);
     }
 
-
-    //Delete section
-    @PatchMapping("/delete-status-by-id")
+    // Delete section
+    @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> deletePerformanceById(@RequestBody DeletePerformanceRequest deletePerformanceRequest){
-        performanceService.deletePerformanceById(deletePerformanceRequest);
+    public ResponseEntity<String> deletePerformanceById(@PathVariable Long id) {
+        performanceService.deletePerformanceById(id);
         return ResponseEntity.ok("Performance details marked as invalid successfully");
     }
 
-
-    //Update section
-    @PutMapping("/update-performance-details/{id}")
+    // Update section
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> updatePerformance(@PathVariable long id, @RequestBody PerformanceRequest performanceRequest) {
-        performanceRequest.setPK_performanceID(id); // Ensure the ID from the path is set in the request
+    public ResponseEntity<String> updatePerformance(@PathVariable Long id, @RequestBody PerformanceRequest performanceRequest) {
+        performanceRequest.setPK_performanceID(id);
         performanceService.updatePerformanceReportDetails(performanceRequest);
-        return ResponseEntity.ok("Performance Details updated successfully");
+        return ResponseEntity.ok("Performance details updated successfully");
     }
-
 
 }
