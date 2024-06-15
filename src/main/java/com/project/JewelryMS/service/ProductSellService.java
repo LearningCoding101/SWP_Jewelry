@@ -150,7 +150,7 @@ public class ProductSellService {
 
     public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturer){
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 125000000.0F;
+        Float gemStonePrice = 80000000.0F;
         Float goldPrice = 0.0F;
             //Get API Gold from Info Gold
             goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
