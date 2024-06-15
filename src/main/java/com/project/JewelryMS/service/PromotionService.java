@@ -29,7 +29,9 @@ public class PromotionService {
         String formattedTime = date.toLocalTime().format(timeFormatter);
         String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
-        return formattedDate + " " + formattedTime + " (" + dayOfWeek + ")";
+        return formattedDate;
+//                + " " + formattedTime + " (" + dayOfWeek + ")";
+        //Date formatted changed by demand from the Front-end team
     }
 
     // Helper method to convert a Promotion entity to a PromotionResponse DTO
@@ -114,8 +116,8 @@ public class PromotionService {
         updatePromotionStatusBasedOnEndDate(allPromotions);
 
         return allPromotions.stream()
-                .filter(promotion -> promotion.getStartDate().isBefore(targetDate)
-                        && promotion.getEndDate().isAfter(targetDate))
+                .filter(promotion -> (promotion.getStartDate().isBefore(targetDate) || promotion.getStartDate().isEqual(targetDate))
+                        && (promotion.getEndDate().isAfter(targetDate) || promotion.getEndDate().isEqual(targetDate)))
                 .map(this::toPromotionResponse)
                 .collect(Collectors.toList());
     }
