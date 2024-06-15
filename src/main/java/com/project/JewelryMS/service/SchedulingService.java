@@ -92,7 +92,6 @@ public class SchedulingService {
     }
 
 
-
     // Method to assign multiple staff to a shift
     @Transactional
     public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
