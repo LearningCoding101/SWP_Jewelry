@@ -61,31 +61,9 @@ public class SchedulingService {
         return assignStaffToShift(staffId, shiftId);
     }
 
-//    public int[][] getScheduleMatrix() {
-//        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
-//        List<Shift> shifts = shiftRepository.findAll();
-//
-//        int[][] matrix = new int[staffAccounts.size()][shifts.size()];
-//
-//        for (int i = 0; i < staffAccounts.size(); i++) {
-//            for (int j = 0; j < shifts.size(); j++) {
-//                final int finalI = i;
-//                final int finalJ = j;
-//                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().equals(shifts.get(finalJ)))) {
-//                    matrix[finalI][finalJ] = 1;
-//                } else {
-//                    matrix[finalI][finalJ] = 0;
-//                }
-//            }
-//        }
-//
-//        return matrix;
-//    }
-
-    //This shall need explanation
     public Map<LocalDate, List<StaffAccount>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
-        // Initialize the matrix
-        Map<LocalDate, List<StaffAccount>> matrix = new HashMap<>();
+        // Initialize the matrix as a LinkedHashMap to maintain the insertion order
+        Map<LocalDate, List<StaffAccount>> matrix = new LinkedHashMap<>();
 
         // Get all staff accounts
         List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
@@ -110,9 +88,9 @@ public class SchedulingService {
                 }
             }
         }
-
         return matrix;
     }
+
 
 
     // Method to assign multiple staff to a shift
