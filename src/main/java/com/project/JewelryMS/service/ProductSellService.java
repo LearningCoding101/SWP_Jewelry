@@ -153,7 +153,7 @@ public class ProductSellService {
         Float gemStonePrice = 80000000.0F;
         Float goldPrice = 0.0F;
             //Get API Gold from Info Gold
-            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v")) / 10.0F;
         Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
         return Totalprice;
     }
@@ -256,7 +256,7 @@ public class ProductSellService {
         return mapToProductSellResponse(existingProductSell);
     }
 
-    public void DeleteProduct(long id){
+    public void deleteProduct(long id){
         Optional<ProductSell> productSellOptional = productSellRepository.findById(id);
         if(productSellOptional.isPresent()){
             ProductSell productSell = productSellOptional.get();

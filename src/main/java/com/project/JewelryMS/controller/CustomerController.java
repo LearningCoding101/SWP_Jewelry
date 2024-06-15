@@ -19,73 +19,76 @@ import java.util.List;
 @SecurityRequirement(name = "api")
 public class CustomerController {
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
-    //Create section
-    @PostMapping("/create")
+    // Create a new customer
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Customer> createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
         Customer customer = customerService.createCustomer(createCustomerRequest);
         return ResponseEntity.ok(customer);
     }
 
-    //Read section
-    @GetMapping("/list-all")
+    // Get all customers
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<Customer>>readAllCustomer(){
+    public ResponseEntity<List<Customer>> readAllCustomer() {
         List<Customer> customerList = customerService.readAllCustomer();
         return ResponseEntity.ok(customerList);
     }
 
-    @GetMapping("/rank/{id}")
+    // Get customer rank by ID
+    @GetMapping("/{id}/rank")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> getCustomerRank(@PathVariable("CustomerID") Long id) {
+    public ResponseEntity<String> getCustomerRank(@PathVariable("id") Long id) {
         String rank = customerService.getCustomerRank(id);
         return ResponseEntity.ok(rank);
     }
 
-    @GetMapping("/list-by-id")
+    // Get a single customer by ID
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<Customer> readCustomerFromId(@RequestParam Long id){
+    public ResponseEntity<Customer> readCustomerFromId(@RequestParam Long id) {
         Customer customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
 
-    @GetMapping("/list-by-number")
+    // Get a single customer by phone number
+    @GetMapping("/by-phone-number")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<Customer> readCustomerFromPhoneNumber(@RequestParam String id){
+    public ResponseEntity<Customer> readCustomerFromPhoneNumber(@RequestParam String id) {
         Customer customer = customerService.getCustomerByPhoneNumber(id);
         return ResponseEntity.ok(customer);
     }
 
-    @GetMapping("/list-active-customer")
+    // Get all active customers
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<Customer>> readAllActiveCustomer() {
-        List<Customer> customerList = customerService.readAllActiveCustomers(); // Filter active customers
+        List<Customer> customerList = customerService.readAllActiveCustomers();
         return ResponseEntity.ok(customerList);
     }
 
-
-    //Delete section
-    @DeleteMapping("/delete-status")
+    // Mark a customer as inactive
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> deleteCustomer(@RequestBody CustomerDeleteRequest request){
-        customerService.deleteCustomerById(request);
+    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
+        customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer details marked as inactive successfully");
     }
 
-
-    //Update section
-    @PutMapping("/update-customer-details")
+    // Update customer details
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> updateCustomer(@RequestBody CustomerRequest customerRequest){
+    public ResponseEntity<String> updateCustomer(@RequestBody CustomerRequest customerRequest) {
         customerService.updateCustomerDetails(customerRequest);
-        return ResponseEntity.ok("Customer Details updated successfully");
+        return ResponseEntity.ok("Customer details updated successfully");
     }
 
-    @PatchMapping("/update-customer-points")
+    // Update customer points
+    @PatchMapping("/{id}/points")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> updateCustomerPoints(@RequestBody ViewCustomerPointRequest viewPointsRequest){
+    public ResponseEntity<String> updateCustomerPoints(@RequestBody ViewCustomerPointRequest viewPointsRequest) {
         customerService.updateCustomerPoints(viewPointsRequest);
         return ResponseEntity.ok("Customer points updated successfully");
     }

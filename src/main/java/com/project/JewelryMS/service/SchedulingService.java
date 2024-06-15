@@ -33,11 +33,11 @@ public class SchedulingService {
 
     // Method to assign a staff member to a shift
     @Transactional
-    public Staff_Shift assignStaffToShift(int staffId, int shiftId) {
+    public Staff_Shift assignStaffToShift(int staffId, long shiftId) {
         // Fetch the staff and shift entities from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
-        Shift shift = shiftRepository.findById(shiftId)
+        Shift shift = shiftRepository.findById((long) shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));
 
         // Check if the staff member is already assigned to the shift
@@ -81,6 +81,7 @@ public class SchedulingService {
 //        return matrix;
 //    }
 
+    //This shall need explanation
     public int[][] getScheduleMatrix() {
         List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
         int daysOfWeek = 7; // 7 days in a week
@@ -126,11 +127,11 @@ public class SchedulingService {
 
     // Method to remove a staff member from a shift
     @Transactional
-    public void removeStaffFromShift(int staffId, int shiftId) {
+    public void removeStaffFromShift(int staffId, long shiftId) {
         // Fetch the staff and shift entities from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
-        Shift shift = shiftRepository.findById(shiftId)
+        Shift shift = shiftRepository.findById((long) shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));
 
         // Find the Staff_Shift entity that links the staff member and the shift

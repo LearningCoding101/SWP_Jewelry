@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ShiftRepository extends JpaRepository<Shift, Integer> {
+public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
     // Find shifts by start time
     @Query("SELECT s FROM Shift s WHERE s.startTime = :startTime")
