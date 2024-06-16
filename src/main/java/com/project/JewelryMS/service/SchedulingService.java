@@ -61,17 +61,25 @@ public class SchedulingService {
         return assignStaffToShift(staffId, shiftId);
     }
 
-    public Map<LocalDate, List<StaffAccount>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
-        // Initialize the matrix as a LinkedHashMap to maintain the insertion order
-        Map<LocalDate, List<StaffAccount>> matrix = new LinkedHashMap<>();
+    public Map<LocalDate, Map<String, List<StaffAccount>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
+        // Define the shift types
+        String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
+
+        // Initialize the matrix
+        Map<LocalDate, Map<String, List<StaffAccount>>> matrix = new LinkedHashMap<>();
 
         // Get all staff accounts
         List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
 
         // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            // Initialize the list for the current date
-            matrix.put(date, new ArrayList<>());
+            // Initialize the map for the current date
+            matrix.put(date, new LinkedHashMap<>());
+
+            // Initialize the list for each shift type
+            for (String shiftType : shiftTypes) {
+                matrix.get(date).put(shiftType, new ArrayList<>());
+            }
 
             // Iterate over each staff account
             for (StaffAccount staff : staffAccounts) {
@@ -82,14 +90,25 @@ public class SchedulingService {
 
                 // Check if the staff has a shift on the current date
                 LocalDate finalDate = date;
-                if (shifts.stream().anyMatch(shift -> shift.getStartTime().toLocalDate().equals(finalDate))) {
-                    // If so, add the staff to the list for the current date
-                    matrix.get(date).add(staff);
-                }
+                LocalDate finalDate1 = date;
+                shifts.stream()
+                        .filter(shift -> shift.getStartTime().toLocalDate().equals(finalDate))
+                        .forEach(shift -> {
+                            // Determine the shift type based on the start time
+                            String shiftType = shift.getShiftType();
+                            if (!Arrays.asList(shiftTypes).contains(shiftType)) {
+                                throw new RuntimeException("Invalid shift type: " + shiftType);
+                            }
+
+                            // If so, add the staff to the list for the current date and shift type
+                            matrix.get(finalDate1).get(shiftType).add(staff);
+                        });
             }
         }
+
         return matrix;
     }
+
 
 
     // Method to assign multiple staff to a shift

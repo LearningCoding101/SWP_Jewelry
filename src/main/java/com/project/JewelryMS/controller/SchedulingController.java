@@ -40,9 +40,9 @@ public class SchedulingController {
 
     @GetMapping("/scheduleMatrix")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<Map<LocalDate, List<StaffAccount>>> getScheduleMatrix(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        Map<LocalDate, List<StaffAccount>> matrix = schedulingService.getScheduleMatrix(startDate, endDate);
+    public ResponseEntity<Map<LocalDate, Map<String, List<StaffAccount>>>> getScheduleMatrix(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                                             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        Map<LocalDate, Map<String, List<StaffAccount>>> matrix = schedulingService.getScheduleMatrix(startDate, endDate);
         return ResponseEntity.ok(matrix);
     }
 
