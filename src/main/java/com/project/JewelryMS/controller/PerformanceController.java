@@ -13,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 @RestController
-@RequestMapping("/staff-performance")
+@RequestMapping("/performance")
 @SecurityRequirement(name = "api")
 
 public class PerformanceController {
@@ -24,7 +26,7 @@ public class PerformanceController {
     PerformanceService performanceService;
 
     // Create section
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<PerformanceResponse> createPerformanceReport(@RequestBody CreatePerformanceRequest createPerformanceReport) {
         PerformanceResponse performance = performanceService.createPerformanceReport(createPerformanceReport);
@@ -32,7 +34,7 @@ public class PerformanceController {
     }
 
     // Read section
-    @GetMapping
+    @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<PerformanceResponse>> readAllPerformanceReports() {
         List<PerformanceResponse> performanceList = performanceService.readAllPerformanceReport();
@@ -55,12 +57,14 @@ public class PerformanceController {
 
     @GetMapping("/date")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate(@RequestParam String targetDateStr) {
-        List<PerformanceResponse> performance = performanceService.getPerformanceByDate(targetDateStr);
+    public ResponseEntity<List<PerformanceResponse>> readPerformanceByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LocalDateTime targetDate = date.atStartOfDay();
+        List<PerformanceResponse> performance = performanceService.getPerformanceByDate(targetDate);
         return ResponseEntity.ok(performance);
     }
 
-    @GetMapping("/active-reports")
+
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<List<PerformanceResponse>> readAllActiveReports() {
         List<PerformanceResponse> performanceList = performanceService.readAllConfirmedPerformanceReport();
