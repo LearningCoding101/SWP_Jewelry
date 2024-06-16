@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("shift")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class ShiftController {
     @Autowired
     private ShiftService shiftService;

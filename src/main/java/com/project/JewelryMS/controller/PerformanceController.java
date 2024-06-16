@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/staff-performance")
 @SecurityRequirement(name = "api")
-
+@CrossOrigin(origins = "*")
 public class PerformanceController {
     @Autowired
     PerformanceService performanceService;

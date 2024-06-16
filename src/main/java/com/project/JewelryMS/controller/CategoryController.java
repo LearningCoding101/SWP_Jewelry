@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/category")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
