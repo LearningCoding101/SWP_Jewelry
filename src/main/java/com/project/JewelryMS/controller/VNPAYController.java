@@ -16,6 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("vnpay")
+@CrossOrigin(origins = "*")
 public class VNPAYController {
     @Autowired
     private VNPAYservice vnPayService;

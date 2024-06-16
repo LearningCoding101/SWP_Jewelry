@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/staff-accounts") // Base URL path
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class StaffAccountController {
 
     @Autowired

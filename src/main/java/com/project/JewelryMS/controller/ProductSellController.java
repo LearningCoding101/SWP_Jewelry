@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/productSell")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class ProductSellController {
 
     @Autowired

@@ -291,4 +291,37 @@ public class OrderHandlerService {
 
     }
 
+    public void updateOrderStatus(String info){
+        int orderID = Integer.parseInt(info.replace("Thanh-toan-", "").trim());
+
+        PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
+        System.out.println(orderToUpdate.toString());
+        orderToUpdate.setStatus(3);
+        System.out.println(orderToUpdate.toString());
+
+        orderService.saveOrder(orderToUpdate);
+
+
+    }
+
+    public boolean updateOrderStatusCash(ConfirmCashPaymentRequest request){
+        float paidAmount = request.getAmount();
+        float askPrice = request.getTotal();
+        if(paidAmount < askPrice){
+            return false;
+        } else {
+            PurchaseOrder orderToUpdate = orderService.getOrderById(request.getOrderID());
+            if(orderToUpdate != null){
+                System.out.println(orderToUpdate.toString());
+                orderToUpdate.setStatus(3);
+                System.out.println(orderToUpdate.toString());
+                return orderService.saveOrder(orderToUpdate) != null;
+            } else{
+                return false;
+            }
+        }
+
+    }
+
+
 }
