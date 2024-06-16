@@ -14,23 +14,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffShiftResponse {
-    private int staffID;
-    private String accountName;
-    private String email;
-    private String username;
-    private List<StaffShiftResponse.ShiftResponse> shift;
+    private int shiftID;
+    private String startTime;
+    private String endTime;
+    private String shiftType;
+    private String status;
+    private String workArea;
+    private int register;
+    private List<StaffResponse> staff;
 
-    // Getters and Setters
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ShiftResponse {
-        private int shiftID;
-        private String endTime;
-        private int register;
-        private String shiftType;
-        private String startTime;
-        private String status;
-        private String workArea;
+    public static class StaffResponse {
+        private int staffID;
+        private String accountName;
+        private String email;
+        private String username;
     }
 }
+
