@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -27,5 +29,7 @@ public class Guarantee {
 
     //For what product
     private String coverage;
+    @Column(name="warrantyPeriodMonth")
+    private Integer warrantyPeriodMonth;
     private boolean status = true;
 }

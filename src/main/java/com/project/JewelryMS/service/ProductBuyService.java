@@ -31,7 +31,7 @@ public class ProductBuyService {
         productBuy.setPbName(request.getName());
 
         // Find the category by name
-        Optional<Category> categoryOpt = categoryRepository.findCategoryByName(request.getCategory());
+        Optional<Category> categoryOpt = categoryRepository.findCategoryById(request.getCategory_id());
         if (categoryOpt.isPresent()) {
             productBuy.setCategory(categoryOpt.get());
         } else {
@@ -53,14 +53,23 @@ public class ProductBuyService {
 
 
     private float calculateProductBuyCost(Integer chi, Integer carat, String gemstoneType, String metalType) {
-        Float Totalprice = 0.0F;
-        Float gemStonePrice = 100000000.0F;
-        Float goldPrice = 0.0F;
-        //Get API Gold from Info Gold
-        goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-        Float TotalGemPrice = (gemStonePrice * carat) * 0.8F;
-        Totalprice =  (TotalGemPrice + goldPrice * chi );
-        return Totalprice;
+        Float totalGemPrice = 0.0F;
+        Float totalPrice = 0.0F;
+
+        if (gemstoneType != null && carat != null) {
+            Float gemStonePrice = 100000000.0F; // Price per carat
+            totalGemPrice = (gemStonePrice * carat) * 0.8F;
+        }
+
+        Float totalGoldPrice = 0.0F;
+        if (metalType != null && chi != null) {
+            Float goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+            totalGoldPrice = (goldPrice / 10) * chi;
+        }
+
+        totalPrice = (totalGemPrice + totalGoldPrice ); // Applying the markup
+
+        return totalPrice;
     }
 
     private CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {

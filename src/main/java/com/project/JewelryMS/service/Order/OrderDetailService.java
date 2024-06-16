@@ -1,19 +1,22 @@
 package com.project.JewelryMS.service.Order;
 
+import com.project.JewelryMS.entity.Guarantee;
 import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.Promotion;
 import com.project.JewelryMS.model.Order.TotalOrderRequest;
 import com.project.JewelryMS.model.Order.TotalOrderResponse;
-import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
-import com.project.JewelryMS.model.OrderDetail.OrderPromotionRequest;
-import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
+import com.project.JewelryMS.model.OrderDetail.*;
+import com.project.JewelryMS.repository.GuaranteeRepository;
 import com.project.JewelryMS.repository.OrderDetailRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +31,9 @@ public class OrderDetailService {
 
     @Autowired
     private PromotionRepository promotionRepository;
+
+    @Autowired
+    private GuaranteeRepository guaranteeRepository;
 
     public OrderDetail saveOrderDetail(OrderDetail order) {
         return orderDetailRepository.save(order);
@@ -117,5 +123,56 @@ public class OrderDetailService {
         totalOrderResponse.setTotal(totalResponse);
         return totalOrderResponse;
     }
+
+
+    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(CalculateGuaranteeDateRequest request) {
+        List<OrderDetailResponse> responses = new ArrayList<>();
+
+        for (Long orderDetailId : request.getOrderDetail_ID()) {
+            Optional<OrderDetail> orderDetailOpt = orderDetailRepository.findById(orderDetailId);
+
+            if (orderDetailOpt.isPresent()) {
+                OrderDetail orderDetail = orderDetailOpt.get();
+                Optional<Guarantee> guaranteeOpt = guaranteeRepository.findByProductSell(orderDetail.getProductSell());
+
+                if (guaranteeOpt.isPresent()) {
+                    Guarantee guarantee = guaranteeOpt.get();
+                    Integer warrantyPeriodMonth = guarantee.getWarrantyPeriodMonth();
+
+                    // Calculate guaranteeEndDate
+                    Timestamp now = new Timestamp(System.currentTimeMillis());
+                    Timestamp guaranteeEndDate = calculateGuaranteeEndDate(now, warrantyPeriodMonth);
+                    orderDetail.setGuaranteeEndDate(guaranteeEndDate);
+
+                    orderDetailRepository.save(orderDetail);
+
+                    // Create response
+                    OrderDetailResponse response = mapToOrderDetailResponse(orderDetail);
+                    responses.add(response);
+                }
+            } else {
+                throw new IllegalArgumentException("OrderDetail ID not found: " + orderDetailId);
+            }
+        }
+
+        return responses;
+    }
+
+    private Timestamp calculateGuaranteeEndDate(Timestamp startDate, Integer warrantyPeriodMonth) {
+        LocalDateTime startDateTime = startDate.toLocalDateTime();
+        startDateTime = startDateTime.plusMonths(warrantyPeriodMonth);
+        return Timestamp.valueOf(startDateTime);
+    }
+
+    private OrderDetailResponse mapToOrderDetailResponse(OrderDetail orderDetail) {
+        OrderDetailResponse response = new OrderDetailResponse();
+        response.setPK_ODID(orderDetail.getPK_ODID());
+        response.setProductSell_ID(orderDetail.getProductSell().getProductID());
+        response.setPurchaseOrder_ID(orderDetail.getPurchaseOrder().getPK_OrderID());
+        response.setQuantity(orderDetail.getQuantity());
+        response.setGuaranteeEndDate(orderDetail.getGuaranteeEndDate());
+        return response;
+    }
+
 }
 

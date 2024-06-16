@@ -5,10 +5,7 @@ import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
-import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
-import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
-import com.project.JewelryMS.model.OrderDetail.OrderPromotionRequest;
-import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
+import com.project.JewelryMS.model.OrderDetail.*;
 import com.project.JewelryMS.service.CustomerService;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.Order.OrderDetailService;
@@ -16,6 +13,7 @@ import com.project.JewelryMS.service.Order.OrderHandlerService;
 import com.project.JewelryMS.service.QRService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -154,6 +152,11 @@ public class OrderController {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
     }
 
+    @PostMapping("/calculate-guarantee-end-date")
+    public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
+        List<OrderDetailResponse> responses = orderDetailService.calculateAndSetGuaranteeEndDate(request);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
 
 
 }
