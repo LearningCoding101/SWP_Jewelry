@@ -55,7 +55,7 @@ public class OrderController {
 
     @PostMapping("append-productBuy")
     public ResponseEntity<Void> addOrderBuyDetail(@RequestParam Long orderId, @RequestParam Long productBuyId) {
-        orderHandlerService.OrderBuyDetail(orderId, productBuyId);
+        orderHandlerService.addOrderBuyDetail(orderId, productBuyId);
         return ResponseEntity.ok().build();
     }
 

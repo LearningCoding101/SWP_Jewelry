@@ -21,7 +21,8 @@ public class ProductResponse {
     private String Description;
     private String gemstoneType;
     private String image;
-    private float manufacturer;
+    private String manufacturer;
+    private Float manufactureCost;
     private String metalType;
     private String Name;
     private String productCode;

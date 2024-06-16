@@ -54,7 +54,7 @@ public class ProductBuyService {
 
     private float calculateProductBuyCost(Integer chi, Integer carat, String gemstoneType, String metalType) {
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 125000000.0F;
+        Float gemStonePrice = 100000000.0F;
         Float goldPrice = 0.0F;
         //Get API Gold from Info Gold
         goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
@@ -111,7 +111,7 @@ public class ProductBuyService {
     }
 
 
-    public String DeleteProductBuy(Long id){
+    public String deleteProductBuy(Long id){
         Optional<ProductBuy> productBuyOptional = productBuyRepository.findById(id);
         if(productBuyOptional.isPresent()){
             ProductBuy productBuy = productBuyOptional.get();
