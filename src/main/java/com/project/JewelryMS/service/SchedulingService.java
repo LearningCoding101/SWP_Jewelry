@@ -3,6 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
+import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import com.project.JewelryMS.repository.StaffShiftRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,24 +63,29 @@ public class SchedulingService {
         return assignStaffToShift(staffId, shiftId);
     }
 
-    public Map<LocalDate, Map<String, List<StaffAccount>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
+    public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
         // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
         // Initialize the matrix
-        Map<LocalDate, Map<String, List<StaffAccount>>> matrix = new LinkedHashMap<>();
+        Map<String, Map<String, List<StaffShiftResponse>>> matrix = new LinkedHashMap<>();
 
         // Get all staff accounts
         List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
 
+        // Date and Time formatters
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
         // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             // Initialize the map for the current date
-            matrix.put(date, new LinkedHashMap<>());
+            String formattedDate = date.format(dateFormatter);
+            matrix.put(formattedDate, new LinkedHashMap<>());
 
             // Initialize the list for each shift type
             for (String shiftType : shiftTypes) {
-                matrix.get(date).put(shiftType, new ArrayList<>());
+                matrix.get(formattedDate).put(shiftType, new ArrayList<>());
             }
 
             // Iterate over each staff account
@@ -90,18 +97,29 @@ public class SchedulingService {
 
                 // Check if the staff has a shift on the current date
                 LocalDate finalDate = date;
-                LocalDate finalDate1 = date;
                 shifts.stream()
                         .filter(shift -> shift.getStartTime().toLocalDate().equals(finalDate))
                         .forEach(shift -> {
                             // Determine the shift type based on the start time
-                            String shiftType = shift.getShiftType();
-                            if (!Arrays.asList(shiftTypes).contains(shiftType)) {
-                                throw new RuntimeException("Invalid shift type: " + shiftType);
+                            int hour = shift.getStartTime().getHour();
+                            String shiftType;
+                            if (hour >= 7 && hour < 11) {
+                                shiftType = "Morning";
+                            } else if (hour >= 13 && hour < 16) {
+                                shiftType = "Afternoon";
+                            } else if (hour >= 17 && hour < 21) {
+                                shiftType = "Evening";
+                            } else {
+                                throw new RuntimeException("Shift does not fall into any defined period");
                             }
 
-                            // If so, add the staff to the list for the current date and shift type
-                            matrix.get(finalDate1).get(shiftType).add(staff);
+                            // Format the start and end times
+                            String formattedStartTime = shift.getStartTime().format(timeFormatter);
+                            String formattedEndTime = shift.getEndTime().format(timeFormatter);
+
+                            // If so, create a new StaffShiftResponse object and add it to the list for the current date and shift type
+                            StaffShiftResponse staffShift = new StaffShiftResponse(staff.getStaffID(), staff.getAccount().getAccountName(), staff.getAccount().getEmail(), staff.getAccount().getUsername(), shifts.stream().map(s -> new StaffShiftResponse.ShiftResponse(s.getShiftID(), formattedEndTime, s.getRegister(), s.getShiftType(), formattedStartTime, s.getStatus(), s.getWorkArea())).collect(Collectors.toList()));
+                            matrix.get(formattedDate).get(shiftType).add(staffShift);
                         });
             }
         }

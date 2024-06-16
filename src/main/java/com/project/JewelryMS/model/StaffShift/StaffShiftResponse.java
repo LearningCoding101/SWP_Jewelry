@@ -18,7 +18,7 @@ public class StaffShiftResponse {
     private String accountName;
     private String email;
     private String username;
-    private List<StaffAccountResponse.ShiftResponse> shift;
+    private List<StaffShiftResponse.ShiftResponse> shift;
 
     // Getters and Setters
     @Data
@@ -26,10 +26,10 @@ public class StaffShiftResponse {
     @NoArgsConstructor
     public static class ShiftResponse {
         private int shiftID;
-        private LocalDateTime endTime;
+        private String endTime;
         private int register;
         private String shiftType;
-        private LocalDateTime startTime;
+        private String startTime;
         private String status;
         private String workArea;
     }

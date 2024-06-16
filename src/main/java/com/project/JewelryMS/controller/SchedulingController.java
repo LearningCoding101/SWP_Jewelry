@@ -3,6 +3,7 @@ package com.project.JewelryMS.controller;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
 import com.project.JewelryMS.model.StaffShift.IdWrapper;
+import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -40,11 +41,13 @@ public class SchedulingController {
 
     @GetMapping("/scheduleMatrix")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<Map<LocalDate, Map<String, List<StaffAccount>>>> getScheduleMatrix(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                                                                             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        Map<LocalDate, Map<String, List<StaffAccount>>> matrix = schedulingService.getScheduleMatrix(startDate, endDate);
+    public ResponseEntity<Map<String, Map<String, List<StaffShiftResponse>>>> getScheduleMatrix(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                                                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        Map<String, Map<String, List<StaffShiftResponse>>> matrix = schedulingService.getScheduleMatrix(startDate, endDate);
         return ResponseEntity.ok(matrix);
     }
+
+
 
 
     @PostMapping("/assignMultipleStaffToShift")
