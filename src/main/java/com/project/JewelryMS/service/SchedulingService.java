@@ -40,7 +40,7 @@ public class SchedulingService {
         // Fetch the staff and shift entities from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
-        Shift shift = shiftRepository.findById(shiftId)
+        Shift shift = shiftRepository.findById((long) shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));
 
         // Check if the staff member is already assigned to the shift
@@ -157,7 +157,7 @@ public class SchedulingService {
         // Fetch the staff and shift entities from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
                 .orElseThrow(() -> new RuntimeException("Staff not found"));
-        Shift shift = shiftRepository.findById(shiftId)
+        Shift shift = shiftRepository.findById((long) shiftId)
                 .orElseThrow(() -> new RuntimeException("Shift not found"));
 
         // Find the Staff_Shift entity that links the staff member and the shift

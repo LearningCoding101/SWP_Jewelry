@@ -93,6 +93,7 @@ public class ProductSellService {
                 response.setGemstoneType(productSell.getGemstoneType());
                 response.setImage(productSell.getImage());
                 response.setManufacturer(productSell.getManufacturer());
+                response.setManufactureCost(productSell.getManufactureCost());
                 response.setMetalType(productSell.getMetalType());
                 response.setName(productSell.getPName());
                 response.setProductCode(productSell.getProductCode());
@@ -132,7 +133,7 @@ public class ProductSellService {
             throw new IllegalArgumentException("Category ID not found");
         }
         productSell.setChi(request.getChi());
-        productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufacturer()));
+        productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufactureCost()));
         productSell.setPDescription(request.getPDescription());
         productSell.setPName(request.getPName());
         productSell.setGemstoneType(request.getGemstoneType());
@@ -140,6 +141,7 @@ public class ProductSellService {
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
         productSell.setImage(imageUrl);
         productSell.setManufacturer(request.getManufacturer());
+        productSell.setManufactureCost(request.getManufactureCost());
         productSell.setMetalType(request.getMetalType());
         productSell.setProductCode(request.getProductCode());
         productSell.setPStatus(true);
@@ -148,13 +150,13 @@ public class ProductSellService {
         return getProductSellById2(productSell1.getProductID());
     }
 
-    public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturer){
+    public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturerCost){
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 125000000.0F;
+        Float gemStonePrice = 100000000.0F;
         Float goldPrice = 0.0F;
             //Get API Gold from Info Gold
-            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturer) * GetPricingRatio());
+            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v")) / 10.0F;
+        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturerCost) * GetPricingRatio());
         return Totalprice;
     }
 
@@ -177,8 +179,9 @@ public class ProductSellService {
         if(productSellOptional.isPresent()){
             ProductSell productSell = productSellOptional.get();
             return productSell;
+        }else{
+            return new ProductSell();
         }
-        return productSellOptional.get();
     }
 
     public ProductSellResponse getProductSellById2(long id) {
@@ -198,6 +201,7 @@ public class ProductSellService {
         response.setGemstoneType(productSell.getGemstoneType());
         response.setImage(productSell.getImage());
         response.setManufacturer(productSell.getManufacturer());
+        response.setManufactureCost(productSell.getManufactureCost());
         response.setMetalType(productSell.getMetalType());
         response.setName(productSell.getPName());
         response.setProductCode(productSell.getProductCode());
@@ -231,6 +235,7 @@ public class ProductSellService {
         String imageUrl = imageService.uploadImageByPathService(productSellRequest.getImage());
         existingProductSell.setImage(imageUrl);
         existingProductSell.setManufacturer(productSellRequest.getManufacturer());
+        existingProductSell.setManufactureCost(productSellRequest.getManufactureCost());
         existingProductSell.setMetalType(productSellRequest.getMetalType());
         existingProductSell.setPName(productSellRequest.getPName());
         existingProductSell.setProductCode(productSellRequest.getProductCode());

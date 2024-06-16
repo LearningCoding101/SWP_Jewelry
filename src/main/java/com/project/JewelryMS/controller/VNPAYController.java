@@ -39,18 +39,18 @@ public class VNPAYController {
         return vnpayUrl;
     }
 
-    // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
-    @GetMapping("/vnpay-payment-return")
-    @CrossOrigin
-    public ResponseEntity paymentCompleted(HttpServletRequest request, Model model){
-        int paymentStatus = vnPayService.orderReturn(request);
-
-        String redirectUrl = paymentStatus == 1 ? "/ordersuccess" : "/orderfail";
-        if(paymentStatus == 1){
-            orderHandlerService.updateOrderStatus(request.getParameter("vnp_OrderInfo"));
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://jewelryms.xyz/staff" + redirectUrl)); // Removed the "/" before redirectUrl
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-    }
+//    // Sau khi hoàn tất thanh toán, VNPAY sẽ chuyển hướng trình duyệt về URL này
+//    @GetMapping("/vnpay-payment-return")
+//    @CrossOrigin
+//    public ResponseEntity paymentCompleted(HttpServletRequest request, Model model){
+//        int paymentStatus = vnPayService.orderReturn(request);
+//
+//        String redirectUrl = paymentStatus == 1 ? "/ordersuccess" : "/orderfail";
+//        if(paymentStatus == 1){
+//            orderHandlerService.updateOrderStatus(request.getParameter("vnp_OrderInfo"));
+//        }
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create("http://jewelryms.xyz/staff" + redirectUrl)); // Removed the "/" before redirectUrl
+//        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+//    }
 }

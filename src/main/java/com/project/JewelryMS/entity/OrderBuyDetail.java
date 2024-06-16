@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class OrderBuyDetail implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,5 @@ public class OrderBuyDetail implements Serializable{
     @JoinColumn(name = "FK_ProductBuyID", referencedColumnName = "PK_ProductBuyID")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductBuy productBuy;
-
-    Integer quantity;
 
 }
