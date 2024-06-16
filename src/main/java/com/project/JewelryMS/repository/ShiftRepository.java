@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -47,5 +48,13 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     // Find shifts by the actual ID
     @Query("SELECT s FROM Shift s WHERE s.shiftID = :shiftID")
     Shift findByShiftId(@Param("shiftID") int shiftID);
+
+    // Find shifts by date
+    @Query("SELECT s FROM Shift s WHERE FUNCTION('DATE', s.startTime) = :date")
+    List<Shift> findAllByDate(@Param("date") LocalDate date);
+
+    // Find shifts by date and type
+    @Query("SELECT s FROM Shift s WHERE FUNCTION('DATE', s.startTime) = :date AND s.shiftType = :shiftType")
+    List<Shift> findAllByDateAndType(@Param("date") LocalDate date, @Param("shiftType") String shiftType);
 }
 

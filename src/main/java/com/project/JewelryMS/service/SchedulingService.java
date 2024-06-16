@@ -62,16 +62,12 @@ public class SchedulingService {
     public Staff_Shift assignShiftToStaff(int shiftId, int staffId) {
         return assignStaffToShift(staffId, shiftId);
     }
-
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
         // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
         // Initialize the matrix
         Map<String, Map<String, List<StaffShiftResponse>>> matrix = new LinkedHashMap<>();
-
-        // Get all staff accounts
-        List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
 
         // Date and Time formatters
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
@@ -86,48 +82,27 @@ public class SchedulingService {
             // Initialize the list for each shift type
             for (String shiftType : shiftTypes) {
                 matrix.get(formattedDate).put(shiftType, new ArrayList<>());
-            }
 
-            // Iterate over each staff account
-            for (StaffAccount staff : staffAccounts) {
-                // Get all shifts for the current staff account
-                Set<Shift> shifts = staff.getStaffShifts().stream()
-                        .map(Staff_Shift::getShift)
-                        .collect(Collectors.toSet());
+                // Get all shifts of the current type for the current date
+                List<Shift> shifts = shiftRepository.findAllByDateAndType(date, shiftType);
 
-                // Check if the staff has a shift on the current date
-                LocalDate finalDate = date;
-                shifts.stream()
-                        .filter(shift -> shift.getStartTime().toLocalDate().equals(finalDate))
-                        .forEach(shift -> {
-                            // Determine the shift type based on the start time
-                            int hour = shift.getStartTime().getHour();
-                            String shiftType;
-                            if (hour >= 7 && hour < 11) {
-                                shiftType = "Morning";
-                            } else if (hour >= 13 && hour < 16) {
-                                shiftType = "Afternoon";
-                            } else if (hour >= 17 && hour < 21) {
-                                shiftType = "Evening";
-                            } else {
-                                throw new RuntimeException("Shift does not fall into any defined period");
-                            }
+                // For each shift, get the staff assigned to it and create a StaffShiftResponse
+                for (Shift shift : shifts) {
+                    List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
 
-                            // Format the start and end times
-                            String formattedStartTime = shift.getStartTime().format(timeFormatter);
-                            String formattedEndTime = shift.getEndTime().format(timeFormatter);
+                    // Format the start and end times
+                    String formattedStartTime = shift.getStartTime().format(timeFormatter);
+                    String formattedEndTime = shift.getEndTime().format(timeFormatter);
 
-                            // If so, create a new StaffShiftResponse object and add it to the list for the current date and shift type
-                            StaffShiftResponse staffShift = new StaffShiftResponse(staff.getStaffID(), staff.getAccount().getAccountName(), staff.getAccount().getEmail(), staff.getAccount().getUsername(), shifts.stream().map(s -> new StaffShiftResponse.ShiftResponse(s.getShiftID(), formattedEndTime, s.getRegister(), s.getShiftType(), formattedStartTime, s.getStatus(), s.getWorkArea())).collect(Collectors.toList()));
-                            matrix.get(formattedDate).get(shiftType).add(staffShift);
-                        });
+                    // Create a new StaffShiftResponse object and add it to the list for the current date and shift type
+                    StaffShiftResponse staffShift = new StaffShiftResponse(shift.getShiftID(), formattedStartTime, formattedEndTime, shiftType, shift.getStatus(), shift.getWorkArea(), shift.getRegister(), staffAccounts.stream().map(s -> new StaffShiftResponse.StaffResponse(s.getStaffID(), s.getAccount().getAccountName(), s.getAccount().getEmail(), s.getAccount().getUsername())).collect(Collectors.toList()));
+                    matrix.get(formattedDate).get(shiftType).add(staffShift);
+                }
             }
         }
 
         return matrix;
     }
-
-
 
     // Method to assign multiple staff to a shift
     @Transactional
