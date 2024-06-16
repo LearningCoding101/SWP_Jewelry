@@ -13,7 +13,8 @@ public class CreateProductSellRequest {
     private String pDescription;
     private String gemstoneType;
     private MultipartFile image;
-    private float manufacturer;
+    private String manufacturer;
+    private Float manufactureCost;
     private String metalType;
     private String pName;
     private String productCode;

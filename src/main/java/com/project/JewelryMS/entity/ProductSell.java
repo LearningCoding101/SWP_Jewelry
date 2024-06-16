@@ -53,7 +53,10 @@ public class ProductSell {
     private String image;
 
     @Column(name = "manufacturer")
-    private float manufacturer;
+    private String manufacturer;
+
+    @Column(name = "manufactureCost")
+    private Float manufactureCost;
 
     @Column(name = "metalType", length = 255)
     private String metalType;

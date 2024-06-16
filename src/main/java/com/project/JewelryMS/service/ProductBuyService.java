@@ -2,6 +2,7 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
+import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
@@ -53,7 +54,7 @@ public class ProductBuyService {
 
     private float calculateProductBuyCost(Integer chi, Integer carat, String gemstoneType, String metalType) {
         Float Totalprice = 0.0F;
-        Float gemStonePrice = 125000000.0F;
+        Float gemStonePrice = 100000000.0F;
         Float goldPrice = 0.0F;
         //Get API Gold from Info Gold
         goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
@@ -97,6 +98,16 @@ public class ProductBuyService {
         response.setGemstoneType(productBuy.getGemstoneType());
         response.setCost(productBuy.getPbCost());
         return response;
+    }
+
+
+    public ProductBuy getProductBuyById2(long id) {
+        Optional<ProductBuy> productBuyOptional = productBuyRepository.findById(id);
+        if(productBuyOptional.isPresent()){
+            ProductBuy productBuy = productBuyOptional.get();
+            return productBuy;
+        }
+        return productBuyOptional.get();
     }
 
 

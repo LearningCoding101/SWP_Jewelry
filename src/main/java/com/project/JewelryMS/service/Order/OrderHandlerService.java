@@ -1,10 +1,10 @@
 package com.project.JewelryMS.service.Order;
 
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.entity.PurchaseOrder;
-import com.project.JewelryMS.entity.OrderDetail;
+import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.Order.*;
+import com.project.JewelryMS.repository.ProductBuyRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.service.ProductBuyService;
 import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,12 @@ public class OrderHandlerService {
     ProductSellService productSellService;
     @Autowired
     ProductSellRepository productSellRepository;
+    @Autowired
+    ProductBuyRepository productBuyRepository;
+    @Autowired
+    ProductBuyService productBuyService;
+    @Autowired
+    OrderBuyDetailService orderBuyDetailService;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -56,8 +62,101 @@ public class OrderHandlerService {
         }
         return id;
     }
+    //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
+    @Transactional
+    public Long createOrderWithBuyDetails(PurchaseOrder purchaseOrder, List<OrderBuyDetail> list){
+        Set<OrderBuyDetail> detailSet = new HashSet<>();
+        for(OrderBuyDetail detail : list){
+            detail.setPurchaseOrder(purchaseOrder);
+            detailSet.add(detail);
+        }
+        purchaseOrder.setOrderBuyDetails(detailSet);
+        orderService.saveOrder(purchaseOrder);
+        return purchaseOrder.getPK_OrderID();
+    }
 
+    public Long handleCreateOrderBuyWithDetails(CreateOrderRequest orderRequest, List<CreateOrderBuyDetailRequest> detailRequest){
+        PurchaseOrder order = new PurchaseOrder();
+        Long id = -1L;
+        order.setStatus(orderRequest.getStatus());
+        order.setPurchaseDate(orderRequest.getPurchaseDate());
+        order.setPaymentType(orderRequest.getPaymentType());
+        order.setTotalAmount(orderRequest.getTotalAmount());
+        List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
+        for(CreateOrderBuyDetailRequest detail : detailRequest){
+            OrderBuyDetail orderBuyDetail = new OrderBuyDetail();
+            orderBuyDetail.setProductBuy(productBuyService.getProductBuyById2(detail.getProductBuyID()));
+            orderBuyDetail.setPurchaseOrder(order);
+            orderBuyDetails.add(orderBuyDetail);
+        }
 
+        if(!orderBuyDetails.isEmpty()){
+            id = createOrderWithBuyDetails(order, orderBuyDetails);
+        }
+        return id;
+    }
+    public void addOrderBuyDetail(Long orderId, Long productBuyId) {
+        PurchaseOrder order = orderService.getOrderById(orderId);
+        ProductBuy productBuy= productBuyService.getProductBuyById2(productBuyId);
+
+        OrderBuyDetail orderBuyDetail = new OrderBuyDetail();
+        orderBuyDetail.setProductBuy(productBuy);
+        orderBuyDetail.setPurchaseOrder(order);
+        orderBuyDetailService.saveOrderBuyDetail(orderBuyDetail);
+    }
+
+    public List<OrderBuyResponse> getAllBuyOrder(){
+        List<OrderBuyResponse> result = new ArrayList<>();
+        List<PurchaseOrder> orderList = orderService.getAllOrders();
+        System.out.println(orderList.toString());
+        for(PurchaseOrder order : orderList) {
+            if (order.getOrderBuyDetails() != null && !order.getOrderBuyDetails().isEmpty()) {
+                OrderBuyResponse orderToGet = new OrderBuyResponse();
+                orderToGet.setStatus(order.getStatus());
+                orderToGet.setPaymentType(order.getPaymentType());
+                orderToGet.setTotalAmount(order.getTotalAmount());
+                orderToGet.setPurchaseDate(order.getPurchaseDate());
+                Set<ProductBuyResponse> productBuyResponses = new HashSet<>();
+                List<OrderBuyDetail> iterateList = order.getOrderBuyDetails().stream().toList();
+                for (OrderBuyDetail item : iterateList) {
+                    ProductBuy product = item.getProductBuy();
+                    ProductBuyResponse response = new ProductBuyResponse();
+                    response.setProductBuyID(product.getPK_ProductBuyID());
+                    response.setCategoryName(product.getCategory().getName());
+                    response.setMetalType(product.getMetalType());
+                    response.setGemstoneType(product.getGemstoneType());
+                    response.setPbName(product.getPbName());
+                    response.setCost(product.getPbCost());
+                    productBuyResponses.add(response);
+                }
+                orderToGet.setProductBuyDetail(productBuyResponses);
+                result.add(orderToGet);
+            }
+        }
+        return result;
+    }
+
+    public List<ProductBuyResponse> getProductBuyByOrderId(Long orderID) {
+        PurchaseOrder order = orderService.getOrderById(orderID);
+        Set<ProductBuyResponse> productBuyResponses = new HashSet<>();
+        System.out.println("reached " + order.getPurchaseDate());
+        if (order.getOrderBuyDetails() != null && !order.getOrderBuyDetails().isEmpty()) {
+            for (OrderBuyDetail item : order.getOrderBuyDetails()) {
+
+                ProductBuy product = item.getProductBuy();
+                ProductBuyResponse response = new ProductBuyResponse();
+                response.setProductBuyID(product.getPK_ProductBuyID());
+                response.setCategoryName(product.getCategory().getName());
+                response.setMetalType(product.getMetalType());
+                response.setGemstoneType(product.getGemstoneType());
+                response.setPbName(product.getPbName());
+                response.setCost(product.getPbCost());
+                productBuyResponses.add(response);
+            }
+        }
+        return new ArrayList<>(productBuyResponses);
+    }
+    //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
 
     public void addOrderDetail(Long orderId, Long productId, Integer quantity) {
         PurchaseOrder order = orderService.getOrderById(orderId);
@@ -94,6 +193,7 @@ public class OrderHandlerService {
                 response.setGemstoneType(product.getGemstoneType());
                 response.setImage(product.getImage());
                 response.setManufacturer(product.getManufacturer());
+                response.setManufactureCost(product.getManufactureCost());
                 response.setStatus(product.isPStatus());
                 response.setCategory_id(product.getProductID());
                 List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
@@ -134,6 +234,7 @@ public class OrderHandlerService {
             response.setGemstoneType(product.getGemstoneType());
             response.setImage(product.getImage());
             response.setManufacturer(product.getManufacturer());
+            response.setManufactureCost(product.getManufactureCost());
             response.setStatus(product.isPStatus());
             response.setCategory_id(product.getProductID());
 
@@ -167,12 +268,11 @@ public class OrderHandlerService {
             response.setCarat(product.getCarat());
             response.setChi(product.getChi());
             response.setCost(product.getCost());
-
-
             response.setDescription(product.getPDescription());
             response.setGemstoneType(product.getGemstoneType());
             response.setImage(product.getImage());
             response.setManufacturer(product.getManufacturer());
+            response.setManufactureCost(product.getManufactureCost());
             response.setStatus(product.isPStatus());
             response.setCategory_id(product.getProductID());
             List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
