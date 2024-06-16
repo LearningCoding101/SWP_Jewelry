@@ -47,7 +47,7 @@ public class OrderController {
     // Create a new order
     @PostMapping
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<Void> saleCreateOrder(@RequestBody CreateOrderWrapper order) {
+    public ResponseEntity saleCreateOrder(@RequestBody CreateOrderWrapper order) {
         orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
         return ResponseEntity.ok("");
     }
@@ -103,11 +103,6 @@ public class OrderController {
     }
     @PutMapping("append-product")
     public ResponseEntity saleAppendProductToOrder(){
-
-    // Append a product to an existing order
-    @PutMapping("/append-product")
-   // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<Void> saleAppendProductToOrder() {
         return ResponseEntity.ok().build();
     }
 
@@ -126,11 +121,6 @@ public class OrderController {
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderHandlerService.getAllOrder());
     }
-    @PutMapping("payment")
-    public ResponseEntity cashierCompleteOrder(){
-
-
-        return ResponseEntity.ok("");
 
     // Complete order payment
     @PutMapping("/payment")
