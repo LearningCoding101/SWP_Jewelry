@@ -43,7 +43,7 @@ public class ProductBuy {
     private Integer chi;
 
     @Column(name = "carat")
-    private Integer carat;
+    private Float carat;
 
     @Column(name = "pbStatus")
     private boolean pbStatus;
