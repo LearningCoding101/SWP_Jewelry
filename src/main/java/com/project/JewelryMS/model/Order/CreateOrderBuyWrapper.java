@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateOrderBuyWrapper {
     private CreateOrderRequest orderRequest;
-    private List<CreateOrderBuyDetailRequest> BuyDetailList;
+    private List<CreateProductBuyRequest> ProductBuyList;
     private String email;
 
 

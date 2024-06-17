@@ -2,8 +2,8 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
+import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
+import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
@@ -11,7 +11,6 @@ import com.project.JewelryMS.repository.ProductBuyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,33 +25,35 @@ public class ProductBuyService {
     private ApiService apiService;
     @Autowired
     private ImageService imageService;
-//    public CreateProductBuyResponse createProductBuy(CreateProductBuyRequest request) {
-//        ProductBuy productBuy = new ProductBuy();
-//        productBuy.setPbName(request.getName());
-//
-//        // Find the category by name
-//        Optional<Category> categoryOpt = categoryRepository.findCategoryById(request.getCategory_id());
-//        if (categoryOpt.isPresent()) {
-//            productBuy.setCategory(categoryOpt.get());
-//        } else {
-//            throw new IllegalArgumentException("Category name not found");
-//        }
-//
-//        productBuy.setMetalType(request.getMetalType());
-//        productBuy.setGemstoneType(request.getGemstoneType());
-//        String imageUrl = imageService.uploadImageByPathService(request.getImage());
-//        productBuy.setImage(imageUrl);
-//        productBuy.setChi(request.getMetalWeight());
-//        productBuy.setCarat(request.getGemstoneWeight());
-//        productBuy.setPbCost(calculateProductBuyCost(request.getMetalWeight(), request.getGemstoneWeight(), request.getGemstoneType(), request.getMetalType()));
-//
-//        ProductBuy savedProductBuy = productBuyRepository.save(productBuy);
-//
-//        return mapToCreateProductBuyResponse(savedProductBuy);
-//    }
+    public ProductBuy createProductBuy(CreateProductBuyRequest request) {
+        ProductBuy productBuy = new ProductBuy();
+        productBuy.setPbName(request.getName());
+
+        // Find the category by name
+        Optional<Category> categoryOpt = categoryRepository.findCategoryById(request.getCategory_id());
+        if (categoryOpt.isPresent()) {
+            productBuy.setCategory(categoryOpt.get());
+        } else {
+            throw new IllegalArgumentException("Category name not found");
+        }
+
+        productBuy.setMetalType(request.getMetalType());
+        productBuy.setGemstoneType(request.getGemstoneType());
+        if(request.getImage()!=null) {
+            String imageUrl = imageService.uploadImageByPathService(request.getImage());
+            productBuy.setImage(imageUrl);
+        }else{
+            productBuy.setImage(null);
+        }
+        productBuy.setChi(request.getMetalWeight());
+        productBuy.setCarat(request.getGemstoneWeight());
+        productBuy.setPbCost(request.getCost());
+        productBuy.setPbStatus(true);
+        return productBuyRepository.save(productBuy);
+    }
 
 
-    private Float calculateProductBuyCost(CreateProductBuyRequest createProductBuyRequest) {
+    public Float calculateProductBuyCost(CalculatePBRequest createProductBuyRequest) {
         Float totalGemPrice = 0.0F;
         Float totalPrice = 0.0F;
         String gemstoneType = createProductBuyRequest.getGemstoneType();
@@ -61,7 +62,7 @@ public class ProductBuyService {
         Integer chi = createProductBuyRequest.getMetalWeight();
         if (gemstoneType != null && carat != null) {
             Float gemStonePrice = 100000000.0F; // Price per carat
-            totalGemPrice = (gemStonePrice * carat) * 0.8F;
+            totalGemPrice = ((gemStonePrice * carat) * 0.8F);
         }
 
         Float totalGoldPrice = 0.0F;
@@ -72,10 +73,10 @@ public class ProductBuyService {
 
         totalPrice = (totalGemPrice + totalGoldPrice ); // Applying the markup
 
-        return totalPrice;
+        return totalPrice / 1000.0F;
     }
 
-    private CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {
+    public CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {
         CreateProductBuyResponse response = new CreateProductBuyResponse();
         response.setProductBuyID(productBuy.getPK_ProductBuyID());
         response.setCategoryName(productBuy.getCategory().getName());

@@ -14,7 +14,6 @@ import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -92,17 +91,23 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(CreateOrderRequest orderRequest, List<CreateOrderBuyDetailRequest> detailRequest){
+    public Long handleCreateOrderBuyWithDetails(CreateOrderRequest orderRequest, List<CreateProductBuyRequest> createProductBuyRequests){
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
+        List<Long> ProductBuyIDList = new ArrayList<>();
+        for(CreateProductBuyRequest productBuyRequest: createProductBuyRequests){
+            ProductBuy productBuy = new ProductBuy();
+            productBuy = productBuyService.createProductBuy(productBuyRequest);
+            ProductBuyIDList.add(productBuy.getPK_ProductBuyID());
+        }
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
-        for(CreateOrderBuyDetailRequest detail : detailRequest){
+        for(Long ProductBuyIDs : ProductBuyIDList){
             OrderBuyDetail orderBuyDetail = new OrderBuyDetail();
-            orderBuyDetail.setProductBuy(productBuyService.getProductBuyById2(detail.getProductBuyID()));
+            orderBuyDetail.setProductBuy(productBuyService.getProductBuyById2(ProductBuyIDs));
             orderBuyDetail.setPurchaseOrder(order);
             orderBuyDetails.add(orderBuyDetail);
         }

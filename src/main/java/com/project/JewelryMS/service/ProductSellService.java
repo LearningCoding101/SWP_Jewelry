@@ -167,7 +167,7 @@ public class ProductSellService {
 
         totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * 1.2F;
 
-        return totalPrice;
+        return totalPrice / 1000.0F;
     }
 
     public Float GetPricingRatio() {
