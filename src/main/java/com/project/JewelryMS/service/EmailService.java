@@ -1,8 +1,14 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
+import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.ProductResponse;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailDTO;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailGuarantee;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
+import com.project.JewelryMS.service.Order.OrderDetailService;
+import com.project.JewelryMS.service.Order.OrderHandlerService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -20,12 +26,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class EmailService {
@@ -37,6 +41,10 @@ public class EmailService {
     private ImageService imageService;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    ProductSellService productSellService;
+    @Autowired
+    OrderDetailService orderDetailService;
     private static final String EMAIL_PATTERN ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     private static final String UPCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
@@ -148,9 +156,56 @@ public class EmailService {
         }
     }
 
+    public void sendConfirmEmail(Long orderID, EmailDetail emailDetail) {
+        try {
+            // Fetch order details for the given orderID
+            List<OrderDetailDTO> orderDetails = orderDetailService.getOrderDetailsByOrderId(orderID).stream()
+                    .filter(orderDetail -> orderDetail.getOrderId().equals(orderID)).toList();
 
+            // Prepare the HTML content
+            Context context = new Context();
+            context.setVariable("name", emailDetail.getRecipient());
+            context.setVariable("content", emailDetail.getMsgBody());
+            context.setVariable("orderTable", htmlFormatterService.createOrderDetailTableConfirm(orderDetails));
 
+            // Process the email template
+            String text = templateEngine.process("orderEmail", context);
 
+            // Creating a MimeMessage
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+            // Setting up necessary details
+            mimeMessageHelper.setFrom("jewelryms44@gmail.com");
+            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setSubject(emailDetail.getSubject());
+
+            // Send the email
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException messagingException) {
+            messagingException.printStackTrace();
+        }
+    }
+
+    private static ProductResponse getProductResponse(ProductResponse item, ProductSell product) {
+        ProductResponse response = new ProductResponse();
+
+        response.setQuantity(item.getQuantity());
+        response.setProductID(product.getProductID());
+        response.setName(product.getPName());
+        response.setCarat(product.getCarat());
+        response.setChi(product.getChi());
+        response.setCost(product.getCost());
+        response.setDescription(product.getPDescription());
+        response.setGemstoneType(product.getGemstoneType());
+        response.setImage(product.getImage());
+        response.setManufacturer(product.getManufacturer());
+        response.setManufactureCost(product.getManufactureCost());
+        response.setStatus(product.isPStatus());
+        response.setCategory_id(product.getProductID());
+        return response;
+    }
 
 
     public boolean validEmail(String email){

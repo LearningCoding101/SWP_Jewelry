@@ -1,14 +1,18 @@
 package com.project.JewelryMS.service.Order;
 
 import com.project.JewelryMS.entity.*;
+import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
 import com.project.JewelryMS.repository.ProductBuyRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ProductBuyService;
 import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,6 +34,8 @@ public class OrderHandlerService {
     ProductBuyService productBuyService;
     @Autowired
     OrderBuyDetailService orderBuyDetailService;
+    @Autowired
+    EmailService emailService;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -42,13 +48,14 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest){
+    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email){
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
+        order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for(CreateOrderDetailRequest detail : detailRequest){
             OrderDetail orderDetail = new OrderDetail();
@@ -298,13 +305,23 @@ public class OrderHandlerService {
         PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
         System.out.println(orderToUpdate.toString());
         orderToUpdate.setStatus(3);
+        calculateAndSetGuaranteeEndDate((long) orderID);
+        sendConfirmationEmail((long) orderID, orderToUpdate.getEmail());
         System.out.println(orderToUpdate.toString());
-
         orderService.saveOrder(orderToUpdate);
 
 
     }
+    public void sendConfirmationEmail(Long orderId, String recipientEmail) {
+        // Prepare EmailDetail object
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(recipientEmail);
+        emailDetail.setSubject("Confirmation Email for Order #" + orderId);
+        emailDetail.setMsgBody("This is to confirm your order with ID #" + orderId + ". Thank you for your purchase.");
 
+        // Call the service method to send confirmation email
+        emailService.sendConfirmEmail(orderId, emailDetail);
+    }
     public boolean updateOrderStatusCash(ConfirmCashPaymentRequest request){
         float paidAmount = request.getAmount();
         float askPrice = request.getTotal();
@@ -315,7 +332,9 @@ public class OrderHandlerService {
             if(orderToUpdate != null){
                 System.out.println(orderToUpdate.toString());
                 orderToUpdate.setStatus(3);
+                calculateAndSetGuaranteeEndDate((long) request.getOrderID());
                 System.out.println(orderToUpdate.toString());
+                sendConfirmationEmail((long) request.getOrderID(), orderToUpdate.getEmail());
                 return orderService.saveOrder(orderToUpdate) != null;
             } else{
                 return false;
@@ -324,5 +343,10 @@ public class OrderHandlerService {
 
     }
 
+
+    //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
+    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderID){
+        return orderDetailService.calculateAndSetGuaranteeEndDate(orderID);
+    }
 
 }

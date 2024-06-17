@@ -1,3 +1,4 @@
+com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\model\Order\TotalOrderResponse.class
 com\project\JewelryMS\controller\CustomerController.class
@@ -6,8 +7,10 @@ com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
 com\project\JewelryMS\service\CustomerService.class
+com\project\JewelryMS\model\OrderDetail\OrderDetailResponse.class
 com\project\JewelryMS\model\Order\OrderResponse.class
 com\project\JewelryMS\config\SecurityConfig.class
+com\project\JewelryMS\model\Order\OrderBuyResponse.class
 com\project\JewelryMS\model\ProductSell\ProductSellRequest.class
 com\project\JewelryMS\repository\CustomerRepository.class
 com\project\JewelryMS\controller\CategoryController.class
@@ -18,6 +21,7 @@ com\project\JewelryMS\model\ProductSell\AddPromotionsRequest.class
 com\project\JewelryMS\service\ProductSellService.class
 com\project\JewelryMS\controller\AuthenticationAPI.class
 com\project\JewelryMS\service\StaffAccountService.class
+com\project\JewelryMS\service\SchedulingService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\controller\ProfileController.class
 com\project\JewelryMS\model\Shift\CreateShiftRequest.class
@@ -54,6 +58,7 @@ com\project\JewelryMS\model\Guarantee\GuaranteeResponse.class
 com\project\JewelryMS\controller\StaffAccountController.class
 com\project\JewelryMS\entity\Customer.class
 com\project\JewelryMS\service\ApiService.class
+com\project\JewelryMS\service\Order\OrderBuyDetailService.class
 com\project\JewelryMS\service\GuaranteeService.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.class
@@ -61,7 +66,9 @@ com\project\JewelryMS\service\ImageService.class
 com\project\JewelryMS\config\FirebaseConfig.class
 com\project\JewelryMS\exception\APIhandleException.class
 com\project\JewelryMS\service\QRService.class
+com\project\JewelryMS\model\Shift\ShiftResponse.class
 com\project\JewelryMS\model\Promotion\PromotionRequest.class
+com\project\JewelryMS\repository\OrderBuyDetailRepository.class
 com\project\JewelryMS\model\ProductSell\CreateProductSellRequest.class
 com\project\JewelryMS\config\CORSconfig.class
 com\project\JewelryMS\entity\ProductSell.class
@@ -75,6 +82,7 @@ com\project\JewelryMS\model\Profile\UpdateStaffResponse.class
 com\project\JewelryMS\repository\PromotionRepository.class
 com\project\JewelryMS\model\Profile\ManagerProfileResponse.class
 com\project\JewelryMS\model\ChangePasswordRequest.class
+com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.class
 com\project\JewelryMS\entity\Account.class
 com\project\JewelryMS\model\Image\ImgbbResponse.class
 com\project\JewelryMS\config\VNPAYConfig.class
@@ -85,13 +93,17 @@ com\project\JewelryMS\entity\Guarantee.class
 com\project\JewelryMS\service\VNPAYservice.class
 com\project\JewelryMS\entity\ProductBuy.class
 com\project\JewelryMS\model\LoginGoogleRequest.class
+com\project\JewelryMS\model\Order\CreateOrderBuyWrapper.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
+com\project\JewelryMS\model\Order\ProductBuyResponse.class
 com\project\JewelryMS\model\AccountResponseGG.class
 com\project\JewelryMS\service\ShiftService.class
 com\project\JewelryMS\entity\OrderBuyDetail.class
 com\project\JewelryMS\model\Order\CreateOrderWrapper.class
 com\project\JewelryMS\model\CodeService.class
+com\project\JewelryMS\model\StaffShift\StaffShiftResponse.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.class
+com\project\JewelryMS\model\StaffShift\IdWrapper.class
 com\project\JewelryMS\JewelryMsApplication.class
 com\project\JewelryMS\model\Category\CategoryResponse.class
 com\project\JewelryMS\entity\Category.class
@@ -102,6 +114,7 @@ com\project\JewelryMS\model\Image\ImgbbResponse$Data$Image.class
 com\project\JewelryMS\repository\OrderDetailRepository.class
 com\project\JewelryMS\model\Category\CategoryRequest.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data$Thumb.class
+com\project\JewelryMS\model\Order\CreateOrderBuyDetailRequest.class
 com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\GuaranteeController.class
@@ -110,6 +123,7 @@ com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
 com\project\JewelryMS\model\Customer\CreateCustomerRequest.class
 com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.class
 com\project\JewelryMS\controller\ProductBuyController.class
+com\project\JewelryMS\repository\StaffShiftRepository.class
 com\project\JewelryMS\model\Shift\DeleteShiftRequest.class
 com\project\JewelryMS\model\Profile\ViewShiftResponse.class
 com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
@@ -118,6 +132,7 @@ com\project\JewelryMS\model\Performance\DeletePerformanceRequest.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\controller\ImageController.class
+com\project\JewelryMS\controller\SchedulingController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class

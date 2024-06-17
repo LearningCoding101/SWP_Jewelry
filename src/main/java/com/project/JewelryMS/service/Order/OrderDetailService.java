@@ -51,6 +51,9 @@ public class OrderDetailService {
         orderDetailRepository.deleteById(id);
     }
 
+    public List<OrderDetailDTO> getOrderDetailsByOrderId(Long orderId) {
+        return orderDetailRepository.findOrderDetailsByOrderId(orderId);
+    }
 
     public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
         float totalAmount = 0;
@@ -124,40 +127,39 @@ public class OrderDetailService {
         return totalOrderResponse;
     }
 
+    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderId) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
 
-    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(CalculateGuaranteeDateRequest request) {
-        List<OrderDetailResponse> responses = new ArrayList<>();
-
-        for (Long orderDetailId : request.getOrderDetail_ID()) {
-            Optional<OrderDetail> orderDetailOpt = orderDetailRepository.findById(orderDetailId);
-
-            if (orderDetailOpt.isPresent()) {
-                OrderDetail orderDetail = orderDetailOpt.get();
-                Optional<Guarantee> guaranteeOpt = guaranteeRepository.findByProductSell(orderDetail.getProductSell());
-
-                if (guaranteeOpt.isPresent()) {
-                    Guarantee guarantee = guaranteeOpt.get();
-                    Integer warrantyPeriodMonth = guarantee.getWarrantyPeriodMonth();
-
-                    // Calculate guaranteeEndDate
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-                    Timestamp guaranteeEndDate = calculateGuaranteeEndDate(now, warrantyPeriodMonth);
-                    orderDetail.setGuaranteeEndDate(guaranteeEndDate);
-
-                    orderDetailRepository.save(orderDetail);
-
-                    // Create response
-                    OrderDetailResponse response = mapToOrderDetailResponse(orderDetail);
-                    responses.add(response);
-                }
-            } else {
-                throw new IllegalArgumentException("OrderDetail ID not found: " + orderDetailId);
-            }
-        }
+        List<OrderDetailResponse> responses = orderDetails.stream()
+                .filter(orderDetail -> orderDetail.getPurchaseOrder().getPK_OrderID().equals(orderId))
+                .map(this::processOrderDetail)
+                .toList();
 
         return responses;
     }
 
+    private OrderDetailResponse processOrderDetail(OrderDetail orderDetail) {
+        ProductSell productSell = orderDetail.getProductSell();
+        if (productSell != null) {
+            Optional<Guarantee> guaranteeOpt = guaranteeRepository.findByProductSell(productSell);
+
+            if (guaranteeOpt.isPresent()) {
+                Guarantee guarantee = guaranteeOpt.get();
+                Integer warrantyPeriodMonth = guarantee.getWarrantyPeriodMonth();
+
+                // Calculate guaranteeEndDate
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                Timestamp guaranteeEndDate = calculateGuaranteeEndDate(now, warrantyPeriodMonth);
+                orderDetail.setGuaranteeEndDate(guaranteeEndDate);
+
+                orderDetailRepository.save(orderDetail);
+
+                // Create response
+                return mapToOrderDetailResponse(orderDetail);
+            }
+        }
+        return null;
+    }
     private Timestamp calculateGuaranteeEndDate(Timestamp startDate, Integer warrantyPeriodMonth) {
         LocalDateTime startDateTime = startDate.toLocalDateTime();
         startDateTime = startDateTime.plusMonths(warrantyPeriodMonth);

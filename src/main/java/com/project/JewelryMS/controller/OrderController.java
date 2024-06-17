@@ -46,8 +46,12 @@ public class OrderController {
     @PostMapping
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity saleCreateOrder(@RequestBody CreateOrderWrapper order) {
-        orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
+        orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList(), order.getEmail());
         return ResponseEntity.ok("");
+    }
+    @GetMapping("test/{orderId}")
+    public List<OrderDetailDTO> getOrderDetails(@PathVariable Long orderId) {
+        return orderDetailService.getOrderDetailsByOrderId(orderId);
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("initializePB")
@@ -81,7 +85,7 @@ public class OrderController {
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value
-        Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
+        Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList(), order.getEmail());
         String value = orderID.toString();
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(qrService.createQR(value));
 
@@ -165,11 +169,11 @@ public class OrderController {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
     }
 
-    @PostMapping("/calculate-guarantee-end-date")
-    public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
-        List<OrderDetailResponse> responses = orderDetailService.calculateAndSetGuaranteeEndDate(request);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
+//    @PostMapping("/calculate-guarantee-end-date")
+//    public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
+//        List<OrderDetailResponse> responses =orderHandlerService.calculateAndSetGuaranteeEndDate(request);
+//        return new ResponseEntity<>(responses, HttpStatus.OK);
+//    }
 
 
 }
