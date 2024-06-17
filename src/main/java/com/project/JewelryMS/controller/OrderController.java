@@ -145,8 +145,6 @@ public class OrderController {
     }
 
 
-
-
     @PostMapping("calculate-customer-points")
     public ResponseEntity<Integer> calculateAndUpdatePoints(@RequestBody CalculatePointsRequest request) {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
