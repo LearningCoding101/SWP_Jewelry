@@ -120,27 +120,27 @@ public class OrderController {
 
     }
 
-    @GetMapping("/SubTotal")
+    @PostMapping("/SubTotal")
     public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
-        Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
+        Float totalAmount = orderHandlerService.calculateSubTotal(orderDetailRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @GetMapping("/DiscountProduct")
+    @PostMapping("/DiscountProduct")
     public ResponseEntity<Float> calculateDiscount(@RequestBody OrderPromotionRequest orderPromotionRequest) {
-        Float totalAmount = orderDetailService.calculateDiscountProduct(orderPromotionRequest);
+        Float totalAmount = orderHandlerService.calculateDiscountProduct(orderPromotionRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @GetMapping("/OrderDetailsTotal")
+    @PostMapping("/OrderDetailsTotal")
     public ResponseEntity<Float> calculateOrderDetailTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
-        Float totalAmount = orderDetailService.TotalOrderDetails(orderTotalRequest);
+        Float totalAmount = orderHandlerService.TotalOrderDetails(orderTotalRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
     @PostMapping("/OrderTotal")
     public ResponseEntity<TotalOrderResponse> calculateOrderTotal(@RequestBody List<TotalOrderRequest> totalOrderRequests) {
-        TotalOrderResponse totalOrderResponse = orderDetailService.totalOrder(totalOrderRequests);
+        TotalOrderResponse totalOrderResponse = orderHandlerService.totalOrder(totalOrderRequests);
         return ResponseEntity.ok(totalOrderResponse);
     }
 
@@ -152,7 +152,7 @@ public class OrderController {
 
     @PostMapping("/calculate-guarantee-end-date")
     public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
-        List<OrderDetailResponse> responses = orderDetailService.calculateAndSetGuaranteeEndDate(request);
+        List<OrderDetailResponse> responses = orderHandlerService.calculateAndSetGuaranteeEndDate(request);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
