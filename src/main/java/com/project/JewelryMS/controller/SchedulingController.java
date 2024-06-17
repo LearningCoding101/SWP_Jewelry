@@ -78,4 +78,12 @@ public class SchedulingController {
         schedulingService.removeShiftFromStaff(shiftId, staffId);
         return ResponseEntity.ok("Unassigning shift from staff is complete.");
     }
+
+    @PostMapping("/assignStaffToDay")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<StaffShiftResponse> assignStaffToDay(@RequestParam int staffId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestParam String shiftType) {
+        StaffShiftResponse staffShift = schedulingService.assignStaffToDay(staffId, date, shiftType);
+        return ResponseEntity.ok(staffShift);
+    }
+
 }
