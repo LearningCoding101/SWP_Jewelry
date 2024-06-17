@@ -3,9 +3,14 @@ package com.project.JewelryMS.service.Order;
 import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
+import com.project.JewelryMS.model.OrderDetail.OrderPromotionRequest;
+import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
+import com.project.JewelryMS.repository.GuaranteeRepository;
 import com.project.JewelryMS.repository.ProductBuyRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.repository.PromotionRepository;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ProductBuyService;
 import com.project.JewelryMS.service.ProductSellService;
@@ -14,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,6 +42,10 @@ public class OrderHandlerService {
     OrderBuyDetailService orderBuyDetailService;
     @Autowired
     EmailService emailService;
+    @Autowired
+    PromotionRepository promotionRepository;
+    @Autowired
+    GuaranteeRepository guaranteeRepository;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -299,19 +309,6 @@ public class OrderHandlerService {
 
     }
 
-    public void updateOrderStatus(String info){
-        int orderID = Integer.parseInt(info.replace("Thanh-toan-", "").trim());
-
-        PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
-        System.out.println(orderToUpdate.toString());
-        orderToUpdate.setStatus(3);
-        calculateAndSetGuaranteeEndDate((long) orderID);
-        sendConfirmationEmail((long) orderID, orderToUpdate.getEmail());
-        System.out.println(orderToUpdate.toString());
-        orderService.saveOrder(orderToUpdate);
-
-
-    }
     public void sendConfirmationEmail(Long orderId, String recipientEmail) {
         // Prepare EmailDetail object
         EmailDetail emailDetail = new EmailDetail();
@@ -346,7 +343,128 @@ public class OrderHandlerService {
 
     //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
     public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderID){
-        return orderDetailService.calculateAndSetGuaranteeEndDate(orderID);
+        return calculateAndSetGuaranteeEndDate(orderID);
+    }
+
+    public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
+        float totalAmount = 0;
+        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderDetailRequest.getProductSell_ID());
+        if (productSellOptional.isPresent()) {
+            ProductSell productSell = productSellOptional.get();
+            float productCost = productSell.getCost();
+            int quantity = orderDetailRequest.getQuantity();
+            totalAmount = productCost * quantity;
+        }
+        return totalAmount;
+    }
+
+    public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest) {
+        Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
+        Integer discount = promotion.getDiscount();
+        Float percentage = discount / 100.0F;
+        Float totalAmount = 0.0F;
+        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
+        if (productSellOptional.isPresent()) {
+            ProductSell productSell = productSellOptional.get();
+            float productCost = productSell.getCost();
+            int quantity = orderPromotionRequest.getQuantity();
+            totalAmount = productCost * quantity;
+        }
+        return totalAmount * percentage;
+    }
+
+    public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
+        Float subtotal = orderTotalRequest.getSubTotal();
+        Float discountProuduct = orderTotalRequest.getDiscountProduct();
+        Float total = subtotal - discountProuduct;
+        return total;
+    }
+
+    public TotalOrderResponse totalOrder(List<TotalOrderRequest> totalOrderRequests) {
+        Float subTotalResponse = 0.0F;
+        Float discount_priceResponse = 0.0F;
+        Float totalResponse = 0.0F;
+        for (TotalOrderRequest request : totalOrderRequests) {
+            // Fetch product details
+            Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSell_ID());
+            if (productSellOpt.isPresent()) {
+                ProductSell productSell = productSellOpt.get();
+                Float cost = productSell.getCost();
+                Float subtotal = cost * request.getQuantity();
+                subTotalResponse += subtotal;
+                // Fetch promotion details if provided
+                Float discountAmount = 0.0F;
+                if (request.getPromotion_ID() != null) {
+                    Optional<Promotion> promotionOptional = promotionRepository.findById(request.getPromotion_ID());
+                    if (promotionOptional.isPresent()) {
+                        Integer discount = promotionOptional.get().getDiscount();
+                        Float percentage = discount / 100.0F;
+                        discountAmount = subtotal * percentage;
+                        discount_priceResponse +=discountAmount;
+                    }
+                }
+
+                // Calculate the total after discount
+                Float totalDetails = subtotal - discountAmount;
+                totalResponse += totalDetails;
+            } else {
+                throw new IllegalArgumentException("ProductSell ID not found: " + request.getProductSell_ID());
+            }
+        }
+        TotalOrderResponse totalOrderResponse = new TotalOrderResponse();
+        totalOrderResponse.setSubTotal(subTotalResponse);
+        totalOrderResponse.setDiscount_Price(discount_priceResponse);
+        totalOrderResponse.setTotal(totalResponse);
+        return totalOrderResponse;
+    }
+
+    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderId) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+
+        List<OrderDetailResponse> responses = orderDetails.stream()
+                .filter(orderDetail -> orderDetail.getPurchaseOrder().getPK_OrderID().equals(orderId))
+                .map(this::processOrderDetail)
+                .toList();
+
+        return responses;
+    }
+
+    private OrderDetailResponse processOrderDetail(OrderDetail orderDetail) {
+        ProductSell productSell = orderDetail.getProductSell();
+        if (productSell != null) {
+            Optional<Guarantee> guaranteeOpt = guaranteeRepository.findByProductSell(productSell);
+
+            if (guaranteeOpt.isPresent()) {
+                Guarantee guarantee = guaranteeOpt.get();
+                Integer warrantyPeriodMonth = guarantee.getWarrantyPeriodMonth();
+
+                // Calculate guaranteeEndDate
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                Timestamp guaranteeEndDate = calculateGuaranteeEndDate(now, warrantyPeriodMonth);
+                orderDetail.setGuaranteeEndDate(guaranteeEndDate);
+
+                orderDetailRepository.save(orderDetail);
+
+                // Create response
+                return mapToOrderDetailResponse(orderDetail);
+            }
+        }
+        return null;
+    }
+    private Timestamp calculateGuaranteeEndDate(Timestamp startDate, Integer warrantyPeriodMonth) {
+        LocalDateTime startDateTime = startDate.toLocalDateTime();
+        startDateTime = startDateTime.plusMonths(warrantyPeriodMonth);
+        return Timestamp.valueOf(startDateTime);
+    }
+
+    private OrderDetailResponse mapToOrderDetailResponse(OrderDetail orderDetail) {
+        OrderDetailResponse response = new OrderDetailResponse();
+        response.setPK_ODID(orderDetail.getPK_ODID());
+        response.setProductSell_ID(orderDetail.getProductSell().getProductID());
+        response.setPurchaseOrder_ID(orderDetail.getPurchaseOrder().getPK_OrderID());
+        response.setQuantity(orderDetail.getQuantity());
+        response.setGuaranteeEndDate(orderDetail.getGuaranteeEndDate());
+        return response;
     }
 
 }
