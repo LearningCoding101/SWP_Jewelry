@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Info")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class InfoController {
     @Autowired
     private ApiService apiService;

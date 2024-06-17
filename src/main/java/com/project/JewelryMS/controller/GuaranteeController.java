@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/guarantee")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class GuaranteeController {
 
     @Autowired

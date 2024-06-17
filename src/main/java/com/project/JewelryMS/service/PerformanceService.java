@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Date;
@@ -86,16 +87,18 @@ public class PerformanceService {
         return performance != null ? toPerformanceResponse(performance) : null;
     }
 
-    public List<PerformanceResponse> getPerformanceByDate(String dateStr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
-        LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
+    public List<PerformanceResponse> getPerformanceByDate(LocalDateTime targetDate) {
+        LocalDateTime startOfDay = targetDate.with(LocalTime.MIN);
+        LocalDateTime endOfDay = targetDate.with(LocalTime.MAX);
 
-        List<Performance> performances = performanceRepository.findByDate(date);
+        List<Performance> performances = performanceRepository.findByDateBetween(startOfDay, endOfDay);
 
         return performances.stream()
                 .map(this::toPerformanceResponse)
                 .collect(Collectors.toList());
     }
+
+
 
     public List<PerformanceResponse> readAllPerformanceReport() {
         List<Performance> performances = performanceRepository.listAll();

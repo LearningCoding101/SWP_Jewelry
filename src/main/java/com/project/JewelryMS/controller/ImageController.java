@@ -28,6 +28,7 @@ import java.util.Base64;
 @RestController
 @RequestMapping("/images")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class ImageController {
 
 

@@ -26,6 +26,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/order")
+//@SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
+
 public class OrderController {
     @Autowired
     OrderHandlerService orderHandlerService;
@@ -38,11 +41,17 @@ public class OrderController {
     @Autowired
     CustomerService customerService;
 
-    @PostMapping("initialize")
-    public ResponseEntity saleCreateOrder(@RequestBody CreateOrderWrapper order){
-        orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
 
+    // Create a new order
+    @PostMapping
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+    public ResponseEntity saleCreateOrder(@RequestBody CreateOrderWrapper order) {
+        orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList(), order.getEmail());
         return ResponseEntity.ok("");
+    }
+    @GetMapping("test/{orderId}")
+    public List<OrderDetailDTO> getOrderDetails(@PathVariable Long orderId) {
+        return orderDetailService.getOrderDetailsByOrderId(orderId);
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("initializePB")
@@ -56,6 +65,8 @@ public class OrderController {
         orderHandlerService.addOrderBuyDetail(orderId, productBuyId);
         return ResponseEntity.ok().build();
     }
+
+    // Create a new order and generate QR code
 
     @GetMapping("get-all-orderBuy")
     public ResponseEntity<List<OrderBuyResponse>> getAllBuyOrders() {
@@ -74,10 +85,8 @@ public class OrderController {
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value
-        Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList());
+        Long orderID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList(), order.getEmail());
         String value = orderID.toString();
-        System.out.println(order.toString());
-        // Create QR code image
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(qrService.createQR(value));
 
 
@@ -96,51 +105,61 @@ public class OrderController {
     }
     @PutMapping("append-product")
     public ResponseEntity saleAppendProductToOrder(){
-
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("get-order/{id}")
-    public ResponseEntity<List<ProductResponse>> cashierGetPendingOrder(@PathVariable(name = "id") Long id) {
+    // Get a pending order by ID
+    @GetMapping("/{id}")
+  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+    public ResponseEntity<List<ProductResponse>> cashierGetPendingOrder(@PathVariable Long id) {
         List<ProductResponse> productResponses = orderHandlerService.getProductByOrderId(id);
         System.out.println(id);
         return ResponseEntity.ok(productResponses);
     }
 
-    @GetMapping("get-all-order")
-    public ResponseEntity<List<OrderResponse>> getAllOrderTest(){
-        System.out.println("reached getAllOrder");
+    // Get all orders
+    @GetMapping
+   // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderHandlerService.getAllOrder());
     }
-    @PutMapping("payment")
-    public ResponseEntity cashierCompleteOrder(){
 
-
-        return ResponseEntity.ok("");
-
+    // Complete order payment
+    @PutMapping("/payment")
+  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
+    public ResponseEntity<Void> cashierCompleteOrder() {
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/SubTotal")
+    // Calculate order subtotal
+    @PostMapping("/subtotal")
+  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
-        Float totalAmount = orderHandlerService.calculateSubTotal(orderDetailRequest);
+        Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @PostMapping("/DiscountProduct")
+    // Calculate product discount
+    @PostMapping("/discount")
+   // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateDiscount(@RequestBody OrderPromotionRequest orderPromotionRequest) {
-        Float totalAmount = orderHandlerService.calculateDiscountProduct(orderPromotionRequest);
+        Float totalAmount = orderDetailService.calculateDiscountProduct(orderPromotionRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @PostMapping("/OrderDetailsTotal")
+    // Calculate order details total
+    @PostMapping("/order-details-total")
+   // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateOrderDetailTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
-        Float totalAmount = orderHandlerService.TotalOrderDetails(orderTotalRequest);
+        Float totalAmount = orderDetailService.TotalOrderDetails(orderTotalRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
-    @PostMapping("/OrderTotal")
+    // Calculate order total
+    @PostMapping("/total")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<TotalOrderResponse> calculateOrderTotal(@RequestBody List<TotalOrderRequest> totalOrderRequests) {
-        TotalOrderResponse totalOrderResponse = orderHandlerService.totalOrder(totalOrderRequests);
+        TotalOrderResponse totalOrderResponse = orderDetailService.totalOrder(totalOrderRequests);
         return ResponseEntity.ok(totalOrderResponse);
     }
 
@@ -150,11 +169,11 @@ public class OrderController {
         return ResponseEntity.ok(customerService.calculateAndUpdatePoints(request));
     }
 
-    @PostMapping("/calculate-guarantee-end-date")
-    public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
-        List<OrderDetailResponse> responses = orderHandlerService.calculateAndSetGuaranteeEndDate(request);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
+//    @PostMapping("/calculate-guarantee-end-date")
+//    public ResponseEntity<List<OrderDetailResponse>> calculateGuaranteeEndDate(@RequestBody CalculateGuaranteeDateRequest request) {
+//        List<OrderDetailResponse> responses =orderHandlerService.calculateAndSetGuaranteeEndDate(request);
+//        return new ResponseEntity<>(responses, HttpStatus.OK);
+//    }
 
 
 }

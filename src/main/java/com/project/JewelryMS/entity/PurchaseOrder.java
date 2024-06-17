@@ -27,6 +27,7 @@ public class PurchaseOrder implements Serializable {
 
     String paymentType;
     Float totalAmount;
+    String email;
     Date purchaseDate;
     //1: not pay yet, 2: in process , 3 : paid
     Integer status;

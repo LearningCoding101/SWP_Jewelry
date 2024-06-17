@@ -1,10 +1,8 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.model.Order.CreateOrderRequest;
-import com.project.JewelryMS.model.Order.CreateOrderWrapper;
 import com.project.JewelryMS.model.Order.ProductResponse;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +78,83 @@ public class HtmlFormatterService {
 
 
         return tableStart;
+    }
+
+
+    public String CreateTableRowOrderConfirm(String name,
+                                             String cost,
+                                             String chi,
+                                             String carat,
+                                             String manufacturer,
+                                             String category,
+                                             String quantity,
+                                             String guaranteeTill,
+                                             String coverageType,
+                                             String period) {
+
+        return "<tr>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + name + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + cost + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + chi + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + carat + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + manufacturer + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + category + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + quantity + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + guaranteeTill + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + coverageType + "</td>" +
+                "<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>" + period + "</td>" +
+                "</tr>";
+    }
+
+    public String createOrderDetailTableConfirm(List<OrderDetailDTO> orderDetails) {
+        StringBuilder htmlTable = new StringBuilder();
+
+        // Start table structure
+        htmlTable.append("<div style='overflow: auto; width: 100%;' role='region' tabindex='0'>")
+                .append("<table align='center' style='border: 2px solid #dededf; width: 100%; table-layout: auto; border-collapse: collapse; border-spacing: 1px; text-align: center;'>")
+                .append("<caption style='caption-side: top; text-align: center;'>Order Details</caption>")
+                .append("<thead>")
+                .append("<tr>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Product Name</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Quantity</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Guarantee End Date</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Coverage</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Policy Type</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Warranty Period (Months)</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Carat</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Cost</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Gemstone Type</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Image</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Metal Type</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Manufacturer</th>")
+                .append("</tr>")
+                .append("</thead>")
+                .append("<tbody>");
+
+        // Add rows for each OrderDetailDTO
+        for (OrderDetailDTO orderDetail : orderDetails) {
+            htmlTable.append("<tr>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getPName()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getQuantity()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getGuaranteeEndDate()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getCoverage()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getPolicyType()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getWarrantyPeriodMonth()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getCarat()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getCost()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getGemstoneType()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append("<img src='").append(orderDetail.getImage()).append("' alt='Product Image' style='max-width: 100px;'>").append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getMetalType()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getManufacturer()).append("</td>")
+                    .append("</tr>");
+        }
+
+        // End table structure
+        htmlTable.append("</tbody>")
+                .append("</table>")
+                .append("</div>");
+
+        return htmlTable.toString();
     }
 
 }

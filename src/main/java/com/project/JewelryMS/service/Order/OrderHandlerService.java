@@ -1,16 +1,19 @@
 package com.project.JewelryMS.service.Order;
 
 import com.project.JewelryMS.entity.*;
+import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
-import com.project.JewelryMS.model.OrderDetail.*;
-import com.project.JewelryMS.repository.*;
+import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
+import com.project.JewelryMS.repository.ProductBuyRepository;
+import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ProductBuyService;
 import com.project.JewelryMS.service.ProductSellService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,12 +35,7 @@ public class OrderHandlerService {
     @Autowired
     OrderBuyDetailService orderBuyDetailService;
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
-    @Autowired
-    private PromotionRepository promotionRepository;
-
-    @Autowired
-    private GuaranteeRepository guaranteeRepository;
+    EmailService emailService;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -50,13 +48,14 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest){
+    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email){
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
+        order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for(CreateOrderDetailRequest detail : detailRequest){
             OrderDetail orderDetail = new OrderDetail();
@@ -300,126 +299,54 @@ public class OrderHandlerService {
 
     }
 
-    public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
-        float totalAmount = 0;
-        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderDetailRequest.getProductSell_ID());
-        if (productSellOptional.isPresent()) {
-            ProductSell productSell = productSellOptional.get();
-            float productCost = productSell.getCost();
-            int quantity = orderDetailRequest.getQuantity();
-            totalAmount = productCost * quantity;
-        }
-        return totalAmount;
+    public void updateOrderStatus(String info){
+        int orderID = Integer.parseInt(info.replace("Thanh-toan-", "").trim());
+
+        PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
+        System.out.println(orderToUpdate.toString());
+        orderToUpdate.setStatus(3);
+        calculateAndSetGuaranteeEndDate((long) orderID);
+        sendConfirmationEmail((long) orderID, orderToUpdate.getEmail());
+        System.out.println(orderToUpdate.toString());
+        orderService.saveOrder(orderToUpdate);
+
+
     }
+    public void sendConfirmationEmail(Long orderId, String recipientEmail) {
+        // Prepare EmailDetail object
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(recipientEmail);
+        emailDetail.setSubject("Confirmation Email for Order #" + orderId);
+        emailDetail.setMsgBody("This is to confirm your order with ID #" + orderId + ". Thank you for your purchase.");
 
-    public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest) {
-        Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
-        Integer discount = promotion.getDiscount();
-        Float percentage = discount / 100.0F;
-        Float totalAmount = 0.0F;
-        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
-        if (productSellOptional.isPresent()) {
-            ProductSell productSell = productSellOptional.get();
-            float productCost = productSell.getCost();
-            int quantity = orderPromotionRequest.getQuantity();
-            totalAmount = productCost * quantity;
-        }
-        return totalAmount * percentage;
+        // Call the service method to send confirmation email
+        emailService.sendConfirmEmail(orderId, emailDetail);
     }
-
-    public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
-        Float subtotal = orderTotalRequest.getSubTotal();
-        Float discountProuduct = orderTotalRequest.getDiscountProduct();
-        Float total = subtotal - discountProuduct;
-        return total;
-    }
-
-    public TotalOrderResponse totalOrder(List<TotalOrderRequest> totalOrderRequests) {
-        Float subTotalResponse = 0.0F;
-        Float discount_priceResponse = 0.0F;
-        Float totalResponse = 0.0F;
-        for (TotalOrderRequest request : totalOrderRequests) {
-            // Fetch product details
-            Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSell_ID());
-            if (productSellOpt.isPresent()) {
-                ProductSell productSell = productSellOpt.get();
-                Float cost = productSell.getCost();
-                Float subtotal = cost * request.getQuantity();
-                subTotalResponse += subtotal;
-                // Fetch promotion details if provided
-                Float discountAmount = 0.0F;
-                if (request.getPromotion_ID() != null) {
-                    Optional<Promotion> promotionOptional = promotionRepository.findById(request.getPromotion_ID());
-                    if (promotionOptional.isPresent()) {
-                        Integer discount = promotionOptional.get().getDiscount();
-                        Float percentage = discount / 100.0F;
-                        discountAmount = subtotal * percentage;
-                        discount_priceResponse +=discountAmount;
-                    }
-                }
-
-                // Calculate the total after discount
-                Float totalDetails = subtotal - discountAmount;
-                totalResponse += totalDetails;
-            } else {
-                throw new IllegalArgumentException("ProductSell ID not found: " + request.getProductSell_ID());
-            }
-        }
-        TotalOrderResponse totalOrderResponse = new TotalOrderResponse();
-        totalOrderResponse.setSubTotal(subTotalResponse);
-        totalOrderResponse.setDiscount_Price(discount_priceResponse);
-        totalOrderResponse.setTotal(totalResponse);
-        return totalOrderResponse;
-    }
-
-
-    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(CalculateGuaranteeDateRequest request) {
-        List<OrderDetailResponse> responses = new ArrayList<>();
-
-        for (Long orderDetailId : request.getOrderDetail_ID()) {
-            Optional<OrderDetail> orderDetailOpt = orderDetailRepository.findById(orderDetailId);
-
-            if (orderDetailOpt.isPresent()) {
-                OrderDetail orderDetail = orderDetailOpt.get();
-                Optional<Guarantee> guaranteeOpt = guaranteeRepository.findByProductSell(orderDetail.getProductSell());
-
-                if (guaranteeOpt.isPresent()) {
-                    Guarantee guarantee = guaranteeOpt.get();
-                    Integer warrantyPeriodMonth = guarantee.getWarrantyPeriodMonth();
-
-                    // Calculate guaranteeEndDate
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-                    Timestamp guaranteeEndDate = calculateGuaranteeEndDate(now, warrantyPeriodMonth);
-                    orderDetail.setGuaranteeEndDate(guaranteeEndDate);
-
-                    orderDetailRepository.save(orderDetail);
-
-                    // Create response
-                    OrderDetailResponse response = mapToOrderDetailResponse(orderDetail);
-                    responses.add(response);
-                }
-            } else {
-                throw new IllegalArgumentException("OrderDetail ID not found: " + orderDetailId);
+    public boolean updateOrderStatusCash(ConfirmCashPaymentRequest request){
+        float paidAmount = request.getAmount();
+        float askPrice = request.getTotal();
+        if(paidAmount < askPrice){
+            return false;
+        } else {
+            PurchaseOrder orderToUpdate = orderService.getOrderById(request.getOrderID());
+            if(orderToUpdate != null){
+                System.out.println(orderToUpdate.toString());
+                orderToUpdate.setStatus(3);
+                calculateAndSetGuaranteeEndDate((long) request.getOrderID());
+                System.out.println(orderToUpdate.toString());
+                sendConfirmationEmail((long) request.getOrderID(), orderToUpdate.getEmail());
+                return orderService.saveOrder(orderToUpdate) != null;
+            } else{
+                return false;
             }
         }
 
-        return responses;
     }
 
-    private Timestamp calculateGuaranteeEndDate(Timestamp startDate, Integer warrantyPeriodMonth) {
-        LocalDateTime startDateTime = startDate.toLocalDateTime();
-        startDateTime = startDateTime.plusMonths(warrantyPeriodMonth);
-        return Timestamp.valueOf(startDateTime);
-    }
 
-    private OrderDetailResponse mapToOrderDetailResponse(OrderDetail orderDetail) {
-        OrderDetailResponse response = new OrderDetailResponse();
-        response.setPK_ODID(orderDetail.getPK_ODID());
-        response.setProductSell_ID(orderDetail.getProductSell().getProductID());
-        response.setPurchaseOrder_ID(orderDetail.getPurchaseOrder().getPK_OrderID());
-        response.setQuantity(orderDetail.getQuantity());
-        response.setGuaranteeEndDate(orderDetail.getGuaranteeEndDate());
-        return response;
+    //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
+    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderID){
+        return orderDetailService.calculateAndSetGuaranteeEndDate(orderID);
     }
 
 }

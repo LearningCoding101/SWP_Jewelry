@@ -3,6 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
+import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import com.project.JewelryMS.repository.StaffShiftRepository;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -59,43 +62,41 @@ public class SchedulingService {
     public Staff_Shift assignShiftToStaff(int shiftId, int staffId) {
         return assignStaffToShift(staffId, shiftId);
     }
+    public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
+        // Define the shift types
+        String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
-//    public int[][] getScheduleMatrix() {
-//        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
-//        List<Shift> shifts = shiftRepository.findAll();
-//
-//        int[][] matrix = new int[staffAccounts.size()][shifts.size()];
-//
-//        for (int i = 0; i < staffAccounts.size(); i++) {
-//            for (int j = 0; j < shifts.size(); j++) {
-//                final int finalI = i;
-//                final int finalJ = j;
-//                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().equals(shifts.get(finalJ)))) {
-//                    matrix[finalI][finalJ] = 1;
-//                } else {
-//                    matrix[finalI][finalJ] = 0;
-//                }
-//            }
-//        }
-//
-//        return matrix;
-//    }
+        // Initialize the matrix
+        Map<String, Map<String, List<StaffShiftResponse>>> matrix = new LinkedHashMap<>();
 
-    //This shall need explanation
-    public int[][] getScheduleMatrix() {
-        List<StaffAccount> staffAccounts = staffAccountRepository.findAll();
-        int daysOfWeek = 7; // 7 days in a week
+        // Date and Time formatters
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
-        int[][] matrix = new int[staffAccounts.size()][daysOfWeek];
+        // Iterate over each date in the range
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            // Initialize the map for the current date
+            String formattedDate = date.format(dateFormatter);
+            matrix.put(formattedDate, new LinkedHashMap<>());
 
-        for (int i = 0; i < staffAccounts.size(); i++) {
-            for (int j = 0; j < daysOfWeek; j++) {
-                final int finalI = i;
-                final int finalJ = j;
-                if (staffAccounts.get(finalI).getStaffShifts().stream().anyMatch(ss -> ss.getShift().getStartTime().getDayOfWeek().getValue() == finalJ + 1)) {
-                    matrix[finalI][finalJ] = 1;
-                } else {
-                    matrix[finalI][finalJ] = 0;
+            // Initialize the list for each shift type
+            for (String shiftType : shiftTypes) {
+                matrix.get(formattedDate).put(shiftType, new ArrayList<>());
+
+                // Get all shifts of the current type for the current date
+                List<Shift> shifts = shiftRepository.findAllByDateAndType(date, shiftType);
+
+                // For each shift, get the staff assigned to it and create a StaffShiftResponse
+                for (Shift shift : shifts) {
+                    List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
+
+                    // Format the start and end times
+                    String formattedStartTime = shift.getStartTime().format(timeFormatter);
+                    String formattedEndTime = shift.getEndTime().format(timeFormatter);
+
+                    // Create a new StaffShiftResponse object and add it to the list for the current date and shift type
+                    StaffShiftResponse staffShift = new StaffShiftResponse(shift.getShiftID(), formattedStartTime, formattedEndTime, shiftType, shift.getStatus(), shift.getWorkArea(), shift.getRegister(), staffAccounts.stream().map(s -> new StaffShiftResponse.StaffResponse(s.getStaffID(), s.getAccount().getAccountName(), s.getAccount().getEmail(), s.getAccount().getUsername())).collect(Collectors.toList()));
+                    matrix.get(formattedDate).get(shiftType).add(staffShift);
                 }
             }
         }

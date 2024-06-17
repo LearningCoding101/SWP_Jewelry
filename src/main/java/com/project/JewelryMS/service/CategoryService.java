@@ -52,7 +52,7 @@ public class CategoryService {
 
     public Category readCategoryById(Long id){
         Optional<Category> categoryOptional = categoryRepository.findById(id);
-        return categoryOptional.get();
+        return categoryOptional.orElseGet(Category::new);
     }
 
     public List<Category> findAllCategories(){
