@@ -26,36 +26,39 @@ public class ProductBuyService {
     private ApiService apiService;
     @Autowired
     private ImageService imageService;
-    public CreateProductBuyResponse createProductBuy(CreateProductBuyRequest request) {
-        ProductBuy productBuy = new ProductBuy();
-        productBuy.setPbName(request.getName());
+//    public CreateProductBuyResponse createProductBuy(CreateProductBuyRequest request) {
+//        ProductBuy productBuy = new ProductBuy();
+//        productBuy.setPbName(request.getName());
+//
+//        // Find the category by name
+//        Optional<Category> categoryOpt = categoryRepository.findCategoryById(request.getCategory_id());
+//        if (categoryOpt.isPresent()) {
+//            productBuy.setCategory(categoryOpt.get());
+//        } else {
+//            throw new IllegalArgumentException("Category name not found");
+//        }
+//
+//        productBuy.setMetalType(request.getMetalType());
+//        productBuy.setGemstoneType(request.getGemstoneType());
+//        String imageUrl = imageService.uploadImageByPathService(request.getImage());
+//        productBuy.setImage(imageUrl);
+//        productBuy.setChi(request.getMetalWeight());
+//        productBuy.setCarat(request.getGemstoneWeight());
+//        productBuy.setPbCost(calculateProductBuyCost(request.getMetalWeight(), request.getGemstoneWeight(), request.getGemstoneType(), request.getMetalType()));
+//
+//        ProductBuy savedProductBuy = productBuyRepository.save(productBuy);
+//
+//        return mapToCreateProductBuyResponse(savedProductBuy);
+//    }
 
-        // Find the category by name
-        Optional<Category> categoryOpt = categoryRepository.findCategoryById(request.getCategory_id());
-        if (categoryOpt.isPresent()) {
-            productBuy.setCategory(categoryOpt.get());
-        } else {
-            throw new IllegalArgumentException("Category name not found");
-        }
 
-        productBuy.setMetalType(request.getMetalType());
-        productBuy.setGemstoneType(request.getGemstoneType());
-        String imageUrl = imageService.uploadImageByPathService(request.getImage());
-        productBuy.setImage(imageUrl);
-        productBuy.setChi(request.getMetalWeight());
-        productBuy.setCarat(request.getGemstoneWeight());
-        productBuy.setPbCost(calculateProductBuyCost(request.getMetalWeight(), request.getGemstoneWeight(), request.getGemstoneType(), request.getMetalType()));
-
-        ProductBuy savedProductBuy = productBuyRepository.save(productBuy);
-
-        return mapToCreateProductBuyResponse(savedProductBuy);
-    }
-
-
-    private float calculateProductBuyCost(Integer chi, Integer carat, String gemstoneType, String metalType) {
+    private Float calculateProductBuyCost(CreateProductBuyRequest createProductBuyRequest) {
         Float totalGemPrice = 0.0F;
         Float totalPrice = 0.0F;
-
+        String gemstoneType = createProductBuyRequest.getGemstoneType();
+        String metalType = createProductBuyRequest.getMetalType();
+        Float carat = createProductBuyRequest.getGemstoneWeight();
+        Integer chi = createProductBuyRequest.getMetalWeight();
         if (gemstoneType != null && carat != null) {
             Float gemStonePrice = 100000000.0F; // Price per carat
             totalGemPrice = (gemStonePrice * carat) * 0.8F;

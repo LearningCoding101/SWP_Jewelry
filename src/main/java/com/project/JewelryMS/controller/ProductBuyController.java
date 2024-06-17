@@ -19,11 +19,11 @@ public class ProductBuyController {
     private ProductBuyService productBuyService;
 
     // Create a new product buy
-    @PostMapping
-    public ResponseEntity<CreateProductBuyResponse> createProductBuy(@ModelAttribute CreateProductBuyRequest request) {
-        CreateProductBuyResponse response = productBuyService.createProductBuy(request);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping
+//    public ResponseEntity<CreateProductBuyResponse> createProductBuy(@ModelAttribute CreateProductBuyRequest request) {
+//        CreateProductBuyResponse response = productBuyService.createProductBuy(request);
+//        return ResponseEntity.ok(response);
+//    }
 
     // Get all product buys
     @GetMapping
@@ -44,6 +44,11 @@ public class ProductBuyController {
     public ResponseEntity<String> deleteProductBuy(@PathVariable Long id) {
         String response = productBuyService.deleteProductBuy(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/calculate-cost")
+    public ResponseEntity<Float> calculateProductBuyCost(@RequestBody CreateProductBuyRequest createProductBuyRequest) {
+        return ResponseEntity.ok(productBuyService.calculateProductBuyCost;
     }
 
 }

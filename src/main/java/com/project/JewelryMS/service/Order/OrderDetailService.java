@@ -46,6 +46,8 @@ public class OrderDetailService {
         orderDetailRepository.deleteById(id);
     }
 
-
+    public List<OrderDetailDTO> getOrderDetailsByOrderId(Long orderId) {
+        return orderDetailRepository.findOrderDetailsByOrderId(orderId);
+    }
 }
 

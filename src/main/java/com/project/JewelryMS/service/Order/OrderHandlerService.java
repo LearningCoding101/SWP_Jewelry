@@ -7,10 +7,7 @@ import com.project.JewelryMS.model.OrderDetail.OrderDetailRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
 import com.project.JewelryMS.model.OrderDetail.OrderPromotionRequest;
 import com.project.JewelryMS.model.OrderDetail.OrderTotalRequest;
-import com.project.JewelryMS.repository.GuaranteeRepository;
-import com.project.JewelryMS.repository.ProductBuyRepository;
-import com.project.JewelryMS.repository.ProductSellRepository;
-import com.project.JewelryMS.repository.PromotionRepository;
+import com.project.JewelryMS.repository.*;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ProductBuyService;
 import com.project.JewelryMS.service.ProductSellService;
@@ -46,6 +43,8 @@ public class OrderHandlerService {
     PromotionRepository promotionRepository;
     @Autowired
     GuaranteeRepository guaranteeRepository;
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -309,6 +308,19 @@ public class OrderHandlerService {
 
     }
 
+    public void updateOrderStatus(String info){
+        int orderID = Integer.parseInt(info.replace("Thanh-toan-", "").trim());
+
+        PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
+        System.out.println(orderToUpdate.toString());
+        orderToUpdate.setStatus(3);
+        calculateAndSetGuaranteeEndDate((long) orderID);
+        sendConfirmationEmail((long) orderID, orderToUpdate.getEmail());
+        System.out.println(orderToUpdate.toString());
+        orderService.saveOrder(orderToUpdate);
+
+
+    }
     public void sendConfirmationEmail(Long orderId, String recipientEmail) {
         // Prepare EmailDetail object
         EmailDetail emailDetail = new EmailDetail();
@@ -342,10 +354,7 @@ public class OrderHandlerService {
 
 
     //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
-    public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderID){
-        return calculateAndSetGuaranteeEndDate(orderID);
-    }
-
+    //Calculate SubTotal, Discount product and Total////////////////////////////////////////////////////////////////////////////////////////////////
     public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
         float totalAmount = 0;
         Optional<ProductSell> productSellOptional = productSellRepository.findById(orderDetailRequest.getProductSell_ID());
@@ -417,7 +426,7 @@ public class OrderHandlerService {
         totalOrderResponse.setTotal(totalResponse);
         return totalOrderResponse;
     }
-
+    //Calculate and Set Guarantee End Date////////////////////////////////////////////////////////////////////////////////////////
     public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderId) {
         List<OrderDetail> orderDetails = orderDetailRepository.findAll();
 
@@ -466,5 +475,7 @@ public class OrderHandlerService {
         response.setGuaranteeEndDate(orderDetail.getGuaranteeEndDate());
         return response;
     }
+
+    //Calculate and Set Guarantee End Date///////////////////////////////////////////////////////////////////////////////////////////////////
 
 }

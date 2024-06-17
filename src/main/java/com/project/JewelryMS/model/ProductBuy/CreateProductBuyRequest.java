@@ -15,5 +15,5 @@ public class CreateProductBuyRequest {
     private String gemstoneType;
     private MultipartFile image;
     private Integer metalWeight;
-    private Integer gemstoneWeight;
+    private Float gemstoneWeight;
 }

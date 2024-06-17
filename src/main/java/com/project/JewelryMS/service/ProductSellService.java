@@ -89,13 +89,13 @@ public class ProductSellService {
                 response.setCarat(productSell.getCarat());
                 response.setChi(productSell.getChi());
                 response.setCost(productSell.getCost());
-                response.setDescription(productSell.getPDescription());
+                response.setPDescription(productSell.getPDescription());
                 response.setGemstoneType(productSell.getGemstoneType());
                 response.setImage(productSell.getImage());
                 response.setManufacturer(productSell.getManufacturer());
                 response.setManufactureCost(productSell.getManufactureCost());
                 response.setMetalType(productSell.getMetalType());
-                response.setName(productSell.getPName());
+                response.setPName(productSell.getPName());
                 response.setProductCode(productSell.getProductCode());
                 response.setStatus(productSell.isPStatus());
 
@@ -207,13 +207,13 @@ public class ProductSellService {
         response.setCarat(productSell.getCarat());
         response.setChi(productSell.getChi());
         response.setCost(productSell.getCost());
-        response.setDescription(productSell.getPDescription());
+        response.setPDescription(productSell.getPDescription());
         response.setGemstoneType(productSell.getGemstoneType());
         response.setImage(productSell.getImage());
         response.setManufacturer(productSell.getManufacturer());
         response.setManufactureCost(productSell.getManufactureCost());
         response.setMetalType(productSell.getMetalType());
-        response.setName(productSell.getPName());
+        response.setPName(productSell.getPName());
         response.setProductCode(productSell.getProductCode());
         response.setStatus(productSell.isPStatus());
 

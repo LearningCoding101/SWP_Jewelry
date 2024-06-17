@@ -135,7 +135,7 @@ public class OrderController {
     @PostMapping("/subtotal")
   //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateTotalAmount(@RequestBody OrderDetailRequest orderDetailRequest) {
-        Float totalAmount = orderDetailService.calculateSubTotal(orderDetailRequest);
+        Float totalAmount = orderHandlerService.calculateSubTotal(orderDetailRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
@@ -143,7 +143,7 @@ public class OrderController {
     @PostMapping("/discount")
    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateDiscount(@RequestBody OrderPromotionRequest orderPromotionRequest) {
-        Float totalAmount = orderDetailService.calculateDiscountProduct(orderPromotionRequest);
+        Float totalAmount = orderHandlerService.calculateDiscountProduct(orderPromotionRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
@@ -151,7 +151,7 @@ public class OrderController {
     @PostMapping("/order-details-total")
    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<Float> calculateOrderDetailTotal(@RequestBody OrderTotalRequest orderTotalRequest) {
-        Float totalAmount = orderDetailService.TotalOrderDetails(orderTotalRequest);
+        Float totalAmount = orderHandlerService.TotalOrderDetails(orderTotalRequest);
         return ResponseEntity.ok(totalAmount);
     }
 
@@ -159,7 +159,7 @@ public class OrderController {
     @PostMapping("/total")
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
     public ResponseEntity<TotalOrderResponse> calculateOrderTotal(@RequestBody List<TotalOrderRequest> totalOrderRequests) {
-        TotalOrderResponse totalOrderResponse = orderDetailService.totalOrder(totalOrderRequests);
+        TotalOrderResponse totalOrderResponse = orderHandlerService.totalOrder(totalOrderRequests);
         return ResponseEntity.ok(totalOrderResponse);
     }
 

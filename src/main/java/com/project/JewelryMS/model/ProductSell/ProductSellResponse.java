@@ -15,13 +15,13 @@ public class ProductSellResponse {
     private float carat;
     private int chi;
     private float cost;
-    private String Description;
+    private String pDescription;
     private String gemstoneType;
     private String image;
     private String manufacturer;
     private Float manufactureCost;
     private String metalType;
-    private String Name;
+    private String pName;
     private String productCode;
     private boolean Status;
     private long category_id;
