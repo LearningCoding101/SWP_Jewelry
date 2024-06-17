@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 
 @RestController
 @RequestMapping("code")
+@CrossOrigin(origins = "*")
 public class CodeController {
     @Autowired
     QRService qrService;

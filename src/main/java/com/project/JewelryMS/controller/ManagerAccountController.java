@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class ManagerAccountController {
 
     @Autowired

@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/promotion")
 @SecurityRequirement(name = "api")
+@CrossOrigin(origins = "*")
 public class PromotionController {
     @Autowired
     PromotionService promotionService;
