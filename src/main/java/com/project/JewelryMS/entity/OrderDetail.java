@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -28,4 +30,6 @@ public class OrderDetail implements Serializable {
 
     Integer quantity;
 
+    @Column(name = "guaranteeEndDate")
+    Timestamp guaranteeEndDate;
 }

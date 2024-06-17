@@ -8,6 +8,5 @@ import java.util.Date;
 public class CreateOrderRequest {
     private String paymentType;
     private Float totalAmount;
-    private Date purchaseDate;
     private Integer status;
 }

@@ -29,7 +29,8 @@ public class GuaranteeService {
                 guarantee.getProductSell().getProductID(),
                 guarantee.getPolicyType(),
                 guarantee.getCoverage(),
-                guarantee.isStatus()
+                guarantee.isStatus(),
+                guarantee.getWarrantyPeriodMonth()
         );
     }
 
@@ -41,7 +42,8 @@ public class GuaranteeService {
             guarantee.setProductSell(productSellOptional.get());
             guarantee.setPolicyType(createGuaranteeRequest.getPolicyType());
             guarantee.setCoverage(createGuaranteeRequest.getCoverage());
-
+            guarantee.setStatus(true);
+            guarantee.setWarrantyPeriodMonth(createGuaranteeRequest.getWarrantyPeriod());
             Guarantee newGuarantee = guaranteeRepository.save(guarantee);
             return toGuaranteeResponse(newGuarantee);
         } else {
@@ -70,7 +72,7 @@ public class GuaranteeService {
             guarantee.setProductSell(productSellRepository.findById(guaranteeRequest.getFK_productID()).orElse(null));
             guarantee.setCoverage(guaranteeRequest.getCoverage());
             guarantee.setPolicyType(guaranteeRequest.getPolicyType());
-
+            guarantee.setWarrantyPeriodMonth(guaranteeRequest.getWarrantyPeriod());
             guaranteeRepository.save(guarantee);
         }
     }

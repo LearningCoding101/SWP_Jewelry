@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class CreateProductBuyRequest {
     private String name;
-    private String Category;
+    private Long category_id;
     private String metalType;
     private String gemstoneType;
     private MultipartFile image;

@@ -151,13 +151,23 @@ public class ProductSellService {
     }
 
     public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturerCost){
-        Float Totalprice = 0.0F;
-        Float gemStonePrice = 100000000.0F;
-        Float goldPrice = 0.0F;
-            //Get API Gold from Info Gold
-            goldPrice = Float.parseFloat(apiService.getGoldPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v")) / 10.0F;
-        Totalprice =  (((gemStonePrice * carat) + (goldPrice * chi) + manufacturerCost) * GetPricingRatio());
-        return Totalprice;
+        Float totalGemPrice = 0.0F;
+        Float totalPrice = 0.0F;
+
+        if (gemstoneType != null && carat != null) {
+            Float gemStonePrice = 100000000.0F; // Price per carat
+            totalGemPrice = (gemStonePrice * carat);
+        }
+
+        Float totalGoldPrice = 0.0F;
+        if (metalType != null && chi != null) {
+            Float goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+            totalGoldPrice = (goldPrice / 10) * chi;
+        }
+
+        totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * 1.2F;
+
+        return totalPrice;
     }
 
     public Float GetPricingRatio() {

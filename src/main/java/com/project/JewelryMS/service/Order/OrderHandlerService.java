@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class OrderHandlerService {
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
-        order.setPurchaseDate(orderRequest.getPurchaseDate());
+        order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -79,7 +80,7 @@ public class OrderHandlerService {
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
-        order.setPurchaseDate(orderRequest.getPurchaseDate());
+        order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
