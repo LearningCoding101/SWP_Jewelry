@@ -91,13 +91,13 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(CreateOrderRequest orderRequest, List<CreateProductBuyRequest> createProductBuyRequests){
+    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> createProductBuyRequests){
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
-        order.setStatus(orderRequest.getStatus());
+//        order.setStatus(null);
         order.setPurchaseDate(new Date());
-        order.setPaymentType(orderRequest.getPaymentType());
-        order.setTotalAmount(orderRequest.getTotalAmount());
+//        order.setPaymentType(null);
+//        order.setTotalAmount(null);
         List<Long> ProductBuyIDList = new ArrayList<>();
         for(CreateProductBuyRequest productBuyRequest: createProductBuyRequests){
             ProductBuy productBuy = new ProductBuy();

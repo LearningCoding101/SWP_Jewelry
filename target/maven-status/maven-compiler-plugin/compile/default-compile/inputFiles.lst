@@ -25,6 +25,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\controller\StaffAccountControl
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\VNPAYController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Account.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Category.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\entity\CoverageEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Customer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Guarantee.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\OrderBuyDetail.java
@@ -71,6 +72,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderBuyWrap
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderDetailRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderWrapper.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateProductBuyRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderData.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderResponse.java
@@ -90,7 +92,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\CreatePerfor
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\DeletePerformanceRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\AddPromotionsRequest.java

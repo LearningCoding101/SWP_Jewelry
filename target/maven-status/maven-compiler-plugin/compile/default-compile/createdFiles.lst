@@ -2,7 +2,6 @@ com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\model\Order\TotalOrderResponse.class
 com\project\JewelryMS\controller\CustomerController.class
-com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
@@ -25,6 +24,7 @@ com\project\JewelryMS\service\SchedulingService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\controller\ProfileController.class
 com\project\JewelryMS\model\Shift\CreateShiftRequest.class
+com\project\JewelryMS\entity\CoverageEnum.class
 com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.class
 com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.class
 com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
@@ -74,6 +74,7 @@ com\project\JewelryMS\config\CORSconfig.class
 com\project\JewelryMS\entity\ProductSell.class
 com\project\JewelryMS\model\Manager\CreateManagerAccountRequest.class
 com\project\JewelryMS\model\Staff\StaffAccountResponse.class
+com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.class
 com\project\JewelryMS\repository\CategoryRepository.class
 com\project\JewelryMS\controller\ProductSellController.class
 com\project\JewelryMS\service\CategoryService.class
@@ -136,6 +137,7 @@ com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\controller\ImageController.class
 com\project\JewelryMS\controller\SchedulingController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
+com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class

@@ -9,9 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderBuyWrapper {
-    private CreateOrderRequest orderRequest;
-    private List<CreateProductBuyRequest> ProductBuyList;
-    private String email;
-
-
+    private List<CreateProductBuyRequest> List;
 }
