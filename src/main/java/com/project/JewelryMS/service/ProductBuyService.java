@@ -2,8 +2,8 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductBuy;
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
+import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
+import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
@@ -11,7 +11,6 @@ import com.project.JewelryMS.repository.ProductBuyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ public class ProductBuyService {
     private ApiService apiService;
     @Autowired
     private ImageService imageService;
-    public CreateProductBuyResponse createProductBuy(CreateProductBuyRequest request) {
+    public ProductBuy createProductBuy(CreateProductBuyRequest request) {
         ProductBuy productBuy = new ProductBuy();
         productBuy.setPbName(request.getName());
 
@@ -40,25 +39,30 @@ public class ProductBuyService {
 
         productBuy.setMetalType(request.getMetalType());
         productBuy.setGemstoneType(request.getGemstoneType());
-        String imageUrl = imageService.uploadImageByPathService(request.getImage());
-        productBuy.setImage(imageUrl);
+        if(request.getImage()!=null) {
+            String imageUrl = imageService.uploadImageByPathService(request.getImage());
+            productBuy.setImage(imageUrl);
+        }else{
+            productBuy.setImage(null);
+        }
         productBuy.setChi(request.getMetalWeight());
         productBuy.setCarat(request.getGemstoneWeight());
-        productBuy.setPbCost(calculateProductBuyCost(request.getMetalWeight(), request.getGemstoneWeight(), request.getGemstoneType(), request.getMetalType()));
-
-        ProductBuy savedProductBuy = productBuyRepository.save(productBuy);
-
-        return mapToCreateProductBuyResponse(savedProductBuy);
+        productBuy.setPbCost(request.getCost());
+        productBuy.setPbStatus(true);
+        return productBuyRepository.save(productBuy);
     }
 
 
-    private float calculateProductBuyCost(Integer chi, Integer carat, String gemstoneType, String metalType) {
+    public Float calculateProductBuyCost(CalculatePBRequest createProductBuyRequest) {
         Float totalGemPrice = 0.0F;
         Float totalPrice = 0.0F;
-
+        String gemstoneType = createProductBuyRequest.getGemstoneType();
+        String metalType = createProductBuyRequest.getMetalType();
+        Float carat = createProductBuyRequest.getGemstoneWeight();
+        Integer chi = createProductBuyRequest.getMetalWeight();
         if (gemstoneType != null && carat != null) {
             Float gemStonePrice = 100000000.0F; // Price per carat
-            totalGemPrice = (gemStonePrice * carat) * 0.8F;
+            totalGemPrice = ((gemStonePrice * carat) * 0.8F);
         }
 
         Float totalGoldPrice = 0.0F;
@@ -69,10 +73,10 @@ public class ProductBuyService {
 
         totalPrice = (totalGemPrice + totalGoldPrice ); // Applying the markup
 
-        return totalPrice;
+        return totalPrice / 1000.0F;
     }
 
-    private CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {
+    public CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {
         CreateProductBuyResponse response = new CreateProductBuyResponse();
         response.setProductBuyID(productBuy.getPK_ProductBuyID());
         response.setCategoryName(productBuy.getCategory().getName());
