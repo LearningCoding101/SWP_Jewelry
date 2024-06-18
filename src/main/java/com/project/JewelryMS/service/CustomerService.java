@@ -58,7 +58,7 @@ public class CustomerService {
 
         customer.setEmail(createCustomerRequest.getEmail());
         customer.setPhoneNumber(createCustomerRequest.getPhoneNumber());
-        customer.setPointAmount(createCustomerRequest.getPointAmount());
+        customer.setGender(createCustomerRequest.getGender());
 
         return customerRepository.save(customer);
     }
@@ -81,7 +81,7 @@ public class CustomerService {
             Customer customer = customerUpdate.get();
             customer.setEmail(customerRequest.getEmail());
             customer.setPhoneNumber(customerRequest.getPhoneNumber());
-            customer.setPointAmount(customerRequest.getPointAmount());
+            customer.setGender(customerRequest.getGender());
             customerRepository.save(customer);
         }
     }
