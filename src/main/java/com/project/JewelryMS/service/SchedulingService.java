@@ -158,8 +158,15 @@ public class SchedulingService {
     public StaffShiftResponse assignStaffToDay(int staffId, LocalDate date, String shiftType) {
         // Fetch the staff entity from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
-                .orElseThrow(() -> new RuntimeException("Staff not found"));
+                .orElseThrow(() -> new ShiftAssignmentException("Staff not found"));
 
+        // Check if the staff member is already assigned to a shift during the same period on the same day
+        boolean isAssigned = staff.getStaffShifts().stream()
+                .anyMatch(ss -> ss.getShift().getStartTime().toLocalDate().equals(date) && ss.getShift().getShiftType().equals(shiftType));
+
+        if (isAssigned) {
+            throw new ShiftAssignmentException("Staff is already assigned to a shift during this period on this day. Please choose a different shift or staff member.");
+        }
         // Find a shift on the specified date and period
         Shift shift = shiftRepository.findAllByDateAndType(date, shiftType)
                 .stream().findFirst().orElse(null);
@@ -199,17 +206,6 @@ public class SchedulingService {
                     .orElseThrow(() -> new RuntimeException("Shift not found"));
         }
 
-        // Check if the staff member is already assigned to the shift
-        Shift finalShift = shift;
-        Staff_Shift existingStaffShift = staff.getStaffShifts().stream()
-                .filter(ss -> ss.getShift().equals(finalShift))
-                .findFirst().orElse(null);
-
-        if (existingStaffShift != null) {
-            // Convert the existing Staff_Shift entity to a StaffShiftResponse and return it
-            return toStaffShiftResponse(existingStaffShift);
-        }
-
         // Create a new Staff_Shift entity
         Staff_Shift staffShift = new Staff_Shift();
         staffShift.setStaffAccount(staff);
@@ -222,6 +218,13 @@ public class SchedulingService {
         return toStaffShiftResponse(staffShift);
     }
 
+    //This need a revised
+    private class ShiftAssignmentException extends RuntimeException {
+        public ShiftAssignmentException(String message) {
+            super(message);
+        }
+    }
+
     // Helper method to convert a Staff_Shift entity to a StaffShiftResponse
     private StaffShiftResponse toStaffShiftResponse(Staff_Shift staffShift) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
@@ -231,5 +234,18 @@ public class SchedulingService {
         StaffShiftResponse.StaffResponse staffResponse = new StaffShiftResponse.StaffResponse(staffShift.getStaffAccount().getStaffID(), staffShift.getStaffAccount().getAccount().getAccountName(), staffShift.getStaffAccount().getAccount().getEmail(), staffShift.getStaffAccount().getAccount().getUsername());
 
         return new StaffShiftResponse(staffShift.getShift().getShiftID(), formattedStartTime, formattedEndTime, staffShift.getShift().getShiftType(), staffShift.getShift().getStatus(), staffShift.getShift().getWorkArea(), staffShift.getShift().getRegister(), Collections.singletonList(staffResponse));
+    }
+
+    @Transactional
+    public Shift updateShiftWorkArea(long shiftId, String newWorkArea) {
+        // Fetch the shift entity from the database
+        Shift shift = shiftRepository.findById(shiftId)
+                .orElseThrow(() -> new RuntimeException("Shift not found"));
+
+        // Update the work area
+        shift.setWorkArea(newWorkArea);
+
+        // Save the updated shift entity to the database
+        return shiftRepository.save(shift);
     }
 }
