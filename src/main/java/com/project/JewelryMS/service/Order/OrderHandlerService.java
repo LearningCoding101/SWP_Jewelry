@@ -46,6 +46,8 @@ public class OrderHandlerService {
     OrderDetailRepository orderDetailRepository;
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    StaffAccountRepository staffAccountRepository;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -65,10 +67,28 @@ public class OrderHandlerService {
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
-        Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
-        if(customerOptional.isPresent()){
-            Customer customer = customerOptional.get();
-            order.setCustomer(customer);
+        if(orderRequest.getCustomer_ID()!=null) {
+            Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
+            if (customerOptional.isPresent()) {
+                Customer customer = customerOptional.get();
+                order.setCustomer(customer);
+            }else{
+                order.setCustomer(null);
+            }
+        }else{
+            order.setCustomer(null);
+        }
+
+        if(orderRequest.getStaff_ID()!=null) {
+            Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderRequest.getStaff_ID());
+            if(staffAccountOptional.isPresent()){
+                StaffAccount staffAccount = staffAccountOptional.get();
+                order.setStaffAccount(staffAccount);
+            }else{
+                order.setStaffAccount(null);
+            }
+        }else{
+            order.setStaffAccount(null);
         }
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -207,6 +227,19 @@ public class OrderHandlerService {
             orderToGet.setPaymentType(order.getPaymentType());
             orderToGet.setTotalAmount(order.getTotalAmount());
             orderToGet.setPurchaseDate(order.getPurchaseDate());
+            if (order.getCustomer() != null) {
+                Long customerID = order.getCustomer().getPK_CustomerID();
+                orderToGet.setCustomer_ID(customerID);
+            } else {
+                orderToGet.setCustomer_ID(null);
+            }
+            if (order.getStaffAccount() != null) {
+                Integer staffID = order.getStaffAccount().getStaffID();
+                orderToGet.setStaff_ID(staffID);
+            } else {
+                // Handle the case where the customer is null, if necessary
+                orderToGet.setStaff_ID(null); // or some default value
+            }
             Set<ProductResponse> productResponses = new HashSet<>();
             List<OrderDetail> iterateList = order.getOrderDetails().stream().toList();
             for(OrderDetail item : iterateList){
@@ -286,6 +319,28 @@ public class OrderHandlerService {
         orderToGet.setPaymentType(order.getPaymentType());
         orderToGet.setTotalAmount(order.getTotalAmount());
         orderToGet.setPurchaseDate(order.getPurchaseDate());
+//        if(order.getCustomer()!=null) {
+//            Optional<Customer> customerOptional = customerRepository.findById(order.getCustomer().getPK_CustomerID());
+//            if (customerOptional.isPresent()) {
+//                Customer customer = customerOptional.get();
+//                orderToGet.setCustomer_ID(customer.getPK_CustomerID());
+//            }else{
+//                orderToGet.setC;
+//            }
+//        }else{
+//            order.setCustomer(null);
+//        }
+//        if(orderRequest.getStaff_ID()!=null) {
+//            Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderRequest.getStaff_ID());
+//            if(staffAccountOptional.isPresent()){
+//                StaffAccount staffAccount = staffAccountOptional.get();
+//                order.setStaffAccount(staffAccount);
+//            }else{
+//                order.setStaffAccount(null);
+//            }
+//        }else{
+//            order.setStaffAccount(null);
+//        }
         Set<ProductResponse> productResponses = new HashSet<>();
         List<OrderDetail> iterateList = order.getOrderDetails().stream().toList();
         for(OrderDetail item : iterateList){
