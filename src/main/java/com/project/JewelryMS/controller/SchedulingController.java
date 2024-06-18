@@ -1,5 +1,6 @@
 package com.project.JewelryMS.controller;
 
+import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
 import com.project.JewelryMS.model.StaffShift.IdWrapper;
@@ -85,5 +86,13 @@ public class SchedulingController {
         StaffShiftResponse staffShift = schedulingService.assignStaffToDay(staffId, date, shiftType);
         return ResponseEntity.ok(staffShift);
     }
+
+    @PutMapping("/updateShiftWorkArea")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<Shift> updateShiftWorkArea(@RequestParam long shiftId, @RequestParam String newWorkArea) {
+        Shift updatedShift = schedulingService.updateShiftWorkArea(shiftId, newWorkArea);
+        return ResponseEntity.ok(updatedShift);
+    }
+
 
 }
