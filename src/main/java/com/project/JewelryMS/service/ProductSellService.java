@@ -134,8 +134,8 @@ public class ProductSellService {
         }
         productSell.setChi(request.getChi());
         productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufactureCost()));
-        productSell.setPDescription(request.getPDescription());
-        productSell.setPName(request.getPName());
+        productSell.setPDescription(request.getPdescription());
+        productSell.setPName(request.getPname());
         productSell.setGemstoneType(request.getGemstoneType());
         // Gọi phương thức uploadImageByPath và send MultipartFile file image
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
