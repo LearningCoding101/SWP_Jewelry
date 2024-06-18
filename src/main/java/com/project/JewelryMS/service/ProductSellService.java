@@ -254,15 +254,6 @@ public class ProductSellService {
                 .orElseThrow(() -> new IllegalArgumentException("Category ID not found"));
         existingProductSell.setCategory(category);
 
-        // Update promotions
-        List<Long> promotionIds = productSellRequest.getPromotion_id();
-        List<Promotion> promotions = new ArrayList<>();
-
-        for (Long promotionId : promotionIds) {
-            Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
-            promotionOptional.ifPresent(promotions::add);
-        }
-        existingProductSell.setPromotion(promotions);
 
         // Save the updated entity
         productSellRepository.save(existingProductSell);

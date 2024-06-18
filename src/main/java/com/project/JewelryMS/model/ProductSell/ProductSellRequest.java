@@ -12,15 +12,14 @@ import java.util.List;
 public class ProductSellRequest {
     private float carat;
     private long category_id;
-    private List<Long> promotion_id;
     private int chi;
     private float cost;
-    private String pDescription;
+    private String pdescription;
     private String gemstoneType;
     private MultipartFile image;
     private String manufacturer;
     private Float manufactureCost;
     private String metalType;
-    private String pName;
+    private String pname;
     private String productCode;
 }
