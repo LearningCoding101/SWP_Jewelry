@@ -9,6 +9,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AuthenticationAPI.j
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CategoryController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CodeController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CustomerController.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\controller\DashBoardController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\GuaranteeController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ImageController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\InfoController.java
@@ -54,12 +55,12 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Image\ImgbbResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\ImageRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ImageTestRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginGoogleRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginRequest.java

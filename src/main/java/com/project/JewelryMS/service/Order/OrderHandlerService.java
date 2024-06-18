@@ -44,6 +44,8 @@ public class OrderHandlerService {
     GuaranteeRepository guaranteeRepository;
     @Autowired
     OrderDetailRepository orderDetailRepository;
+    @Autowired
+    CustomerRepository customerRepository;
     @Transactional
     public Long createOrderWithDetails(PurchaseOrder purchaseOrder, List<OrderDetail> list){
         Set<OrderDetail> detailSet = new HashSet<>();
@@ -63,6 +65,11 @@ public class OrderHandlerService {
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
+        Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
+        if(customerOptional.isPresent()){
+            Customer customer = customerOptional.get();
+            order.setCustomer(customer);
+        }
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for(CreateOrderDetailRequest detail : detailRequest){

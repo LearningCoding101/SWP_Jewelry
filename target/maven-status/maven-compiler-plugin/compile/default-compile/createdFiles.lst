@@ -50,7 +50,6 @@ com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
 com\project\JewelryMS\model\Shift\ShiftRequest.class
-com\project\JewelryMS\model\ImageRequest.class
 com\project\JewelryMS\model\Order\TotalOrderRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
@@ -162,6 +161,8 @@ com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\model\ResetPassRequest.class
 com\project\JewelryMS\service\ProfileService.class
+com\project\JewelryMS\controller\DashBoardController.class
+com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
 com\project\JewelryMS\model\Guarantee\GuaranteeRequest.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
 com\project\JewelryMS\model\Profile\UpdateManagerResponse.class
