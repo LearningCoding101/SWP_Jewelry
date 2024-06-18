@@ -21,5 +21,7 @@ public class Customer {
     String phoneNumber;
     int pointAmount;
     boolean status = true;
+    @Column(name="gender")
+    String gender;
 }
 

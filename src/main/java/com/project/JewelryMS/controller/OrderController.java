@@ -55,8 +55,8 @@ public class OrderController {
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("initializePB")
-    public ResponseEntity saleCreateBuyOrder(@RequestBody CreateOrderBuyWrapper order){
-        orderHandlerService.handleCreateOrderBuyWithDetails(order.getOrderRequest(), order.getProductBuyList());
+    public ResponseEntity saleCreateBuyOrder(@ModelAttribute CreateOrderBuyWrapper order){
+        orderHandlerService.handleCreateOrderBuyWithDetails(order.getList());
         return ResponseEntity.ok("Create Successfully");
     }
 
