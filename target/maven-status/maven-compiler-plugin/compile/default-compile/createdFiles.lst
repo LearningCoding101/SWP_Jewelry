@@ -97,6 +97,8 @@ com\project\JewelryMS\model\Order\CreateOrderBuyWrapper.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\model\Order\ProductBuyResponse.class
 com\project\JewelryMS\model\AccountResponseGG.class
+com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.class
+com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.class
 com\project\JewelryMS\service\ShiftService.class
 com\project\JewelryMS\entity\OrderBuyDetail.class
 com\project\JewelryMS\model\Order\CreateOrderWrapper.class

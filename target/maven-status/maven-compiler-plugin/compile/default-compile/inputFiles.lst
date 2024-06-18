@@ -80,6 +80,8 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\TotalOrderRequest.
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\TotalOrderResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\CalculatePointsRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.java
