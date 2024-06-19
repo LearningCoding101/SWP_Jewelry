@@ -219,7 +219,7 @@ public class SchedulingService {
     }
 
     //This need a revised
-    private class ShiftAssignmentException extends RuntimeException {
+    private static class ShiftAssignmentException extends RuntimeException {
         public ShiftAssignmentException(String message) {
             super(message);
         }
