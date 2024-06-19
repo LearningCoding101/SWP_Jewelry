@@ -49,6 +49,7 @@ com\project\JewelryMS\controller\CodeController.class
 com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
+com\project\JewelryMS\service\SchedulingService$ShiftAssignmentException.class
 com\project\JewelryMS\model\Shift\ShiftRequest.class
 com\project\JewelryMS\model\Order\TotalOrderRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
@@ -121,6 +122,7 @@ com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\GuaranteeController.class
 com\project\JewelryMS\model\EmailDetail.class
+com\project\JewelryMS\model\Dashboard\CategoryResponse.class
 com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
 com\project\JewelryMS\model\Customer\CreateCustomerRequest.class
 com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.class
@@ -140,6 +142,7 @@ com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class
+com\project\JewelryMS\model\Dashboard\RevenueCategoryResponse.class
 com\project\JewelryMS\repository\GuaranteeRepository.class
 com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\repository\OrderRepositiory.class

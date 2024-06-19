@@ -65,11 +65,16 @@ public class OrderHandlerService {
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
-        Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
-        if(customerOptional.isPresent()){
-            Customer customer = customerOptional.get();
-            order.setCustomer(customer);
+        Long customerID = orderRequest.getCustomer_ID(); // This could be null
+        Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
+        if (optionalCustomerId.isPresent()){
+            Optional<Customer> customerOptional = customerRepository.findById(customerID);
+            if(customerOptional.isPresent()){
+                Customer customer = customerOptional.get();
+                order.setCustomer(customer);
+            }
         }
+
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for(CreateOrderDetailRequest detail : detailRequest){
