@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -147,4 +149,13 @@ public class CustomerService {
 //        }
 //        int totalPoint = Math.round(totalPoints);
 //        customer.setPointAmount(customer.getPointAmount() + totalPoint);
+
+    public Map<String, Long> getGenderDemographics() {
+        List<Customer> customers = customerRepository.findAll();
+
+        Map<String, Long> genderCount = customers.stream()
+                .collect(Collectors.groupingBy(Customer::getGender, Collectors.counting()));
+
+        return genderCount;
+    }
 }

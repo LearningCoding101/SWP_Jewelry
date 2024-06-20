@@ -73,6 +73,7 @@ public class SchedulingService {
 
         // Date and Time formatters
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
+//        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
         // Iterate over each date in the range
@@ -219,7 +220,7 @@ public class SchedulingService {
     }
 
     //This need a revised
-    private class ShiftAssignmentException extends RuntimeException {
+    private static class ShiftAssignmentException extends RuntimeException {
         public ShiftAssignmentException(String message) {
             super(message);
         }
