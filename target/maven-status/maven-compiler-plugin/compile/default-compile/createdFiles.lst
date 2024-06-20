@@ -2,7 +2,6 @@ com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\model\Order\TotalOrderResponse.class
 com\project\JewelryMS\controller\CustomerController.class
-com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
@@ -25,6 +24,7 @@ com\project\JewelryMS\service\SchedulingService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\controller\ProfileController.class
 com\project\JewelryMS\model\Shift\CreateShiftRequest.class
+com\project\JewelryMS\entity\CoverageEnum.class
 com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.class
 com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.class
 com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
@@ -49,8 +49,8 @@ com\project\JewelryMS\controller\CodeController.class
 com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
+com\project\JewelryMS\service\SchedulingService$ShiftAssignmentException.class
 com\project\JewelryMS\model\Shift\ShiftRequest.class
-com\project\JewelryMS\model\ImageRequest.class
 com\project\JewelryMS\model\Order\TotalOrderRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
@@ -74,6 +74,7 @@ com\project\JewelryMS\config\CORSconfig.class
 com\project\JewelryMS\entity\ProductSell.class
 com\project\JewelryMS\model\Manager\CreateManagerAccountRequest.class
 com\project\JewelryMS\model\Staff\StaffAccountResponse.class
+com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.class
 com\project\JewelryMS\repository\CategoryRepository.class
 com\project\JewelryMS\controller\ProductSellController.class
 com\project\JewelryMS\service\CategoryService.class
@@ -97,6 +98,8 @@ com\project\JewelryMS\model\Order\CreateOrderBuyWrapper.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\model\Order\ProductBuyResponse.class
 com\project\JewelryMS\model\AccountResponseGG.class
+com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.class
+com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.class
 com\project\JewelryMS\service\ShiftService.class
 com\project\JewelryMS\entity\OrderBuyDetail.class
 com\project\JewelryMS\model\Order\CreateOrderWrapper.class
@@ -119,6 +122,7 @@ com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\GuaranteeController.class
 com\project\JewelryMS\model\EmailDetail.class
+com\project\JewelryMS\model\Dashboard\CategoryResponse.class
 com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
 com\project\JewelryMS\model\Customer\CreateCustomerRequest.class
 com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.class
@@ -134,9 +138,11 @@ com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\controller\ImageController.class
 com\project\JewelryMS\controller\SchedulingController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
+com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class
+com\project\JewelryMS\model\Dashboard\RevenueCategoryResponse.class
 com\project\JewelryMS\repository\GuaranteeRepository.class
 com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\repository\OrderRepositiory.class
@@ -158,6 +164,8 @@ com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\model\ResetPassRequest.class
 com\project\JewelryMS\service\ProfileService.class
+com\project\JewelryMS\controller\DashBoardController.class
+com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
 com\project\JewelryMS\model\Guarantee\GuaranteeRequest.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
 com\project\JewelryMS\model\Profile\UpdateManagerResponse.class
