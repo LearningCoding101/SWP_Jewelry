@@ -42,4 +42,18 @@ public class DashBoardController {
         return ResponseEntity.ok(dashboardService.getTopSellingProducts());
     }
 
+    @PostMapping("/loyalty-customers")
+    public ResponseEntity<CustomerLoyaltyResponse> getCustomerLoyaltyStatistics(@RequestBody RevenueDateRequest revenueDateRequest) {
+        return ResponseEntity.ok(dashboardService.getCustomerLoyaltyStatistics(revenueDateRequest));
+    }
+
+    @PostMapping("demographic-customers")
+    public ResponseEntity<CustomerDemoGraphicResponse> getCustomerDemoGraphic(@RequestBody RevenueDateRequest revenueDateRequest){
+        return ResponseEntity.ok(dashboardService.getCustomerDemoGraphicResponse(revenueDateRequest));
+    }
+
+    @PostMapping("/customer-signups")
+    public ResponseEntity<CustomerSignUpResponse> getCustomerSignUpsByStaff(@RequestBody RevenueDateRequest revenueDateRequest) {
+        return ResponseEntity.ok(dashboardService.getCustomerSignUpsByStaff(revenueDateRequest));
+    }
 }
