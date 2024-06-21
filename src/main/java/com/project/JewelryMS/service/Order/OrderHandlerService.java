@@ -89,7 +89,16 @@ public class OrderHandlerService {
             }
         }else{
             order.setStaffAccount(null);
+        Long customerID = orderRequest.getCustomer_ID(); // This could be null
+        Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
+        if (optionalCustomerId.isPresent()){
+            Optional<Customer> customerOptional = customerRepository.findById(customerID);
+            if(customerOptional.isPresent()){
+                Customer customer = customerOptional.get();
+                order.setCustomer(customer);
+            }
         }
+
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
         for(CreateOrderDetailRequest detail : detailRequest){
@@ -376,7 +385,7 @@ public class OrderHandlerService {
     }
 
     public void updateOrderStatus(String info){
-        int orderID = Integer.parseInt(info.replace("Thanh-toan-", "").trim());
+        int orderID = Integer.parseInt(info.replace("Thanh toan ", "").trim());
 
         PurchaseOrder orderToUpdate = orderService.getOrderById((long) orderID);
         System.out.println(orderToUpdate.toString());
