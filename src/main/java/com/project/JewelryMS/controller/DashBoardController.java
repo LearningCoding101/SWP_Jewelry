@@ -1,5 +1,8 @@
 package com.project.JewelryMS.controller;
 
+import com.project.JewelryMS.model.Dashboard.Customer.CustomerDemographicsResponse;
+import com.project.JewelryMS.model.Dashboard.Customer.CustomerLoyaltyResponse;
+import com.project.JewelryMS.model.Dashboard.Customer.CustomerSignUpResponse;
 import com.project.JewelryMS.model.Dashboard.RevenueCategoryResponse;
 import com.project.JewelryMS.model.Dashboard.RevenueDateRequest;
 import com.project.JewelryMS.model.Dashboard.RevenueProductResponse;
@@ -48,7 +51,7 @@ public class DashBoardController {
     }
 
     @PostMapping("demographic-customers")
-    public ResponseEntity<CustomerDemoGraphicResponse> getCustomerDemoGraphic(@RequestBody RevenueDateRequest revenueDateRequest){
+    public ResponseEntity<CustomerDemographicsResponse> getCustomerDemoGraphic(@RequestBody RevenueDateRequest revenueDateRequest){
         return ResponseEntity.ok(dashboardService.getCustomerDemoGraphicResponse(revenueDateRequest));
     }
 
