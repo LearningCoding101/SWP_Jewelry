@@ -58,6 +58,8 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPoi
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\CategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueCategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueProductResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeRequest.java
@@ -144,6 +146,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\service\ApiService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\AuthenticationService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\CategoryService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\CustomerService.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\DashboardService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\EmailService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\GuaranteeService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\HtmlFormatterService.java
