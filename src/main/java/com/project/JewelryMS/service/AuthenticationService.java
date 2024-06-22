@@ -104,8 +104,8 @@ public class AuthenticationService implements UserDetailsService {
                     accountResponse.setId((long)account.getPK_userID());
                     return accountResponse;
     }
-    public ResponseEntity<String> changePassword(ChangePasswordRequest request) {
-        Account account = authenticationRepository.findById(request.getID()).orElse(null);
+    public ResponseEntity<String> changePassword(ChangePasswordRequest request ,Long id) {
+        Account account = authenticationRepository.findById(id).orElse(null);
 
         if (account == null) {
             return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
@@ -120,14 +120,14 @@ public class AuthenticationService implements UserDetailsService {
 
         return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
-
-    @Override
+@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-
-        return authenticationRepository.findAccountByUsername(username);
+        Account account = authenticationRepository.findAccountByUsername(username);
+        if (account == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return account;
     }
-
 
     public List<Account> getAllManagerAccount() {
         return authenticationRepository.findByRole(RoleEnum.ROLE_MANAGER);

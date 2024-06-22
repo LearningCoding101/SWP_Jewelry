@@ -9,4 +9,6 @@ public class CreateOrderRequest {
     private String paymentType;
     private Float totalAmount;
     private Integer status;
+    private Long customer_ID;
+    private Integer staff_ID;
 }

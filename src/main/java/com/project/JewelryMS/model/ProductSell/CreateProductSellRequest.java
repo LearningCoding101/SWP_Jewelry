@@ -10,12 +10,12 @@ public class CreateProductSellRequest {
     private float carat;
     private long category_id;
     private int chi;
-    private String pDescription;
+    private String pdescription;
     private String gemstoneType;
     private MultipartFile image;
     private String manufacturer;
     private Float manufactureCost;
     private String metalType;
-    private String pName;
+    private String pname;
     private String productCode;
 }

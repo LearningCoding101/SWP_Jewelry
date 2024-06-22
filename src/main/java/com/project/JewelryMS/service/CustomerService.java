@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -40,15 +42,18 @@ public class CustomerService {
         if(customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
             int totalPoints = customer.getPointAmount();
-            if (totalPoints >= 0 && totalPoints <= 99) {
-                return "Connect";
-            } else if (totalPoints >= 100 && totalPoints <= 399) {
-                return "Member";
-            } else if (totalPoints >= 400 && totalPoints <= 999) {
-                return "Companion";
-            } else {
-                return "Intimate";
+            if (totalPoints >= 0) {
+                if (totalPoints >= 0 && totalPoints <= 99) {
+                    return "Connect";
+                } else if (totalPoints >= 100 && totalPoints <= 399) {
+                    return "Member";
+                } else if (totalPoints >= 400 && totalPoints <= 999) {
+                    return "Companion";
+                } else {
+                    return "Intimate";
+                }
             }
+            return "Negative Point Error ???";
         }
         return "Not Found Customer ID";
     }
@@ -58,7 +63,7 @@ public class CustomerService {
 
         customer.setEmail(createCustomerRequest.getEmail());
         customer.setPhoneNumber(createCustomerRequest.getPhoneNumber());
-        customer.setPointAmount(createCustomerRequest.getPointAmount());
+        customer.setGender(createCustomerRequest.getGender());
 
         return customerRepository.save(customer);
     }
@@ -81,7 +86,7 @@ public class CustomerService {
             Customer customer = customerUpdate.get();
             customer.setEmail(customerRequest.getEmail());
             customer.setPhoneNumber(customerRequest.getPhoneNumber());
-            customer.setPointAmount(customerRequest.getPointAmount());
+            customer.setGender(customerRequest.getGender());
             customerRepository.save(customer);
         }
     }
@@ -147,4 +152,13 @@ public class CustomerService {
 //        }
 //        int totalPoint = Math.round(totalPoints);
 //        customer.setPointAmount(customer.getPointAmount() + totalPoint);
+
+    public Map<String, Long> getGenderDemographics() {
+        List<Customer> customers = customerRepository.findAll();
+
+        Map<String, Long> genderCount = customers.stream()
+                .collect(Collectors.groupingBy(Customer::getGender, Collectors.counting()));
+
+        return genderCount;
+    }
 }

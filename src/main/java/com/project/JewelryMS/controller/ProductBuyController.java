@@ -1,11 +1,9 @@
 package com.project.JewelryMS.controller;
 
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
+import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.service.ProductBuyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +17,11 @@ public class ProductBuyController {
     private ProductBuyService productBuyService;
 
     // Create a new product buy
-    @PostMapping
-    public ResponseEntity<CreateProductBuyResponse> createProductBuy(@ModelAttribute CreateProductBuyRequest request) {
-        CreateProductBuyResponse response = productBuyService.createProductBuy(request);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping
+//    public ResponseEntity<CreateProductBuyResponse> createProductBuy(@ModelAttribute CreateProductBuyRequest request) {
+//        CreateProductBuyResponse response = productBuyService.createProductBuy(request);
+//        return ResponseEntity.ok(response);
+//    }
 
     // Get all product buys
     @GetMapping
@@ -44,6 +42,11 @@ public class ProductBuyController {
     public ResponseEntity<String> deleteProductBuy(@PathVariable Long id) {
         String response = productBuyService.deleteProductBuy(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/calculate-cost")
+    public ResponseEntity<Float> calculateProductBuyCost(@RequestBody CalculatePBRequest createProductBuyRequest) {
+        return ResponseEntity.ok(productBuyService.calculateProductBuyCost(createProductBuyRequest));
     }
 
 }

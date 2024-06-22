@@ -89,13 +89,13 @@ public class ProductSellService {
                 response.setCarat(productSell.getCarat());
                 response.setChi(productSell.getChi());
                 response.setCost(productSell.getCost());
-                response.setDescription(productSell.getPDescription());
+                response.setPDescription(productSell.getPDescription());
                 response.setGemstoneType(productSell.getGemstoneType());
                 response.setImage(productSell.getImage());
                 response.setManufacturer(productSell.getManufacturer());
                 response.setManufactureCost(productSell.getManufactureCost());
                 response.setMetalType(productSell.getMetalType());
-                response.setName(productSell.getPName());
+                response.setPName(productSell.getPName());
                 response.setProductCode(productSell.getProductCode());
                 response.setStatus(productSell.isPStatus());
 
@@ -134,8 +134,8 @@ public class ProductSellService {
         }
         productSell.setChi(request.getChi());
         productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufactureCost()));
-        productSell.setPDescription(request.getPDescription());
-        productSell.setPName(request.getPName());
+        productSell.setPDescription(request.getPdescription());
+        productSell.setPName(request.getPname());
         productSell.setGemstoneType(request.getGemstoneType());
         // Gọi phương thức uploadImageByPath và send MultipartFile file image
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
@@ -167,7 +167,7 @@ public class ProductSellService {
 
         totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * 1.2F;
 
-        return totalPrice;
+        return totalPrice / 1000.0F;
     }
 
     public Float GetPricingRatio() {
@@ -207,13 +207,13 @@ public class ProductSellService {
         response.setCarat(productSell.getCarat());
         response.setChi(productSell.getChi());
         response.setCost(productSell.getCost());
-        response.setDescription(productSell.getPDescription());
+        response.setPDescription(productSell.getPDescription());
         response.setGemstoneType(productSell.getGemstoneType());
         response.setImage(productSell.getImage());
         response.setManufacturer(productSell.getManufacturer());
         response.setManufactureCost(productSell.getManufactureCost());
         response.setMetalType(productSell.getMetalType());
-        response.setName(productSell.getPName());
+        response.setPName(productSell.getPName());
         response.setProductCode(productSell.getProductCode());
         response.setStatus(productSell.isPStatus());
 
@@ -240,29 +240,20 @@ public class ProductSellService {
         existingProductSell.setCarat(productSellRequest.getCarat());
         existingProductSell.setChi(productSellRequest.getChi());
         existingProductSell.setCost(productSellRequest.getCost());
-        existingProductSell.setPDescription(productSellRequest.getPDescription());
+        existingProductSell.setPDescription(productSellRequest.getPdescription());
         existingProductSell.setGemstoneType(productSellRequest.getGemstoneType());
         String imageUrl = imageService.uploadImageByPathService(productSellRequest.getImage());
         existingProductSell.setImage(imageUrl);
         existingProductSell.setManufacturer(productSellRequest.getManufacturer());
         existingProductSell.setManufactureCost(productSellRequest.getManufactureCost());
         existingProductSell.setMetalType(productSellRequest.getMetalType());
-        existingProductSell.setPName(productSellRequest.getPName());
+        existingProductSell.setPName(productSellRequest.getPname());
         existingProductSell.setProductCode(productSellRequest.getProductCode());
         // Update category
         Category category = categoryRepository.findById(productSellRequest.getCategory_id())
                 .orElseThrow(() -> new IllegalArgumentException("Category ID not found"));
         existingProductSell.setCategory(category);
 
-        // Update promotions
-        List<Long> promotionIds = productSellRequest.getPromotion_id();
-        List<Promotion> promotions = new ArrayList<>();
-
-        for (Long promotionId : promotionIds) {
-            Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
-            promotionOptional.ifPresent(promotions::add);
-        }
-        existingProductSell.setPromotion(promotions);
 
         // Save the updated entity
         productSellRepository.save(existingProductSell);

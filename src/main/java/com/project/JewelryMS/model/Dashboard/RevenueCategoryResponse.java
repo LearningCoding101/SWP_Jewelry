@@ -1,13 +1,14 @@
-package com.project.JewelryMS.model.Order;
+package com.project.JewelryMS.model.Dashboard;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderBuyWrapper {
-    private List<CreateProductBuyRequest> List;
+public class RevenueCategoryResponse {
+    List<CategoryResponse> list;
 }
