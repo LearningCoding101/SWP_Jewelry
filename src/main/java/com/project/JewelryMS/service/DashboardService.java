@@ -1,11 +1,11 @@
 package com.project.JewelryMS.service;
 
-import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.OrderDetail;
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.entity.PurchaseOrder;
+import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.Dashboard.*;
+import com.project.JewelryMS.model.Dashboard.Customer.*;
+import com.project.JewelryMS.model.Order.ProductResponse;
 import com.project.JewelryMS.repository.CategoryRepository;
+import com.project.JewelryMS.repository.CustomerRepository;
 import com.project.JewelryMS.repository.OrderRepositiory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,15 @@ public class DashboardService {
     CategoryRepository categoryRepository;
     @Autowired
     OrderRepositiory orderRepositiory;
-    public RevenueCategoryResponse RevenueCategory(){
+    @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
+    CustomerService customerService;
+
+
+    public List<CategoryResponse> RevenueCategory(){
         Optional<List<Category>> optionalCategoryList = Optional.ofNullable(categoryRepository.findAllCategories());
         List<CategoryResponse> categoryResponseList = new ArrayList<>();
-        RevenueCategoryResponse revenueCategoryResponse = new RevenueCategoryResponse();
         if(optionalCategoryList.isPresent()){
             List<Category> categoryList = optionalCategoryList.get();
             for(Category category: categoryList){
@@ -35,8 +40,7 @@ public class DashboardService {
             }
         }
 //        categoryResponseList.sort(Comparator.comparing(CategoryResponse::getCategory_Total).reversed());
-        revenueCategoryResponse.setList(categoryResponseList);
-        return revenueCategoryResponse;
+            return categoryResponseList;
     }
 
     public Float CalculateCategoryTotal(Long Category_ID){
@@ -57,7 +61,7 @@ public class DashboardService {
         return totalRevenue;
     }
 
-    public RevenueProductResponse getTopSellingProducts() {
+    public List<TopSellProductResponse> getTopSellingProducts() {
         List<PurchaseOrder> orders = orderRepositiory.findAll();
 
         // Sử dụng Map để lưu trữ số lượng và doanh thu bán hàng cho từng sản phẩm
@@ -80,16 +84,13 @@ public class DashboardService {
         // Chuyển Map sang List và sắp xếp theo số lượng bán ra hoặc doanh thu
         List<TopSellProductResponse> topSellProductResponses = new ArrayList<>(productSalesMap.values());
         topSellProductResponses.sort(Comparator.comparing(TopSellProductResponse::getUnitSold).reversed());
-        RevenueProductResponse revenueProductResponse = new RevenueProductResponse();
-        revenueProductResponse.setList(topSellProductResponses);
-        return revenueProductResponse;
+        return topSellProductResponses;
     }
 
 
-    public RevenueCategoryResponse RevenueCategory(RevenueDateRequest revenueDateRequest){
+    public List<CategoryResponse> RevenueCategory(RevenueDateRequest revenueDateRequest){
         Optional<List<Category>> optionalCategoryList = Optional.ofNullable(categoryRepository.findAllCategories());
         List<CategoryResponse> categoryResponseList = new ArrayList<>();
-        RevenueCategoryResponse revenueCategoryResponse = new RevenueCategoryResponse();
         if(optionalCategoryList.isPresent()){
             List<Category> categoryList = optionalCategoryList.get();
             for(Category category: categoryList){
@@ -100,8 +101,7 @@ public class DashboardService {
             }
         }
 //       categoryResponseList.sort(Comparator.comparing(CategoryResponse::getCategory_Total).reversed());
-       revenueCategoryResponse.setList(categoryResponseList);
-       return revenueCategoryResponse;
+        return categoryResponseList;
     }
 
     public Float CalculateCategoryTotal(Long Category_ID, RevenueDateRequest revenueDateRequest){
@@ -130,7 +130,7 @@ public class DashboardService {
         return totalRevenue;
     }
 
-    public RevenueProductResponse getTopSellingProducts(RevenueDateRequest revenueDateRequest) {
+    public List<TopSellProductResponse>  getTopSellingProducts(RevenueDateRequest revenueDateRequest) {
         // Lấy start và end dates từ request và chuyển đổi thành LocalDateTime
         LocalDate startDate = revenueDateRequest.getStartTime();
         LocalDate endDate = revenueDateRequest.getEndTime();
@@ -161,9 +161,80 @@ public class DashboardService {
         // Chuyển Map sang List và sắp xếp theo số lượng bán ra hoặc doanh thu
         List<TopSellProductResponse> topSellProductResponses = new ArrayList<>(productSalesMap.values());
         topSellProductResponses.sort(Comparator.comparing(TopSellProductResponse::getUnitSold).reversed());
-        RevenueProductResponse revenueProductResponse = new RevenueProductResponse();
-        revenueProductResponse.setList(topSellProductResponses);
-        return revenueProductResponse;
+        return topSellProductResponses;
+    }
+
+    public CustomerLoyaltyResponse getCustomerLoyaltyStatistics(RevenueDateRequest revenueDateRequest) {
+        // Convert LocalDate to LocalDateTime to include the whole day
+        LocalDate startDate = revenueDateRequest.getStartTime();
+        LocalDate endDate = revenueDateRequest.getEndTime();
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        // Fetch customers created within the date range
+        List<Customer> customers = customerRepository.findCustomersByCreateDateRange(startDateTime, endDateTime);
+
+        // Build the list of CustomerLoyalty objects
+        List<CustomerLoyalty> customerLoyalties = new ArrayList<>();
+        for (Customer customer : customers) {
+            CustomerLoyalty customerLoyalty = new CustomerLoyalty();
+            customerLoyalty.setEmail(customer.getEmail());
+            customerLoyalty.setPhoneNumber(customer.getPhoneNumber());
+            customerLoyalty.setPointAmount(customer.getPointAmount());
+            customerLoyalty.setRank(customerService.getCustomerRank(customer.getPK_CustomerID()));
+            customerLoyalties.add(customerLoyalty);
+        }
+
+        CustomerLoyaltyResponse response = new CustomerLoyaltyResponse();
+        response.setList(customerLoyalties);
+        return response;
+    }
+
+    public CustomerDemographicsResponse getCustomerDemoGraphicResponse(RevenueDateRequest revenueDateRequest){
+        // Convert LocalDate to LocalDateTime to include the whole day
+        LocalDate startDate = revenueDateRequest.getStartTime();
+        LocalDate endDate = revenueDateRequest.getEndTime();
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        // Fetch customers created within the date range
+        List<Customer> customers = customerRepository.findCustomersByCreateDateRange(startDateTime, endDateTime);
+        List<CustomerDemographics> customerDemoGraphics = new ArrayList<>();
+        for(Customer customer: customers){
+            CustomerDemographics customerDemoGraphic = new CustomerDemographics();
+            customerDemoGraphic.setGender(customer.getGender());
+            customerDemoGraphics.add(customerDemoGraphic);
+        }
+        CustomerDemographicsResponse customerDemoGraphicResponse = new CustomerDemographicsResponse();
+        customerDemoGraphicResponse.setList(customerDemoGraphics);
+        return customerDemoGraphicResponse;
+    }
+
+    public CustomerSignUpResponse getCustomerSignUpsByStaff(RevenueDateRequest revenueDateRequest) {
+        LocalDate startDate = revenueDateRequest.getStartTime();
+        LocalDate endDate = revenueDateRequest.getEndTime();
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        List<Object[]> results = customerRepository.findCustomerSignUpsByStaff(startDateTime, endDateTime);
+        List<CustomerSignUp> customerSignUps = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String staffName = (String) result[0];
+            Long signUpCount = (Long) result[1];
+
+            CustomerSignUp customerSignUp = new CustomerSignUp();
+            customerSignUp.setStaffName(staffName);
+            customerSignUp.setNumberSignUp(signUpCount.intValue());
+            customerSignUps.add(customerSignUp);
+        }
+
+        CustomerSignUpResponse response = new CustomerSignUpResponse();
+        response.setList(customerSignUps);
+        return response;
     }
 
 }
