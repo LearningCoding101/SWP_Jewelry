@@ -55,8 +55,10 @@ public class OrderController {
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("initializePB")
+    @CrossOrigin(origins = "*")
+
     public ResponseEntity saleCreateBuyOrder(@ModelAttribute CreateOrderBuyWrapper order){
-        orderHandlerService.handleCreateOrderBuyWithDetails(order.getList());
+        orderHandlerService.handleCreateOrderBuyWithDetails(order);
         return ResponseEntity.ok("Create Successfully");
     }
 
