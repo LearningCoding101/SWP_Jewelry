@@ -56,9 +56,10 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\CategoryResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueCategoryResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.java

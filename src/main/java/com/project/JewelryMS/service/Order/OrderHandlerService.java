@@ -59,11 +59,12 @@ public class OrderHandlerService {
         orderService.saveOrder(purchaseOrder);
         return purchaseOrder.getPK_OrderID();
     }
-
     public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email) {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
+        Long id = -1L;
+
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         if (orderRequest.getCustomer_ID() != null) {
@@ -118,6 +119,7 @@ public class OrderHandlerService {
 
     }
 
+
     //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
     @Transactional
     public Long createOrderWithBuyDetails(PurchaseOrder purchaseOrder, List<OrderBuyDetail> list){
@@ -131,13 +133,13 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(CreateOrderBuyWrapper createOrderBuyWrapper){
+    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> List ){
         PurchaseOrder order = new PurchaseOrder();
         // Check if the input list is null
-        if (createOrderBuyWrapper.getList() == null) {
+        if (List == null) {
             throw new IllegalArgumentException("createProductBuyRequests cannot be null");
         }
-        List<CreateProductBuyRequest> createProductBuyRequests = createOrderBuyWrapper.getList();
+        List<CreateProductBuyRequest> createProductBuyRequests = List;
 
         Long id = -1L;
 //        order.setStatus(null);
