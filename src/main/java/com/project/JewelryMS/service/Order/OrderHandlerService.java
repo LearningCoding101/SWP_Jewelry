@@ -60,59 +60,61 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email){
+    public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email) {
         PurchaseOrder order = new PurchaseOrder();
         Long id = -1L;
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
-        if(orderRequest.getCustomer_ID()!=null) {
+        if (orderRequest.getCustomer_ID() != null) {
             Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
             if (customerOptional.isPresent()) {
                 Customer customer = customerOptional.get();
                 order.setCustomer(customer);
-            }else{
+            } else {
                 order.setCustomer(null);
             }
-        }else{
+        } else {
             order.setCustomer(null);
         }
 
-        if(orderRequest.getStaff_ID()!=null) {
+        if (orderRequest.getStaff_ID() != null) {
             Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderRequest.getStaff_ID());
-            if(staffAccountOptional.isPresent()){
+            if (staffAccountOptional.isPresent()) {
                 StaffAccount staffAccount = staffAccountOptional.get();
                 order.setStaffAccount(staffAccount);
-            }else{
+            } else {
                 order.setStaffAccount(null);
             }
-        }else{
+        } else {
             order.setStaffAccount(null);
-        Long customerID = orderRequest.getCustomer_ID(); // This could be null
-        Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
-        if (optionalCustomerId.isPresent()){
-            Optional<Customer> customerOptional = customerRepository.findById(customerID);
-            if(customerOptional.isPresent()){
-                Customer customer = customerOptional.get();
-                order.setCustomer(customer);
+            Long customerID = orderRequest.getCustomer_ID(); // This could be null
+            Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
+            if (optionalCustomerId.isPresent()) {
+                Optional<Customer> customerOptional = customerRepository.findById(customerID);
+                if (customerOptional.isPresent()) {
+                    Customer customer = customerOptional.get();
+                    order.setCustomer(customer);
+                }
+            }
+
+            order.setEmail(email);
+            List<OrderDetail> orderDetails = new ArrayList<>();
+            for (CreateOrderDetailRequest detail : detailRequest) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setQuantity(detail.getQuantity());
+                orderDetail.setProductSell(productSellService.getProductSellById(detail.getProductID()));
+                orderDetail.setPurchaseOrder(order);
+                orderDetails.add(orderDetail);
+            }
+
+            if (!orderDetails.isEmpty()) {
+                id = createOrderWithDetails(order, orderDetails);
             }
         }
-
-        order.setEmail(email);
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for(CreateOrderDetailRequest detail : detailRequest){
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setQuantity(detail.getQuantity());
-            orderDetail.setProductSell(productSellService.getProductSellById(detail.getProductID()));
-            orderDetail.setPurchaseOrder(order);
-            orderDetails.add(orderDetail);
-        }
-
-        if(!orderDetails.isEmpty()){
-            id = createOrderWithDetails(order, orderDetails);
-        }
         return id;
+
     }
     //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
     @Transactional
