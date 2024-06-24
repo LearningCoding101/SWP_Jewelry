@@ -133,13 +133,13 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(CreateOrderBuyWrapper createOrderBuyWrapper){
+    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> List ){
         PurchaseOrder order = new PurchaseOrder();
         // Check if the input list is null
-        if (createOrderBuyWrapper.getList() == null) {
+        if (List == null) {
             throw new IllegalArgumentException("createProductBuyRequests cannot be null");
         }
-        List<CreateProductBuyRequest> createProductBuyRequests = createOrderBuyWrapper.getList();
+        List<CreateProductBuyRequest> createProductBuyRequests = List;
 
         Long id = -1L;
 //        order.setStatus(null);
