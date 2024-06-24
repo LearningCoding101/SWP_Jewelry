@@ -1,8 +1,9 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.Shift;
-import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
+import com.project.JewelryMS.model.Shift.AssignStaffByDayOfWeekRequest;
+import com.project.JewelryMS.model.Shift.AssignStaffToMultipleDaysRequest;
 import com.project.JewelryMS.model.StaffShift.IdWrapper;
 import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,9 +49,6 @@ public class SchedulingController {
         return ResponseEntity.ok(matrix);
     }
 
-
-
-
     @PostMapping("/assignMultipleStaffToShift")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<Staff_Shift>> assignMultipleStaffToShift(@RequestBody List<IdWrapper> staffIds, @RequestParam int shiftId) {
@@ -94,5 +92,30 @@ public class SchedulingController {
         return ResponseEntity.ok(updatedShift);
     }
 
+    @PostMapping("/assignStaffToDateRange")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<List<StaffShiftResponse>> assignStaffToDateRange(
+            @RequestBody AssignStaffToMultipleDaysRequest request) {
+        List<StaffShiftResponse> staffShiftResponses = schedulingService.assignStaffToDateRange(
+                request.getStaffIds(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getShiftTypes()
+        );
+        return ResponseEntity.ok(staffShiftResponses);
+    }
 
+    @PostMapping("/assignStaffByDayOfWeek")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<List<StaffShiftResponse>> assignStaffByDayOfWeek(
+            @RequestBody AssignStaffByDayOfWeekRequest request) {
+        List<StaffShiftResponse> staffShiftResponses = schedulingService.assignStaffByDayOfWeek(
+                request.getStaffIds(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getShiftTypes(),
+                request.getDaysOfWeek()
+        );
+        return ResponseEntity.ok(staffShiftResponses);
+    }
 }
