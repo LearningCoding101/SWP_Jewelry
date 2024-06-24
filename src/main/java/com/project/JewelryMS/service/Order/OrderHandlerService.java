@@ -63,6 +63,8 @@ public class OrderHandlerService {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
+        Long id = -1L;
+
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         if (orderRequest.getCustomer_ID() != null) {
