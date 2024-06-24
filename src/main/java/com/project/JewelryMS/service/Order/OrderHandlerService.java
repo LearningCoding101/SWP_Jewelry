@@ -59,7 +59,6 @@ public class OrderHandlerService {
         orderService.saveOrder(purchaseOrder);
         return purchaseOrder.getPK_OrderID();
     }
-
     public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email) {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(orderRequest.getStatus());
@@ -117,6 +116,7 @@ public class OrderHandlerService {
         return id;
 
     }
+
 
     //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
     @Transactional
