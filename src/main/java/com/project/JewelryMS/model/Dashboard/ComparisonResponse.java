@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
-    String category_Name;
-    Float category_Total;
+public class ComparisonResponse {
+    private long totalQuantityDifference;
+    private float totalRevenueDifference;
+    private long totalCustomerAccountsDifference;
 }
