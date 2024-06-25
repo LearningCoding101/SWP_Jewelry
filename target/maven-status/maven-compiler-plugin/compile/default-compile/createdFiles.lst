@@ -56,6 +56,7 @@ com\project\JewelryMS\model\Shift\ShiftRequest.class
 com\project\JewelryMS\model\Order\TotalOrderRequest.class
 com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
+com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.class
 com\project\JewelryMS\model\Guarantee\GuaranteeResponse.class
 com\project\JewelryMS\controller\StaffAccountController.class
 com\project\JewelryMS\entity\Customer.class
@@ -88,12 +89,12 @@ com\project\JewelryMS\model\ChangePasswordRequest.class
 com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.class
 com\project\JewelryMS\entity\Account.class
 com\project\JewelryMS\model\Image\ImgbbResponse.class
-com\project\JewelryMS\model\Dashboard\RevenueProductResponse.class
 com\project\JewelryMS\config\VNPAYConfig.class
 com\project\JewelryMS\model\AccountIDRequest.class
 com\project\JewelryMS\model\Order\ProductResponse.class
 com\project\JewelryMS\model\Staff\StaffAccountRequest.class
 com\project\JewelryMS\entity\Guarantee.class
+com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.class
 com\project\JewelryMS\service\VNPAYservice.class
 com\project\JewelryMS\entity\ProductBuy.class
 com\project\JewelryMS\model\LoginGoogleRequest.class
@@ -145,7 +146,6 @@ com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\RoleEnum.class
-com\project\JewelryMS\model\Dashboard\RevenueCategoryResponse.class
 com\project\JewelryMS\repository\GuaranteeRepository.class
 com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\repository\OrderRepositiory.class
@@ -166,6 +166,7 @@ com\project\JewelryMS\model\Performance\CreatePerformanceRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\model\ResetPassRequest.class
+com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
 com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
