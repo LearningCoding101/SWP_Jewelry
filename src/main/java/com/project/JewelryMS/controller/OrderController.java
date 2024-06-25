@@ -57,26 +57,10 @@ public class OrderController {
         return orderDetailService.getOrderDetailsByOrderId(orderId);
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @PostMapping("initializePB")
-    public ResponseEntity<String> saleCreateBuyOrder(@RequestBody(required = false) byte[] requestData) {
-        try {
-            String orderJson = new String(requestData); // Convert byte array to String
-
-
-            System.out.println("Received order: " + orderJson);
-            ObjectMapper objectMapper = new ObjectMapper();
-            CreateProductBuyRequest[] orderArray = objectMapper.readValue(orderJson, CreateProductBuyRequest[].class);
-            List<CreateProductBuyRequest> orderList = Arrays.asList(orderArray);
-
-
-            // Process orderWrapper as needed
-            orderHandlerService.handleCreateOrderBuyWithDetails(orderList);
-
-            return ResponseEntity.ok("Create Successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
-        }
+    @PostMapping("initialize-PB-order")
+    public ResponseEntity<String> saleCreateOrder(@RequestBody CreateOrderBuyWrapper order) {
+        Long ID = orderHandlerService.handleCreateOrderBuyWithDetails(order);
+        return ResponseEntity.ok("Create Order Product Buy ID is "+ ID + " Successfully");
     }
 
     @PostMapping("append-productBuy")
