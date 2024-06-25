@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -397,7 +398,7 @@ public class SchedulingService {
         staffShiftRepository.deleteAll(staffShifts);
     }
 
-//ASSIGN STAFF BY THEIR SHIFT TYPE
+    //ASSIGN STAFF BY THEIR SHIFT TYPE
     @Transactional
     public List<StaffShiftResponse> assignStaffByShiftTypePattern(
             Map<Integer, List<List<String>>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
@@ -408,27 +409,32 @@ public class SchedulingService {
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             DayOfWeek dayOfWeek = date.getDayOfWeek();
 
+            if (dayOfWeek == DayOfWeek.SUNDAY) {
+                continue; // Skip Sundays
+            }
+
             for (Map.Entry<Integer, List<List<String>>> entry : staffShiftPatterns.entrySet()) {
                 int staffId = entry.getKey();
                 List<List<String>> shiftPatterns = entry.getValue();
 
                 if (shiftPatterns.size() == 1) {
                     // Single shift type: Work all weekdays (Monday to Saturday)
-                    if (!isSunday(dayOfWeek)) {
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                    }
+                    assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
                 } else if (shiftPatterns.size() == 2) {
                     // Two shift types: Alternate days based on the current day of the week
-                    if (shouldWorkTodayForTwoShiftType(today, dayOfWeek)) {
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
+                    if (shouldWorkTodayForTwoShiftType(today, dayOfWeek, staffId)) {
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
+                    } else {
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
                     }
                 } else if (shiftPatterns.size() == 3) {
-                    // Three shift types: Work two days a week
-                    if (shouldWorkTodayForThreeShiftType(today, dayOfWeek)) {
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
-                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(2));
+                    // Three shift types: Work two days a week based on patterns
+                    if (shouldWorkTodayForThreeShiftType(today, dayOfWeek, staffId)) {
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
+                    } else if (shouldWorkTodayForThreeShiftTypePattern2(today, dayOfWeek, staffId)) {
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
+                    } else if (shouldWorkTodayForThreeShiftTypePattern3(today, dayOfWeek, staffId)) {
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(2));
                     }
                 }
             }
@@ -437,44 +443,27 @@ public class SchedulingService {
         return staffShiftResponses;
     }
 
-    private boolean isMWF(DayOfWeek dayOfWeek) {
-        return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.FRIDAY;
+    private boolean shouldWorkTodayForTwoShiftType(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
+        int patternIndex = (dayOfWeek.getValue() - 1) % 2; // Calculate the pattern index based on day of the week
+        return patternIndex == 0; // Staff with two shift types will follow pattern 0 (e.g., Monday-Wednesday-Friday)
     }
 
-    private boolean isTTS(DayOfWeek dayOfWeek) {
-        return dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.THURSDAY || dayOfWeek == DayOfWeek.SATURDAY;
+    private boolean shouldWorkTodayForThreeShiftType(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
+        int patternIndex = (today.getDayOfYear() - 1) % 2; // Calculate pattern index based on the day of the year (0 or 1)
+        return patternIndex == 0; // Staff with three shift types will follow pattern 0 (e.g., Monday-Thursday)
     }
 
-    private boolean isSunday(DayOfWeek dayOfWeek) {
-        return dayOfWeek == DayOfWeek.SUNDAY;
+    private boolean shouldWorkTodayForThreeShiftTypePattern2(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
+        int patternIndex = (today.getDayOfYear() - 1) % 3; // Calculate pattern index based on the day of the year (0, 1, or 2)
+        return patternIndex == 1; // Staff with three shift types will follow pattern 1 (e.g., Tuesday-Friday)
     }
 
-    private boolean shouldWorkTodayForTwoShiftType(LocalDate today, DayOfWeek dayOfWeek) {
-        boolean isTodayEven = today.getDayOfWeek().getValue() % 2 == 0;
-        boolean isMWFPattern = isMWF(dayOfWeek);
-        boolean isTTSPattern = isTTS(dayOfWeek);
-
-        if (isTodayEven) {
-            return isTTSPattern;
-        } else {
-            return isMWFPattern;
-        }
+    private boolean shouldWorkTodayForThreeShiftTypePattern3(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
+        int patternIndex = (today.getDayOfYear() - 1) % 3; // Calculate pattern index based on the day of the year (0, 1, or 2)
+        return patternIndex == 2; // Staff with three shift types will follow pattern 2 (e.g., Wednesday-Saturday)
     }
 
-    private boolean shouldWorkTodayForThreeShiftType(LocalDate today, DayOfWeek dayOfWeek) {
-        DayOfWeek todayDayOfWeek = today.getDayOfWeek();
-
-        if (todayDayOfWeek == DayOfWeek.MONDAY || todayDayOfWeek == DayOfWeek.THURSDAY) {
-            return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.THURSDAY;
-        } else if (todayDayOfWeek == DayOfWeek.TUESDAY || todayDayOfWeek == DayOfWeek.FRIDAY) {
-            return dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.FRIDAY;
-        } else if (todayDayOfWeek == DayOfWeek.WEDNESDAY || todayDayOfWeek == DayOfWeek.SATURDAY) {
-            return dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.SATURDAY;
-        }
-        return false;
-    }
-
-    private void assignShiftForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, List<String> shiftTypes) {
+    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, List<String> shiftTypes) {
         for (String shiftType : shiftTypes) {
             try {
                 StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
