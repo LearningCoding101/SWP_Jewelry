@@ -185,16 +185,16 @@ public class SchedulingService {
             String startTime, endTime;
             endTime = switch (shiftType) {
                 case "Morning" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 08:00";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 12:00";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 08";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 12";
                 }
                 case "Afternoon" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 13:00";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17:00";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 13";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 16";
                 }
                 case "Evening" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17:00";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 21:00";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 21";
                 }
                 default -> throw new RuntimeException("Invalid shift type");
             };
@@ -221,7 +221,8 @@ public class SchedulingService {
 
     // Helper method to convert a Staff_Shift entity to a StaffShiftResponse
     private StaffShiftResponse toStaffShiftResponse(Staff_Shift staffShift) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+//        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh a");
         String formattedStartTime = staffShift.getShift().getStartTime().format(timeFormatter);
         String formattedEndTime = staffShift.getShift().getEndTime().format(timeFormatter);
 
