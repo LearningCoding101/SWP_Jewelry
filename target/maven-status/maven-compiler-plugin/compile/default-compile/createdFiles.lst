@@ -47,6 +47,7 @@ com\project\JewelryMS\service\EmailService.class
 com\project\JewelryMS\entity\PurchaseOrder.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data$Medium.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data.class
+com\project\JewelryMS\model\Shift\AssignStaffToMultipleDaysRequest.class
 com\project\JewelryMS\controller\CodeController.class
 com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
@@ -86,6 +87,7 @@ com\project\JewelryMS\model\Profile\UpdateStaffResponse.class
 com\project\JewelryMS\repository\PromotionRepository.class
 com\project\JewelryMS\model\Profile\ManagerProfileResponse.class
 com\project\JewelryMS\model\ChangePasswordRequest.class
+com\project\JewelryMS\model\Shift\AssignStaffByDayOfWeekRequest.class
 com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.class
 com\project\JewelryMS\entity\Account.class
 com\project\JewelryMS\model\Image\ImgbbResponse.class
