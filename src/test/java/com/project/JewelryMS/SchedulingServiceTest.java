@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -20,7 +21,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ShiftServiceTest {
+@SpringBootTest
+class ShiftServiceTest {
 
     @Mock
     private ShiftRepository shiftRepository;
@@ -179,17 +181,20 @@ public class ShiftServiceTest {
 
         when(shiftRepository.findById(shiftID)).thenReturn(Optional.empty());
 
-        ShiftRequest result = shiftService.getShiftById(Math.toIntExact(shiftID));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            shiftService.getShiftById(Math.toIntExact(shiftID));
+        });
 
-        assertNull(result);
+        assertEquals("Shift ID:  1 not found", exception.getMessage());
 
         verify(shiftRepository, times(1)).findById(shiftID);
     }
 
     @Test
-    public void testUpdateShift() {
+    public void testUpdateShiftDetails() {
         Long shiftID = 1L;
-        CreateShiftRequest updateShiftRequest = new CreateShiftRequest();
+        ShiftRequest updateShiftRequest = new ShiftRequest();
+        updateShiftRequest.setShiftID(Math.toIntExact(shiftID));
         updateShiftRequest.setShiftType("Evening");
         updateShiftRequest.setStartTime("2023-01-01 16");
         updateShiftRequest.setEndTime("2023-01-01 20");
@@ -207,15 +212,15 @@ public class ShiftServiceTest {
         shift.setRegister(0);
 
         when(shiftRepository.findById(shiftID)).thenReturn(Optional.of(shift));
-        when(shiftRepository.save(any(Shift.class))).thenReturn(shift);
+        when(shiftRepository.save(any(Shift.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ShiftRequest result = shiftService.updateShift( updateShiftRequest);
+        Shift result = shiftService.updateShiftDetails(updateShiftRequest);
 
         assertNotNull(result);
         assertEquals(shiftID, result.getShiftID());
         assertEquals("Evening", result.getShiftType());
-        assertEquals("2023-01-01 16 (Sunday)", result.getStartTime());
-        assertEquals("2023-01-01 20", result.getEndTime());
+        assertEquals(LocalDateTime.of(2023, 1, 1, 16, 0), result.getStartTime());
+        assertEquals(LocalDateTime.of(2023, 1, 1, 20, 0), result.getEndTime());
         assertEquals("Active", result.getStatus());
         assertEquals("Inventory", result.getWorkArea());
         assertEquals(1, result.getRegister());
@@ -225,7 +230,7 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void testDeleteShift() {
+    public void testDeleteShiftById() {
         Long shiftID = 1L;
         Shift shift = new Shift();
         shift.setShiftID(Math.toIntExact(shiftID));
@@ -234,7 +239,8 @@ public class ShiftServiceTest {
 
         shiftService.deleteShiftById(shiftID);
 
-        verify(shiftRepository, times(1)).delete(shift);
+        assertEquals("Unapplicable", shift.getStatus());
+        verify(shiftRepository, times(1)).save(shift);
     }
 
     @Test
@@ -243,8 +249,12 @@ public class ShiftServiceTest {
 
         when(shiftRepository.findById(shiftID)).thenReturn(Optional.empty());
 
-        shiftService.deleteShiftById(shiftID);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            shiftService.deleteShiftById(shiftID);
+        });
 
-        verify(shiftRepository, never()).delete(any(Shift.class));
+        assertEquals("Shift ID:  1 not found", exception.getMessage());
+        verify(shiftRepository, times(1)).findById(shiftID);
+        verify(shiftRepository, never()).save(any(Shift.class));
     }
 }

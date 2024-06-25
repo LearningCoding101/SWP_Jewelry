@@ -9,9 +9,7 @@ import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import com.project.JewelryMS.repository.StaffShiftRepository;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +23,8 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class SchedulingService {
 
@@ -185,16 +185,16 @@ public class SchedulingService {
             String startTime, endTime;
             endTime = switch (shiftType) {
                 case "Morning" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 08";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 12";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 08:00";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 12:00";
                 }
                 case "Afternoon" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 13";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 13:00";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17:00";
                 }
                 case "Evening" -> {
-                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17";
-                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 21";
+                    startTime = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 17:00";
+                    yield date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " 21:00";
                 }
                 default -> throw new RuntimeException("Invalid shift type");
             };
@@ -219,22 +219,36 @@ public class SchedulingService {
         return toStaffShiftResponse(staffShift);
     }
 
-    // This need a revised
-    private static class ShiftAssignmentException extends RuntimeException {
-        public ShiftAssignmentException(String message) {
-            super(message);
-        }
-    }
-
     // Helper method to convert a Staff_Shift entity to a StaffShiftResponse
     private StaffShiftResponse toStaffShiftResponse(Staff_Shift staffShift) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
         String formattedStartTime = staffShift.getShift().getStartTime().format(timeFormatter);
         String formattedEndTime = staffShift.getShift().getEndTime().format(timeFormatter);
 
-        StaffShiftResponse.StaffResponse staffResponse = new StaffShiftResponse.StaffResponse(staffShift.getStaffAccount().getStaffID(), staffShift.getStaffAccount().getAccount().getAccountName(), staffShift.getStaffAccount().getAccount().getEmail(), staffShift.getStaffAccount().getAccount().getUsername());
+        StaffShiftResponse.StaffResponse staffResponse = new StaffShiftResponse.StaffResponse(
+                staffShift.getStaffAccount().getStaffID(),
+                staffShift.getStaffAccount().getAccount().getAccountName(),
+                staffShift.getStaffAccount().getAccount().getEmail(),
+                staffShift.getStaffAccount().getAccount().getUsername()
+        );
 
-        return new StaffShiftResponse(staffShift.getShift().getShiftID(), formattedStartTime, formattedEndTime, staffShift.getShift().getShiftType(), staffShift.getShift().getStatus(), staffShift.getShift().getWorkArea(), staffShift.getShift().getRegister(), Collections.singletonList(staffResponse));
+        return new StaffShiftResponse(
+                staffShift.getShift().getShiftID(),
+                formattedStartTime,
+                formattedEndTime,
+                staffShift.getShift().getShiftType(),
+                staffShift.getShift().getStatus(),
+                staffShift.getShift().getWorkArea(),
+                staffShift.getShift().getRegister(),
+                Collections.singletonList(staffResponse)
+        );
+    }
+
+    // Custom exception class
+    private static class ShiftAssignmentException extends RuntimeException {
+        public ShiftAssignmentException(String message) {
+            super(message);
+        }
     }
 
     @Transactional
@@ -331,28 +345,26 @@ public class SchedulingService {
     }
 
     @Transactional
-    public List<StaffShiftResponse> assignStaffByDayOfWeek(List<Integer> staffIds, LocalDate startDate, LocalDate endDate, List<String> shiftTypes, List<String> daysOfWeek) {
-        List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
+    public List<StaffShiftResponse> assignStaffByDayOfWeek(
+            Map<Integer, Map<DayOfWeek, List<String>>> staffAvailability,
+            LocalDate startDate,
+            LocalDate endDate) {
 
-        // Convert day names to DayOfWeek enums
-        Map<String, DayOfWeek> dayOfWeekMap = Map.of(
-                "Monday", DayOfWeek.MONDAY,
-                "Tuesday", DayOfWeek.TUESDAY,
-                "Wednesday", DayOfWeek.WEDNESDAY,
-                "Thursday", DayOfWeek.THURSDAY,
-                "Friday", DayOfWeek.FRIDAY,
-                "Saturday", DayOfWeek.SATURDAY,
-                "Sunday", DayOfWeek.SUNDAY
-        );
-        List<DayOfWeek> daysOfWeekEnums = daysOfWeek.stream()
-                .map(dayOfWeekMap::get)
-                .toList();
+        List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
 
         // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            if (daysOfWeekEnums.contains(date.getDayOfWeek())) {
-                for (String shiftType : shiftTypes) {
-                    for (int staffId : staffIds) {
+            DayOfWeek currentDayOfWeek = date.getDayOfWeek();
+
+            for (Map.Entry<Integer, Map<DayOfWeek, List<String>>> entry : staffAvailability.entrySet()) {
+                int staffId = entry.getKey();
+                Map<DayOfWeek, List<String>> availability = entry.getValue();
+
+                // Check if the current day of the week is in the staff's availability
+                if (availability.containsKey(currentDayOfWeek)) {
+                    List<String> shiftTypes = availability.get(currentDayOfWeek);
+
+                    for (String shiftType : shiftTypes) {
                         try {
                             StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
                             staffShiftResponses.add(response);

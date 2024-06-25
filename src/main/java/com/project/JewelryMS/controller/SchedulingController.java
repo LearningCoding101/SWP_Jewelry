@@ -105,16 +105,15 @@ public class SchedulingController {
         return ResponseEntity.ok(staffShiftResponses);
     }
 
+    // New endpoint for assigning staff by day of the week with their specific preferences
     @PostMapping("/assignStaffByDayOfWeek")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<StaffShiftResponse>> assignStaffByDayOfWeek(
             @RequestBody AssignStaffByDayOfWeekRequest request) {
         List<StaffShiftResponse> staffShiftResponses = schedulingService.assignStaffByDayOfWeek(
-                request.getStaffIds(),
+                request.getStaffAvailability(),
                 request.getStartDate(),
-                request.getEndDate(),
-                request.getShiftTypes(),
-                request.getDaysOfWeek()
+                request.getEndDate()
         );
         return ResponseEntity.ok(staffShiftResponses);
     }

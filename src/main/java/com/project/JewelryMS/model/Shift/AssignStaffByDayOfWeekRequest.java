@@ -7,14 +7,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class AssignStaffByDayOfWeekRequest {
-    private List<Integer> staffIds;
+    private Map<Integer, Map<DayOfWeek, List<String>>> staffAvailability;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<String> shiftTypes;
-    private List<String> daysOfWeek; // e.g., "Monday", "Wednesday", "Friday"
 
 }
+
