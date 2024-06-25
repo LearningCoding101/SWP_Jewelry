@@ -1,8 +1,7 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
-import com.project.JewelryMS.entity.RoleEnum;
-import com.project.JewelryMS.entity.Shift;
+import com.project.JewelryMS.enumClass.RoleEnum;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.Profile.*;
 import com.project.JewelryMS.repository.AuthenticationRepository;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service

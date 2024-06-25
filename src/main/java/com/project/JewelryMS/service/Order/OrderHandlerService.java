@@ -107,25 +107,26 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> List ){
+    public Long handleCreateOrderBuyWithDetails(CreateOrderBuyWrapper createOrderBuyWrapper ){
         PurchaseOrder order = new PurchaseOrder();
+        Long id = -1L;
         // Check if the input list is null
-        if (List == null) {
+        if (createOrderBuyWrapper.getProductBuyLists() == null) {
             throw new IllegalArgumentException("createProductBuyRequests cannot be null");
         }
-        List<CreateProductBuyRequest> createProductBuyRequests = List;
+        List<Long> ProductBuyIDList = createOrderBuyWrapper.getProductBuyLists();
+        CreatePBOrderRequest orderRequest = createOrderBuyWrapper.getOrderRequest();
 
-        Long id = -1L;
-//        order.setStatus(null);
         order.setPurchaseDate(new Date());
-//        order.setPaymentType(null);
-//        order.setTotalAmount(null);
-        List<Long> ProductBuyIDList = new ArrayList<>();
-        for(CreateProductBuyRequest productBuyRequest: createProductBuyRequests){
-            ProductBuy productBuy = new ProductBuy();
-            productBuy = productBuyService.createProductBuy(productBuyRequest);
-            ProductBuyIDList.add(productBuy.getPK_ProductBuyID());
+        order.setStatus(orderRequest.getStatus());
+        order.setPaymentType(orderRequest.getPaymentType());
+        order.setTotalAmount(orderRequest.getTotalAmount());
+        if (orderRequest.getStaff_ID() != null) {
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
+        } else {
+            order.setStaffAccount(null);
         }
+
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
         for(Long ProductBuyIDs : ProductBuyIDList){
             OrderBuyDetail orderBuyDetail = new OrderBuyDetail();

@@ -10,7 +10,7 @@ import java.sql.Date;
 @NoArgsConstructor
 public class CreateStaffAccountRequest {
     private String phoneNumber;
-    private float salary;
+    private Float salary;
     private Date startDate;
     private String email;
     private String username;
