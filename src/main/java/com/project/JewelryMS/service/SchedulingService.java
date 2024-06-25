@@ -345,38 +345,144 @@ public class SchedulingService {
         return toStaffShiftResponse(staffShift);
     }
 
+    //This can be used again, if necessary
+//    @Transactional
+//    public List<StaffShiftResponse> assignStaffByDayOfWeek(
+//            Map<Integer, Map<DayOfWeek, List<String>>> staffAvailability,
+//            LocalDate startDate,
+//            LocalDate endDate) {
+//
+//        List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
+//
+//        // Iterate over each date in the range
+//        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+//            DayOfWeek currentDayOfWeek = date.getDayOfWeek();
+//
+//            for (Map.Entry<Integer, Map<DayOfWeek, List<String>>> entry : staffAvailability.entrySet()) {
+//                int staffId = entry.getKey();
+//                Map<DayOfWeek, List<String>> availability = entry.getValue();
+//
+//                // Check if the current day of the week is in the staff's availability
+//                if (availability.containsKey(currentDayOfWeek)) {
+//                    List<String> shiftTypes = availability.get(currentDayOfWeek);
+//
+//                    for (String shiftType : shiftTypes) {
+//                        try {
+//                            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+//                            staffShiftResponses.add(response);
+//                        } catch (ShiftAssignmentException e) {
+//                            // Log and continue if staff is already assigned
+//                            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return staffShiftResponses;
+//    }
     @Transactional
-    public List<StaffShiftResponse> assignStaffByDayOfWeek(
-            Map<Integer, Map<DayOfWeek, List<String>>> staffAvailability,
-            LocalDate startDate,
-            LocalDate endDate) {
+    public void removeStaffFromShiftsInRange(int staffId, LocalDate startDate, LocalDate endDate) {
+        // Validate staff existence
+        StaffAccount staff = staffAccountRepository.findById(staffId)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+
+        // Retrieve all shifts for the staff within the date range
+        List<Staff_Shift> staffShifts = staffShiftRepository.findAllByStaffAccountAndShift_StartTimeBetween(
+                staff,
+                startDate.atStartOfDay(), // Start of day
+                endDate.plusDays(1).atStartOfDay().minusNanos(1) // End of day
+        );
+
+        // Remove each staff shift found
+        staffShiftRepository.deleteAll(staffShifts);
+    }
+
+//ASSIGN STAFF BY THEIR SHIFT TYPE
+    @Transactional
+    public List<StaffShiftResponse> assignStaffByShiftTypePattern(
+            Map<Integer, List<List<String>>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
 
         List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
+        LocalDate today = LocalDate.now();
 
-        // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            DayOfWeek currentDayOfWeek = date.getDayOfWeek();
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
 
-            for (Map.Entry<Integer, Map<DayOfWeek, List<String>>> entry : staffAvailability.entrySet()) {
+            for (Map.Entry<Integer, List<List<String>>> entry : staffShiftPatterns.entrySet()) {
                 int staffId = entry.getKey();
-                Map<DayOfWeek, List<String>> availability = entry.getValue();
+                List<List<String>> shiftPatterns = entry.getValue();
 
-                // Check if the current day of the week is in the staff's availability
-                if (availability.containsKey(currentDayOfWeek)) {
-                    List<String> shiftTypes = availability.get(currentDayOfWeek);
-
-                    for (String shiftType : shiftTypes) {
-                        try {
-                            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-                            staffShiftResponses.add(response);
-                        } catch (ShiftAssignmentException e) {
-                            // Log and continue if staff is already assigned
-                            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
-                        }
+                if (shiftPatterns.size() == 1) {
+                    // Single shift type: Work all weekdays (Monday to Saturday)
+                    if (!isSunday(dayOfWeek)) {
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
+                    }
+                } else if (shiftPatterns.size() == 2) {
+                    // Two shift types: Alternate days based on the current day of the week
+                    if (shouldWorkTodayForTwoShiftType(today, dayOfWeek)) {
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
+                    }
+                } else if (shiftPatterns.size() == 3) {
+                    // Three shift types: Work two days a week
+                    if (shouldWorkTodayForThreeShiftType(today, dayOfWeek)) {
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
+                        assignShiftForDay(staffShiftResponses, staffId, date, shiftPatterns.get(2));
                     }
                 }
             }
         }
+
         return staffShiftResponses;
     }
+
+    private boolean isMWF(DayOfWeek dayOfWeek) {
+        return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.FRIDAY;
+    }
+
+    private boolean isTTS(DayOfWeek dayOfWeek) {
+        return dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.THURSDAY || dayOfWeek == DayOfWeek.SATURDAY;
+    }
+
+    private boolean isSunday(DayOfWeek dayOfWeek) {
+        return dayOfWeek == DayOfWeek.SUNDAY;
+    }
+
+    private boolean shouldWorkTodayForTwoShiftType(LocalDate today, DayOfWeek dayOfWeek) {
+        boolean isTodayEven = today.getDayOfWeek().getValue() % 2 == 0;
+        boolean isMWFPattern = isMWF(dayOfWeek);
+        boolean isTTSPattern = isTTS(dayOfWeek);
+
+        if (isTodayEven) {
+            return isTTSPattern;
+        } else {
+            return isMWFPattern;
+        }
+    }
+
+    private boolean shouldWorkTodayForThreeShiftType(LocalDate today, DayOfWeek dayOfWeek) {
+        DayOfWeek todayDayOfWeek = today.getDayOfWeek();
+
+        if (todayDayOfWeek == DayOfWeek.MONDAY || todayDayOfWeek == DayOfWeek.THURSDAY) {
+            return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.THURSDAY;
+        } else if (todayDayOfWeek == DayOfWeek.TUESDAY || todayDayOfWeek == DayOfWeek.FRIDAY) {
+            return dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.FRIDAY;
+        } else if (todayDayOfWeek == DayOfWeek.WEDNESDAY || todayDayOfWeek == DayOfWeek.SATURDAY) {
+            return dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.SATURDAY;
+        }
+        return false;
+    }
+
+    private void assignShiftForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, List<String> shiftTypes) {
+        for (String shiftType : shiftTypes) {
+            try {
+                StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                responses.add(response);
+            } catch (ShiftAssignmentException e) {
+                System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
+            }
+        }
+    }
+
 }
