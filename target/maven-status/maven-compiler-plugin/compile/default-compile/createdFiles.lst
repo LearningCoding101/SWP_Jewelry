@@ -166,6 +166,7 @@ com\project\JewelryMS\model\Performance\CreatePerformanceRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\model\ResetPassRequest.class
+com\project\JewelryMS\service\ProductBuyService$1.class
 com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
