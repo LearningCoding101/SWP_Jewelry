@@ -1,6 +1,7 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Customer;
+import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.Customer.CreateCustomerRequest;
 import com.project.JewelryMS.model.Customer.CustomerRequest;
 import com.project.JewelryMS.model.OrderDetail.CalculatePointsRequest;
@@ -8,11 +9,13 @@ import com.project.JewelryMS.model.Customer.ViewCustomerPointRequest;
 import com.project.JewelryMS.repository.CustomerRepository;
 import com.project.JewelryMS.repository.OrderDetailRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
+import com.project.JewelryMS.repository.StaffAccountRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +31,9 @@ public class CustomerService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private StaffAccountRepository staffAccountRepository;
 
     @Transactional
     public Integer calculateAndUpdatePoints(CalculatePointsRequest request) {
@@ -64,7 +70,12 @@ public class CustomerService {
         customer.setEmail(createCustomerRequest.getEmail());
         customer.setPhoneNumber(createCustomerRequest.getPhoneNumber());
         customer.setGender(createCustomerRequest.getGender());
-
+        customer.setCreateDate(new Date());
+        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(createCustomerRequest.getStaff_ID());
+        if(staffAccountOptional.isPresent()) {
+            StaffAccount staffAccount = staffAccountOptional.get();
+            customer.setStaffAccount(staffAccount);
+        }
         return customerRepository.save(customer);
     }
 

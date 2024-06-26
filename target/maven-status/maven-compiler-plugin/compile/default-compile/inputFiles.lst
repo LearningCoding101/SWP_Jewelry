@@ -118,6 +118,8 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\PromotionReque
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\PromotionResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\RegisterRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ResetPassRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\AssignStaffByDayOfWeekRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\AssignStaffToMultipleDaysRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\CreateShiftRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\DeleteShiftRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\ShiftRequest.java

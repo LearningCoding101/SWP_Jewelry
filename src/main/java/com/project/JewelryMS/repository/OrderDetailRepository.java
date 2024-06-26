@@ -2,12 +2,15 @@ package com.project.JewelryMS.repository;
 
 import com.project.JewelryMS.entity.OrderDetail;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailDTO;
-import org.hibernate.query.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -26,4 +29,18 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
             "WHERE od.purchaseOrder.PK_OrderID = ?1")
     List<OrderDetailDTO> findOrderDetailsByOrderId(@Param("orderId") Long orderId);
 
+    @Query("SELECT SUM(od.quantity) AS totalQuantity, SUM(od.quantity * ps.cost) AS totalRevenue " +
+            "FROM OrderDetail od JOIN od.productSell ps JOIN od.purchaseOrder po " +
+            "WHERE FUNCTION('DATE', po.purchaseDate) = :date")
+    OrderDetailProjection findTotalQuantityAndRevenueOnDate(@Param("date") Date date);
+
+    @Query("SELECT SUM(od.quantity) AS totalQuantity, SUM(od.quantity * ps.cost) AS totalRevenue " +
+            "FROM OrderDetail od JOIN od.productSell ps JOIN od.purchaseOrder po " +
+            "WHERE DATE_FORMAT(po.purchaseDate, '%Y-%m') = :month")
+    OrderDetailProjection findTotalQuantityAndRevenueInMonth(@Param("month") String month);
+
+    @Query("SELECT SUM(od.quantity) AS totalQuantity, SUM(od.quantity * ps.cost) AS totalRevenue " +
+            "FROM OrderDetail od JOIN od.productSell ps JOIN od.purchaseOrder po " +
+            "WHERE FUNCTION('YEAR', po.purchaseDate) = :year")
+    OrderDetailProjection findTotalQuantityAndRevenueInYear(Year year);
 }

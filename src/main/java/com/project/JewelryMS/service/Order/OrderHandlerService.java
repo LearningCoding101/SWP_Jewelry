@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
 @Service
 public class OrderHandlerService {
     @Autowired
@@ -63,44 +64,22 @@ public class OrderHandlerService {
         order.setStatus(orderRequest.getStatus());
         order.setPurchaseDate(new Date());
         Long id = -1L;
-
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         if (orderRequest.getCustomer_ID() != null) {
-            Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
-            if (customerOptional.isPresent()) {
-                Customer customer = customerOptional.get();
-                order.setCustomer(customer);
-            } else {
-                order.setCustomer(null);
-            }
+            customerRepository.findById(orderRequest.getCustomer_ID()).ifPresent(order::setCustomer);
         } else {
             order.setCustomer(null);
         }
 
         if (orderRequest.getStaff_ID() != null) {
-            Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderRequest.getStaff_ID());
-            if (staffAccountOptional.isPresent()) {
-                StaffAccount staffAccount = staffAccountOptional.get();
-                order.setStaffAccount(staffAccount);
-            } else {
-                order.setStaffAccount(null);
-            }
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
         } else {
             order.setStaffAccount(null);
-            Long customerID = orderRequest.getCustomer_ID(); // This could be null
-            Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
-            if (optionalCustomerId.isPresent()) {
-                Optional<Customer> customerOptional = customerRepository.findById(customerID);
-                if (customerOptional.isPresent()) {
-                    Customer customer = customerOptional.get();
-                    order.setCustomer(customer);
-                }
-            }
-
-            order.setEmail(email);
-            List<OrderDetail> orderDetails = new ArrayList<>();
-            for (CreateOrderDetailRequest detail : detailRequest) {
+        }
+        order.setEmail(email);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CreateOrderDetailRequest detail : detailRequest) {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setQuantity(detail.getQuantity());
                 orderDetail.setProductSell(productSellService.getProductSellById(detail.getProductID()));
@@ -108,14 +87,10 @@ public class OrderHandlerService {
                 orderDetails.add(orderDetail);
             }
 
-            if (!orderDetails.isEmpty()) {
+        if (!orderDetails.isEmpty()) {
                 id = createOrderWithDetails(order, orderDetails);
-            }
-
         }
-
         return id;
-
     }
 
 
@@ -132,24 +107,26 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> List ){
+    public Long handleCreateOrderBuyWithDetails(CreateOrderBuyWrapper createOrderBuyWrapper ){
         PurchaseOrder order = new PurchaseOrder();
+        Long id = -1L;
         // Check if the input list is null
-        if (List == null) {
+        if (createOrderBuyWrapper.getProductBuyLists() == null) {
             throw new IllegalArgumentException("createProductBuyRequests cannot be null");
         }
+        List<Long> ProductBuyIDList = createOrderBuyWrapper.getProductBuyLists();
+        CreatePBOrderRequest orderRequest = createOrderBuyWrapper.getOrderRequest();
 
-        Long id = -1L;
-//        order.setStatus(null);
         order.setPurchaseDate(new Date());
-//        order.setPaymentType(null);
-//        order.setTotalAmount(null);
-        List<Long> ProductBuyIDList = new ArrayList<>();
-        for(CreateProductBuyRequest productBuyRequest: List){
-            ProductBuy productBuy = new ProductBuy();
-            productBuy = productBuyService.createProductBuy(productBuyRequest);
-            ProductBuyIDList.add(productBuy.getPK_ProductBuyID());
+        order.setStatus(orderRequest.getStatus());
+        order.setPaymentType(orderRequest.getPaymentType());
+        order.setTotalAmount(orderRequest.getTotalAmount());
+        if (orderRequest.getStaff_ID() != null) {
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
+        } else {
+            order.setStaffAccount(null);
         }
+
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
         for(Long ProductBuyIDs : ProductBuyIDList){
             OrderBuyDetail orderBuyDetail = new OrderBuyDetail();
@@ -402,7 +379,7 @@ public class OrderHandlerService {
         orderToUpdate.setStatus(3);
         calculateAndSetGuaranteeEndDate((long) orderID);
         sendConfirmationEmail((long) orderID, orderToUpdate.getEmail());
-        System.out.println(orderToUpdate);
+        System.out.println(orderToUpdate.toString());
         orderService.saveOrder(orderToUpdate);
 
 
@@ -425,11 +402,11 @@ public class OrderHandlerService {
         } else {
             PurchaseOrder orderToUpdate = orderService.getOrderById(request.getOrderID());
             if(orderToUpdate != null){
-                System.out.println(orderToUpdate);
-                orderToUpdate.setStatus(3);
-                calculateAndSetGuaranteeEndDate(request.getOrderID());
                 System.out.println(orderToUpdate.toString());
-                sendConfirmationEmail(request.getOrderID(), orderToUpdate.getEmail());
+                orderToUpdate.setStatus(3);
+                calculateAndSetGuaranteeEndDate((long) request.getOrderID());
+                System.out.println(orderToUpdate.toString());
+                sendConfirmationEmail((long) request.getOrderID(), orderToUpdate.getEmail());
                 return orderService.saveOrder(orderToUpdate) != null;
             } else{
                 return false;
@@ -455,9 +432,9 @@ public class OrderHandlerService {
 
     public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest) {
         Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
-        int discount = promotion.getDiscount();
-        float percentage = discount / 100.0F;
-        float totalAmount = 0.0F;
+        Integer discount = promotion.getDiscount();
+        Float percentage = discount / 100.0F;
+        Float totalAmount = 0.0F;
         Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
         if (productSellOptional.isPresent()) {
             ProductSell productSell = productSellOptional.get();
@@ -471,35 +448,36 @@ public class OrderHandlerService {
     public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
         Float subtotal = orderTotalRequest.getSubTotal();
         Float discountProuduct = orderTotalRequest.getDiscountProduct();
-        return subtotal - discountProuduct;
+        Float total = subtotal - discountProuduct;
+        return total;
     }
 
     public TotalOrderResponse totalOrder(List<TotalOrderRequest> totalOrderRequests) {
-        float subTotalResponse = 0.0F;
-        float discount_priceResponse = 0.0F;
-        float totalResponse = 0.0F;
+        Float subTotalResponse = 0.0F;
+        Float discount_priceResponse = 0.0F;
+        Float totalResponse = 0.0F;
         for (TotalOrderRequest request : totalOrderRequests) {
             // Fetch product details
             Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSell_ID());
             if (productSellOpt.isPresent()) {
                 ProductSell productSell = productSellOpt.get();
-                float cost = productSell.getCost();
-                float subtotal = cost * request.getQuantity();
+                Float cost = productSell.getCost();
+                Float subtotal = cost * request.getQuantity();
                 subTotalResponse += subtotal;
                 // Fetch promotion details if provided
-                float discountAmount = 0.0F;
+                Float discountAmount = 0.0F;
                 if (request.getPromotion_ID() != null) {
                     Optional<Promotion> promotionOptional = promotionRepository.findById(request.getPromotion_ID());
                     if (promotionOptional.isPresent()) {
-                        int discount = promotionOptional.get().getDiscount();
-                        float percentage = discount / 100.0F;
+                        Integer discount = promotionOptional.get().getDiscount();
+                        Float percentage = discount / 100.0F;
                         discountAmount = subtotal * percentage;
                         discount_priceResponse +=discountAmount;
                     }
                 }
 
                 // Calculate the total after discount
-                float totalDetails = subtotal - discountAmount;
+                Float totalDetails = subtotal - discountAmount;
                 totalResponse += totalDetails;
             } else {
                 throw new IllegalArgumentException("ProductSell ID not found: " + request.getProductSell_ID());
@@ -515,10 +493,12 @@ public class OrderHandlerService {
     public List<OrderDetailResponse> calculateAndSetGuaranteeEndDate(Long orderId) {
         List<OrderDetail> orderDetails = orderDetailRepository.findAll();
 
-        return orderDetails.stream()
+        List<OrderDetailResponse> responses = orderDetails.stream()
                 .filter(orderDetail -> orderDetail.getPurchaseOrder().getPK_OrderID().equals(orderId))
                 .map(this::processOrderDetail)
                 .toList();
+
+        return responses;
     }
 
     private OrderDetailResponse processOrderDetail(OrderDetail orderDetail) {
