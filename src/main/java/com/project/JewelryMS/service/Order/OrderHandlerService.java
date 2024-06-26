@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @Service
 public class OrderHandlerService {
     @Autowired
@@ -147,8 +146,7 @@ public class OrderHandlerService {
 //        order.setTotalAmount(null);
         List<Long> ProductBuyIDList = new ArrayList<>();
         for(CreateProductBuyRequest productBuyRequest: List){
-            new ProductBuy();
-            ProductBuy productBuy;
+            ProductBuy productBuy = new ProductBuy();
             productBuy = productBuyService.createProductBuy(productBuyRequest);
             ProductBuyIDList.add(productBuy.getPK_ProductBuyID());
         }
@@ -189,7 +187,14 @@ public class OrderHandlerService {
                 Set<ProductBuyResponse> productBuyResponses = new HashSet<>();
                 List<OrderBuyDetail> iterateList = order.getOrderBuyDetails().stream().toList();
                 for (OrderBuyDetail item : iterateList) {
-                    ProductBuyResponse response = getBuyResponse(item);
+                    ProductBuy product = item.getProductBuy();
+                    ProductBuyResponse response = new ProductBuyResponse();
+                    response.setProductBuyID(product.getPK_ProductBuyID());
+                    response.setCategoryName(product.getCategory().getName());
+                    response.setMetalType(product.getMetalType());
+                    response.setGemstoneType(product.getGemstoneType());
+                    response.setPbName(product.getPbName());
+                    response.setCost(product.getPbCost());
                     productBuyResponses.add(response);
                 }
                 orderToGet.setProductBuyDetail(productBuyResponses);
@@ -199,18 +204,6 @@ public class OrderHandlerService {
         return result;
     }
 
-    private static ProductBuyResponse getBuyResponse(OrderBuyDetail item) {
-        ProductBuy product = item.getProductBuy();
-        ProductBuyResponse response = new ProductBuyResponse();
-        response.setProductBuyID(product.getPK_ProductBuyID());
-        response.setCategoryName(product.getCategory().getName());
-        response.setMetalType(product.getMetalType());
-        response.setGemstoneType(product.getGemstoneType());
-        response.setPbName(product.getPbName());
-        response.setCost(product.getPbCost());
-        return response;
-    }
-
     public List<ProductBuyResponse> getProductBuyByOrderId(Long orderID) {
         PurchaseOrder order = orderService.getOrderById(orderID);
         Set<ProductBuyResponse> productBuyResponses = new HashSet<>();
@@ -218,23 +211,18 @@ public class OrderHandlerService {
         if (order.getOrderBuyDetails() != null && !order.getOrderBuyDetails().isEmpty()) {
             for (OrderBuyDetail item : order.getOrderBuyDetails()) {
 
-                ProductBuyResponse response = getProductBuyResponse(item);
+                ProductBuy product = item.getProductBuy();
+                ProductBuyResponse response = new ProductBuyResponse();
+                response.setProductBuyID(product.getPK_ProductBuyID());
+                response.setCategoryName(product.getCategory().getName());
+                response.setMetalType(product.getMetalType());
+                response.setGemstoneType(product.getGemstoneType());
+                response.setPbName(product.getPbName());
+                response.setCost(product.getPbCost());
                 productBuyResponses.add(response);
             }
         }
         return new ArrayList<>(productBuyResponses);
-    }
-
-    private static ProductBuyResponse getProductBuyResponse(OrderBuyDetail item) {
-        ProductBuy product = item.getProductBuy();
-        ProductBuyResponse response = new ProductBuyResponse();
-        response.setProductBuyID(product.getPK_ProductBuyID());
-        response.setCategoryName(product.getCategory().getName());
-        response.setMetalType(product.getMetalType());
-        response.setGemstoneType(product.getGemstoneType());
-        response.setPbName(product.getPbName());
-        response.setCost(product.getPbCost());
-        return response;
     }
     //Product Buy Section///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -440,7 +428,7 @@ public class OrderHandlerService {
                 System.out.println(orderToUpdate);
                 orderToUpdate.setStatus(3);
                 calculateAndSetGuaranteeEndDate(request.getOrderID());
-                System.out.println(orderToUpdate);
+                System.out.println(orderToUpdate.toString());
                 sendConfirmationEmail(request.getOrderID(), orderToUpdate.getEmail());
                 return orderService.saveOrder(orderToUpdate) != null;
             } else{
@@ -481,9 +469,9 @@ public class OrderHandlerService {
     }
 
     public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
-        float subtotal = orderTotalRequest.getSubTotal();
-        float discountProduct = orderTotalRequest.getDiscountProduct();
-        return subtotal - discountProduct; //Total
+        Float subtotal = orderTotalRequest.getSubTotal();
+        Float discountProuduct = orderTotalRequest.getDiscountProduct();
+        return subtotal - discountProuduct;
     }
 
     public TotalOrderResponse totalOrder(List<TotalOrderRequest> totalOrderRequests) {
