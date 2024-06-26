@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class PurchaseOrder implements Serializable {
     String paymentType;
     Float totalAmount;
     String email;
-    Date purchaseDate;
+    LocalDateTime purchaseDate;
     //1: not pay yet, 2: in process , 3 : paid
     Integer status;
     @Override

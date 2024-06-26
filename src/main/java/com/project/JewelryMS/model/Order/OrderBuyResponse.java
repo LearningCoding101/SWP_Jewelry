@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class OrderBuyResponse {
     private String paymentType;
     private Float totalAmount;
-    private Date purchaseDate;
+    private LocalDateTime purchaseDate;
     private Integer status;
     private Set<ProductBuyResponse> productBuyDetail = new HashSet<>();
 }
