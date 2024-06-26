@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -398,43 +399,36 @@ public class SchedulingService {
         staffShiftRepository.deleteAll(staffShifts);
     }
 
-    //ASSIGN STAFF BY THEIR SHIFT TYPE
+    // ASSIGN STAFF INTO SHIFT PATTERN
     @Transactional
     public List<StaffShiftResponse> assignStaffByShiftTypePattern(
-            Map<Integer, List<List<String>>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
+            Map<String, List<Integer>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
 
         List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
-        LocalDate today = LocalDate.now();
+        int totalDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        List<LocalDate> dates = IntStream.range(0, totalDays)
+                .mapToObj(startDate::plusDays)
+                .filter(date -> date.getDayOfWeek() != DayOfWeek.SUNDAY)
+                .toList();
 
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            DayOfWeek dayOfWeek = date.getDayOfWeek();
-
-            if (dayOfWeek == DayOfWeek.SUNDAY) {
-                continue; // Skip Sundays
+        // Create a map to track how often each staff ID appears
+        Map<Integer, Integer> staffFrequency = new HashMap<>();
+        for (List<Integer> staffIds : staffShiftPatterns.values()) {
+            for (int staffId : staffIds) {
+                staffFrequency.put(staffId, staffFrequency.getOrDefault(staffId, 0) + 1);
             }
+        }
 
-            for (Map.Entry<Integer, List<List<String>>> entry : staffShiftPatterns.entrySet()) {
-                int staffId = entry.getKey();
-                List<List<String>> shiftPatterns = entry.getValue();
+        for (Map.Entry<String, List<Integer>> entry : staffShiftPatterns.entrySet()) {
+            String shiftType = entry.getKey();
+            List<Integer> staffIds = entry.getValue();
 
-                if (shiftPatterns.size() == 1) {
-                    // Single shift type: Work all weekdays (Monday to Saturday)
-                    assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                } else if (shiftPatterns.size() == 2) {
-                    // Two shift types: Alternate days based on the current day of the week
-                    if (shouldWorkTodayForTwoShiftType(today, dayOfWeek, staffId)) {
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                    } else {
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
-                    }
-                } else if (shiftPatterns.size() == 3) {
-                    // Three shift types: Work two days a week based on patterns
-                    if (shouldWorkTodayForThreeShiftType(today, dayOfWeek, staffId)) {
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(0));
-                    } else if (shouldWorkTodayForThreeShiftTypePattern2(today, dayOfWeek, staffId)) {
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(1));
-                    } else if (shouldWorkTodayForThreeShiftTypePattern3(today, dayOfWeek, staffId)) {
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftPatterns.get(2));
+            for (int staffId : staffIds) {
+                int frequency = staffFrequency.get(staffId);
+                for (int i = 0; i < dates.size(); i++) {
+                    LocalDate date = dates.get(i);
+                    if (i % frequency == 0) { // Ensure correct padding logic
+                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftType);
                     }
                 }
             }
@@ -443,34 +437,12 @@ public class SchedulingService {
         return staffShiftResponses;
     }
 
-    private boolean shouldWorkTodayForTwoShiftType(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
-        int patternIndex = (dayOfWeek.getValue() - 1) % 2; // Calculate the pattern index based on day of the week
-        return patternIndex == 0; // Staff with two shift types will follow pattern 0 (e.g., Monday-Wednesday-Friday)
-    }
-
-    private boolean shouldWorkTodayForThreeShiftType(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
-        int patternIndex = (today.getDayOfYear() - 1) % 2; // Calculate pattern index based on the day of the year (0 or 1)
-        return patternIndex == 0; // Staff with three shift types will follow pattern 0 (e.g., Monday-Thursday)
-    }
-
-    private boolean shouldWorkTodayForThreeShiftTypePattern2(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
-        int patternIndex = (today.getDayOfYear() - 1) % 3; // Calculate pattern index based on the day of the year (0, 1, or 2)
-        return patternIndex == 1; // Staff with three shift types will follow pattern 1 (e.g., Tuesday-Friday)
-    }
-
-    private boolean shouldWorkTodayForThreeShiftTypePattern3(LocalDate today, DayOfWeek dayOfWeek, int staffId) {
-        int patternIndex = (today.getDayOfYear() - 1) % 3; // Calculate pattern index based on the day of the year (0, 1, or 2)
-        return patternIndex == 2; // Staff with three shift types will follow pattern 2 (e.g., Wednesday-Saturday)
-    }
-
-    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, List<String> shiftTypes) {
-        for (String shiftType : shiftTypes) {
-            try {
-                StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-                responses.add(response);
-            } catch (ShiftAssignmentException e) {
-                System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
-            }
+    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, String shiftType) {
+        try {
+            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+            responses.add(response);
+        } catch (ShiftAssignmentException e) {
+            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
         }
     }
 

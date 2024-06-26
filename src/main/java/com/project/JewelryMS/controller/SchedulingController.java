@@ -118,6 +118,7 @@ public class SchedulingController {
 //        );
 //        return ResponseEntity.ok(staffShiftResponses);
 //    }
+
     @PostMapping("/assignStaffByShiftTypePattern")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<List<StaffShiftResponse>> assignStaffByShiftTypePattern(
@@ -125,11 +126,10 @@ public class SchedulingController {
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
 
-        Map<Integer, List<List<String>>> staffShiftPatterns = request.getStaffShiftPatterns();
+        Map<String, List<Integer>> staffShiftPatterns = request.getStaffShiftPatterns();
         List<StaffShiftResponse> staffShiftResponses = schedulingService.assignStaffByShiftTypePattern(staffShiftPatterns, startDate, endDate);
         return ResponseEntity.ok(staffShiftResponses);
     }
-
 
     @DeleteMapping("/removeStaffFromShiftsInRange")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
