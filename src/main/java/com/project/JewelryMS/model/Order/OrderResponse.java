@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.Set;
 public class OrderResponse {
     private String paymentType;
     private Float totalAmount;
-    private LocalDateTime purchaseDate;
+    private Date purchaseDate;
     private Integer status;
     private Long customer_ID;
     private Integer staff_ID;

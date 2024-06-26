@@ -59,58 +59,64 @@ public class OrderHandlerService {
         orderService.saveOrder(purchaseOrder);
         return purchaseOrder.getPK_OrderID();
     }
-
-    @Transactional
     public Long handleCreateOrderWithDetails(CreateOrderRequest orderRequest, List<CreateOrderDetailRequest> detailRequest, String email) {
         PurchaseOrder order = new PurchaseOrder();
         order.setStatus(orderRequest.getStatus());
-        order.setPurchaseDate(LocalDateTime.now()); // Set current LocalDateTime
-
+        order.setPurchaseDate(new Date());
         Long id = -1L;
 
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
-
-        // Set customer if available
         if (orderRequest.getCustomer_ID() != null) {
             Optional<Customer> customerOptional = customerRepository.findById(orderRequest.getCustomer_ID());
-            customerOptional.ifPresent(order::setCustomer);
+            if (customerOptional.isPresent()) {
+                Customer customer = customerOptional.get();
+                order.setCustomer(customer);
+            } else {
+                order.setCustomer(null);
+            }
         } else {
             order.setCustomer(null);
         }
 
-        // Set staff account if available
         if (orderRequest.getStaff_ID() != null) {
             Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderRequest.getStaff_ID());
-            staffAccountOptional.ifPresent(order::setStaffAccount);
+            if (staffAccountOptional.isPresent()) {
+                StaffAccount staffAccount = staffAccountOptional.get();
+                order.setStaffAccount(staffAccount);
+            } else {
+                order.setStaffAccount(null);
+            }
         } else {
             order.setStaffAccount(null);
-        }
+            Long customerID = orderRequest.getCustomer_ID(); // This could be null
+            Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
+            if (optionalCustomerId.isPresent()) {
+                Optional<Customer> customerOptional = customerRepository.findById(customerID);
+                if (customerOptional.isPresent()) {
+                    Customer customer = customerOptional.get();
+                    order.setCustomer(customer);
+                }
+            }
 
-        // If customer ID is present, retrieve customer and set it to order
-        Long customerID = orderRequest.getCustomer_ID(); // This could be null
-        Optional<Long> optionalCustomerId = Optional.ofNullable(customerID);
-        optionalCustomerId.ifPresent(Id -> {
-            Optional<Customer> customerOptional = customerRepository.findById(Id);
-            customerOptional.ifPresent(order::setCustomer);
-        });
+            order.setEmail(email);
+            List<OrderDetail> orderDetails = new ArrayList<>();
+            for (CreateOrderDetailRequest detail : detailRequest) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setQuantity(detail.getQuantity());
+                orderDetail.setProductSell(productSellService.getProductSellById(detail.getProductID()));
+                orderDetail.setPurchaseOrder(order);
+                orderDetails.add(orderDetail);
+            }
 
-        order.setEmail(email);
+            if (!orderDetails.isEmpty()) {
+                id = createOrderWithDetails(order, orderDetails);
+            }
 
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for (CreateOrderDetailRequest detail : detailRequest) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setQuantity(detail.getQuantity());
-            orderDetail.setProductSell(productSellService.getProductSellById(detail.getProductID()));
-            orderDetail.setPurchaseOrder(order);
-            orderDetails.add(orderDetail);
-        }
-
-        if (!orderDetails.isEmpty()) {
-            id = createOrderWithDetails(order, orderDetails);
         }
 
         return id;
+
     }
 
 
@@ -127,35 +133,38 @@ public class OrderHandlerService {
         return purchaseOrder.getPK_OrderID();
     }
 
-    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> productList) {
-        if (productList == null) {
-            throw new IllegalArgumentException("List of product buy requests cannot be null");
-        }
-
+    public Long handleCreateOrderBuyWithDetails(List<CreateProductBuyRequest> List ){
         PurchaseOrder order = new PurchaseOrder();
-        order.setPurchaseDate(LocalDateTime.now()); // Set current LocalDateTime
-
-        List<Long> productBuyIDList = new ArrayList<>();
-        for (CreateProductBuyRequest productBuyRequest : productList) {
-            ProductBuy productBuy = productBuyService.createProductBuy(productBuyRequest);
-            productBuyIDList.add(productBuy.getPK_ProductBuyID());
+        // Check if the input list is null
+        if (List == null) {
+            throw new IllegalArgumentException("createProductBuyRequests cannot be null");
         }
 
+        Long id = -1L;
+//        order.setStatus(null);
+        order.setPurchaseDate(new Date());
+//        order.setPaymentType(null);
+//        order.setTotalAmount(null);
+        List<Long> ProductBuyIDList = new ArrayList<>();
+        for(CreateProductBuyRequest productBuyRequest: List){
+            new ProductBuy();
+            ProductBuy productBuy;
+            productBuy = productBuyService.createProductBuy(productBuyRequest);
+            ProductBuyIDList.add(productBuy.getPK_ProductBuyID());
+        }
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
-        for (Long productBuyID : productBuyIDList) {
+        for(Long ProductBuyIDs : ProductBuyIDList){
             OrderBuyDetail orderBuyDetail = new OrderBuyDetail();
-            orderBuyDetail.setProductBuy(productBuyService.getProductBuyById2(productBuyID));
+            orderBuyDetail.setProductBuy(productBuyService.getProductBuyById2(ProductBuyIDs));
             orderBuyDetail.setPurchaseOrder(order);
             orderBuyDetails.add(orderBuyDetail);
         }
 
-        Long id = -1L;
-        if (!orderBuyDetails.isEmpty()) {
+        if(!orderBuyDetails.isEmpty()){
             id = createOrderWithBuyDetails(order, orderBuyDetails);
         }
         return id;
     }
-
     public void addOrderBuyDetail(Long orderId, Long productBuyId) {
         PurchaseOrder order = orderService.getOrderById(orderId);
         ProductBuy productBuy= productBuyService.getProductBuyById2(productBuyId);
@@ -239,11 +248,11 @@ public class OrderHandlerService {
         orderDetailId.setQuantity(quantity);
         orderDetailService.saveOrderDetail(orderDetailId);
     }
-
-    public List<OrderResponse> getAllOrder() {
+    public List<OrderResponse> getAllOrder(){
         List<OrderResponse> result = new ArrayList<>();
         List<PurchaseOrder> orderList = orderService.getAllOrders();
-        for (PurchaseOrder order : orderList) {
+        System.out.println(orderList.toString());
+        for(PurchaseOrder order : orderList){
             OrderResponse orderToGet = new OrderResponse();
             orderToGet.setStatus(order.getStatus());
             orderToGet.setPaymentType(order.getPaymentType());
@@ -259,11 +268,12 @@ public class OrderHandlerService {
                 Integer staffID = order.getStaffAccount().getStaffID();
                 orderToGet.setStaff_ID(staffID);
             } else {
+                // Handle the case where the customer is null, if necessary
                 orderToGet.setStaff_ID(null); // or some default value
             }
             Set<ProductResponse> productResponses = new HashSet<>();
             List<OrderDetail> iterateList = order.getOrderDetails().stream().toList();
-            for (OrderDetail item : iterateList) {
+            for(OrderDetail item : iterateList){
                 ProductSell product = item.getProductSell();
                 ProductResponse response = new ProductResponse();
                 response.setQuantity(item.getQuantity());
@@ -279,24 +289,34 @@ public class OrderHandlerService {
                 response.setManufactureCost(product.getManufactureCost());
                 response.setStatus(product.isPStatus());
                 response.setCategory_id(product.getProductID());
+                List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((product.getProductID()));
+                List<String> promotionIds = new ArrayList<>();
 
-                List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId(product.getProductID());
-                List<String> promotionIds = listPromotion.stream().map(String::valueOf).collect(Collectors.toList());
+                for (Long promotionId : listPromotion) {
+                    promotionIds.add(String.valueOf(promotionId));
+                }
+
                 response.setPromotion_id(promotionIds);
+
 
                 productResponses.add(response);
             }
             orderToGet.setProductDetail(productResponses);
             result.add(orderToGet);
+
         }
         return result;
     }
     public List<ProductResponse> getProductByOrderId(Long orderID) {
         PurchaseOrder order = orderService.getOrderById(orderID);
         Set<ProductResponse> productResponses = new HashSet<>();
+        System.out.println("reached " + order.getPurchaseDate());
+
         for (OrderDetail item : order.getOrderDetails()) {
+
             ProductSell product = item.getProductSell();
             ProductResponse response = new ProductResponse();
+
             response.setQuantity(item.getQuantity());
             response.setProductID(product.getProductID());
             response.setName(product.getPName());
@@ -310,7 +330,7 @@ public class OrderHandlerService {
             response.setManufactureCost(product.getManufactureCost());
             response.setStatus(product.isPStatus());
             response.setCategory_id(product.getProductID());
-            // Format date if needed in response
+
             List<String> promotionIds = productSellRepository.findPromotionIdsByProductSellId(product.getProductID())
                     .stream()
                     .map(String::valueOf)
@@ -319,6 +339,7 @@ public class OrderHandlerService {
 
             productResponses.add(response);
         }
+
         return new ArrayList<>(productResponses);
     }
 
