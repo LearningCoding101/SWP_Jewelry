@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class StaffAccountService {
+
     @Autowired
     private StaffAccountRepository staffAccountRepository;
 
@@ -31,6 +33,7 @@ public class StaffAccountService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
     // Create
 
     // Read all
@@ -47,12 +50,16 @@ public class StaffAccountService {
         return staffAccountOptional.map(this::mapToStaffAccountResponse).orElse(null);
     }
 
+    // Method to map StaffAccount to StaffAccountResponse
     private StaffAccountResponse mapToStaffAccountResponse(StaffAccount staffAccount) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         StaffAccountResponse response = new StaffAccountResponse();
         response.setStaffID(staffAccount.getStaffID());
         response.setPhoneNumber(staffAccount.getPhoneNumber());
         response.setSalary(staffAccount.getSalary());
-        response.setStartDate(staffAccount.getStartDate());
+        response.setStartDate(staffAccount.getStartDate().format(formatter)); // Format date to string
+
         response.setAccountName(staffAccount.getAccount().getAccountName());
         response.setRole(staffAccount.getAccount().getRole());
         response.setStatus(staffAccount.getAccount().getStatus());
@@ -71,24 +78,28 @@ public class StaffAccountService {
         return response;
     }
 
+
+
+    // Method to map Shift to ShiftResponse
     private StaffAccountResponse.ShiftResponse mapToShiftResponse(Shift shift) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         StaffAccountResponse.ShiftResponse shiftResponse = new StaffAccountResponse.ShiftResponse();
         shiftResponse.setShiftID(shift.getShiftID());
-        shiftResponse.setEndTime(shift.getEndTime());
+        shiftResponse.setEndTime(shift.getEndTime().format(formatter)); // Format date to string
         shiftResponse.setRegister(shift.getRegister());
         shiftResponse.setShiftType(shift.getShiftType());
-        shiftResponse.setStartTime(shift.getStartTime());
+        shiftResponse.setStartTime(shift.getStartTime().format(formatter)); // Format date to string
         shiftResponse.setStatus(shift.getStatus());
         shiftResponse.setWorkArea(shift.getWorkArea());
         return shiftResponse;
     }
 
-
     // Update
     @Transactional
     public String updateStaffAccount(Integer id, StaffAccountRequest staffAccountRequest) {
         Optional<StaffAccount> existingStaffAccountOpt = staffAccountRepository.findById(id);
-        if (!existingStaffAccountOpt.isPresent()) {
+        if (existingStaffAccountOpt.isEmpty()) {
             throw new RuntimeException("StaffAccount with ID " + id + " not found");
         }
 
@@ -97,11 +108,11 @@ public class StaffAccountService {
         // Update fields from StaffAccountRequest
         existingStaffAccount.setPhoneNumber(staffAccountRequest.getPhoneNumber());
         existingStaffAccount.setSalary(staffAccountRequest.getSalary());
-        existingStaffAccount.setStartDate(staffAccountRequest.getStartDate());
+        existingStaffAccount.setStartDate(staffAccountRequest.getStartDate()); // No conversion needed
 
         // Update account information
         Optional<Account> accountOpt = authenticationRepository.findById((long) existingStaffAccount.getAccount().getPK_userID());
-        if (!accountOpt.isPresent()) {
+        if (accountOpt.isEmpty()) {
             throw new RuntimeException("Account with ID " + existingStaffAccount.getAccount().getPK_userID() + " not found");
         }
         Account account = accountOpt.get();
@@ -136,6 +147,4 @@ public class StaffAccountService {
             throw new RuntimeException("StaffAccount with ID " + id + " not found");
         }
     }
-
-
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,10 +26,8 @@ public class StaffAccount {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
-//    @JsonBackReference
     @JsonIgnoreProperties
     private Account account;
-
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
@@ -37,7 +36,7 @@ public class StaffAccount {
     private float salary;
 
     @Column(name = "startDate")
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @OneToMany(mappedBy = "staffAccount")
     @JsonIgnoreProperties
@@ -51,6 +50,4 @@ public class StaffAccount {
     @OneToMany(mappedBy = "staffAccount")
     @JsonIgnoreProperties("staffAccount")
     List<Customer> customer;
-
-
 }
