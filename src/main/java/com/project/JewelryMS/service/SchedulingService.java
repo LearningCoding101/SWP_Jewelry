@@ -99,14 +99,17 @@ public class SchedulingService {
             for (String shiftType : shiftTypes) {
                 LocalDate finalDate = date;
                 futures.add(executorService.submit(() -> {
+                    // Fetch all shifts for the current date and shift type
                     List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
                     List<StaffShiftResponse> shiftResponses = new CopyOnWriteArrayList<>();
 
                     for (Shift shift : shifts) {
+                        // Fetch all staff accounts for the current shift
                         List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
+                        // Format the start and end times
                         String formattedStartTime = shift.getStartTime().format(timeFormatter);
                         String formattedEndTime = shift.getEndTime().format(timeFormatter);
-
+                        // Create a StaffShiftResponse object
                         StaffShiftResponse staffShift = new StaffShiftResponse(
                                 shift.getShiftID(),
                                 formattedStartTime,
@@ -123,10 +126,10 @@ public class SchedulingService {
                                                 s.getAccount().getUsername()))
                                         .collect(Collectors.toList())
                         );
-
+                        // Add the StaffShiftResponse to the list
                         shiftResponses.add(staffShift);
                     }
-
+                    // Add the shift responses to the matrix
                     matrix.get(formattedDate).put(shiftType, shiftResponses);
                 }));
             }
@@ -140,10 +143,11 @@ public class SchedulingService {
                 e.printStackTrace();  // Handle exception
             }
         }
-
+        // Shutdown the executor service
         executorService.shutdown();
         return matrix;
     }
+
     // Method to assign multiple staff to a shift
     @Transactional
     public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
@@ -500,12 +504,4 @@ public class SchedulingService {
         return staffShiftResponses;
     }
 
-    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, String shiftType) {
-        try {
-            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-            responses.add(response);
-        } catch (ShiftAssignmentException e) {
-            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
-        }
-    }
 }
