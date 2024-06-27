@@ -1,7 +1,7 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
-import com.project.JewelryMS.entity.RoleEnum;
+import com.project.JewelryMS.enumClass.RoleEnum;
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.Profile.*;

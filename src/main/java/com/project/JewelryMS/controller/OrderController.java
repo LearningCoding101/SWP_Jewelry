@@ -173,5 +173,17 @@ public class OrderController {
 //        return new ResponseEntity<>(responses, HttpStatus.OK);
 //    }
 
+    @PatchMapping("/cash-confirm")
+    public ResponseEntity confirmCashPayment(@RequestBody ConfirmCashPaymentRequest request){
+        boolean isUpdated = orderHandlerService.updateOrderStatusCash(request);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Đơn hàng thanh toán thành công");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đơn hàng thanh toán thất bại");
+        }
+
+    }
+
 
 }
