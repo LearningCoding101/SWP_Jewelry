@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,9 +54,9 @@ public class OrderController {
     }
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @PostMapping("initialize-PB-order")
-    public ResponseEntity<String> saleCreateOrder(@RequestBody CreateOrderBuyWrapper order) {
+    public ResponseEntity<Long> saleCreateOrder(@RequestBody CreateOrderBuyWrapper order) {
         Long ID = orderHandlerService.handleCreateOrderBuyWithDetails(order);
-        return ResponseEntity.ok("Create Order Product Buy ID is "+ ID + " Successfully");
+        return ResponseEntity.ok( ID );
     }
 
     @PostMapping("append-productBuy")
@@ -173,5 +174,36 @@ public class OrderController {
 //        return new ResponseEntity<>(responses, HttpStatus.OK);
 //    }
 
+    @PatchMapping("/cash-confirm")
+    public ResponseEntity confirmCashPayment(@RequestBody ConfirmCashPaymentRequest request){
+        boolean isUpdated = orderHandlerService.updateOrderStatusCash(request);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Đơn hàng thanh toán thành công");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đơn hàng thanh toán thất bại");
+        }
+
+    }
+
+    @PatchMapping("process-payment-PB")
+    public ResponseEntity<String> confirmPaymentProductBuy(@ModelAttribute ConfirmPaymentPBRequest confirmPaymentPBRequest){
+        if(confirmPaymentPBRequest!=null){
+            String response = orderHandlerService.updateOrderBuyStatus(confirmPaymentPBRequest);
+            return ResponseEntity.ok(response);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Đơn hàng thanh toán thất bại");
+        }
+    }
+
+    @PutMapping("update-order")
+    public ResponseEntity<String> updateOrderPB(@RequestBody UpdateOrderRequest updateOrderRequest){
+        if(updateOrderRequest!=null){
+            String response = orderHandlerService.updateOrder(updateOrderRequest);
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("updateOrderRequest not Found or Not Supported!!!");
+        }
+    }
 
 }

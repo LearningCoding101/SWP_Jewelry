@@ -1,7 +1,6 @@
 package com.project.JewelryMS.model.Staff;
 
-import com.project.JewelryMS.entity.RoleEnum;
-import com.project.JewelryMS.entity.Shift;
+import com.project.JewelryMS.enumClass.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
 //import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Data
