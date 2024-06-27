@@ -106,7 +106,7 @@ public class AuthenticationServiceTest {
 
     @Test
     void testGetAccount() {
-        String email = "hahoang33322@gmail.com";
+        String email = "hoanghtse181747@fpt.edu.vn";
         authenticationService.getAccount(email);
         verify(authenticationRepository, times(1)).findAccountByemail(email);
     }
@@ -120,7 +120,7 @@ public class AuthenticationServiceTest {
 
     @Test
     void testSendForgotPasswordEmail_Success() {
-        String email = "hahoang33322@gmail.com";
+        String email = "hoanghtse181747@fpt.edu.vn";
         Account account = new Account();
         account.setEmail(email);
 

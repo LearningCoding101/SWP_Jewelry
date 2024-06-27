@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateStaffAccountRequest {
     private String phoneNumber;
-    private Float salary;
+    private float salary;
     private LocalDateTime startDate;
     private String email;
     private String username;
