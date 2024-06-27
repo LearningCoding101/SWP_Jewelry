@@ -44,9 +44,9 @@ public class StaffAccountService {
                 .collect(Collectors.toList());
     }
 
-    // Read by ID
+    // Read staff account by ID
     public StaffAccountResponse getStaffAccountById(Integer id) {
-        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findIDStaffAccount(id);
+        Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(id);
         return staffAccountOptional.map(this::mapToStaffAccountResponse).orElse(null);
     }
 
@@ -77,9 +77,6 @@ public class StaffAccountService {
 
         return response;
     }
-
-
-
     // Method to map Shift to ShiftResponse
     private StaffAccountResponse.ShiftResponse mapToShiftResponse(Shift shift) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -95,7 +92,7 @@ public class StaffAccountService {
         return shiftResponse;
     }
 
-    // Update
+    // Update staff account
     @Transactional
     public String updateStaffAccount(Integer id, StaffAccountRequest staffAccountRequest) {
         Optional<StaffAccount> existingStaffAccountOpt = staffAccountRepository.findById(id);
@@ -111,26 +108,28 @@ public class StaffAccountService {
         existingStaffAccount.setStartDate(staffAccountRequest.getStartDate()); // No conversion needed
 
         // Update account information
-        Optional<Account> accountOpt = authenticationRepository.findById((long) existingStaffAccount.getAccount().getPK_userID());
-        if (accountOpt.isEmpty()) {
-            throw new RuntimeException("Account with ID " + existingStaffAccount.getAccount().getPK_userID() + " not found");
-        }
-        Account account = accountOpt.get();
-        account.setEmail(staffAccountRequest.getEmail());
-        account.setAUsername(staffAccountRequest.getUsername());
-        account.setAPassword(passwordEncoder.encode(staffAccountRequest.getPassword()));
-        account.setAccountName(staffAccountRequest.getAccountName());
-        account.setRole(staffAccountRequest.getRole()); // Update role from request
+        Account account = existingStaffAccount.getAccount();
+        if (account != null) {
+            account.setEmail(staffAccountRequest.getEmail());
+            account.setAUsername(staffAccountRequest.getUsername());
+            account.setAPassword(passwordEncoder.encode(staffAccountRequest.getPassword()));
+            account.setAccountName(staffAccountRequest.getAccountName());
+            account.setRole(staffAccountRequest.getRole()); // Update role from request
 
-        // Save the updated entities
-        authenticationRepository.save(account);
+            authenticationRepository.save(account);
+        } else {
+            throw new RuntimeException("Account associated with StaffAccount ID " + id + " not found");
+        }
+
+        // Save the updated staff account
         staffAccountRepository.save(existingStaffAccount);
 
         // Prepare and return the response
         return "Update Staff Successfully";
     }
 
-    // Method to "delete" a StaffAccount by updating the Account status
+    // "Delete" a StaffAccount by deactivating the associated Account
+    @Transactional
     public boolean deactivateStaffAccount(Integer id) {
         Optional<StaffAccount> staffAccountOpt = staffAccountRepository.findById(id);
         if (staffAccountOpt.isPresent()) {
