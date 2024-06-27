@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("scheduling")
+@RequestMapping("api/scheduling")
 @SecurityRequirement(name = "api")
 public class SchedulingController {
 
