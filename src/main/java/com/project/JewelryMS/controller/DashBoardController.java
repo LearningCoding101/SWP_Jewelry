@@ -95,5 +95,11 @@ public class DashBoardController {
         return ResponseEntity.ok(revenueByStaff);
     }
 
+    @GetMapping("/sales-by-staff")
+    public ResponseEntity<List<StaffSalesResponse>> getSalesByStaff(@RequestParam("date") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        List<StaffSalesResponse> salesByStaff = dashboardService.getSalesMadeByStaff(localDate);
+        return ResponseEntity.ok(salesByStaff);
+    }
 
 }
