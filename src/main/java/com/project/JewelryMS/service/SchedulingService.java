@@ -476,7 +476,14 @@ public class SchedulingService {
                 int frequency = staffFrequency.get(staffId);
                 for (int i = 0; i < dates.size(); i += frequency) {
                     LocalDate date = dates.get(i);
-                    futures.add(executorService.submit(() -> assignShiftsForDay(staffShiftResponses, staffId, date, shiftType)));
+                    futures.add(executorService.submit(() -> {
+                        try {
+                            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                            staffShiftResponses.add(response);
+                        } catch (ShiftAssignmentException e) {
+                            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
+                        }
+                    }));
                 }
             }
         }
