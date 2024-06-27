@@ -435,6 +435,7 @@ public class SchedulingService {
 //        }
 //        return staffShiftResponses;
 //    }
+
     @Transactional
     public void removeStaffFromShiftsInRange(int staffId, LocalDate startDate, LocalDate endDate) {
         // Validate staff existence
