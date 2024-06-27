@@ -500,12 +500,4 @@ public class SchedulingService {
         return staffShiftResponses;
     }
 
-    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, String shiftType) {
-        try {
-            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-            responses.add(response);
-        } catch (ShiftAssignmentException e) {
-            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
-        }
-    }
 }
