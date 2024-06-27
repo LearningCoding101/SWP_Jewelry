@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateStaffAccountRequest {
     private String phoneNumber;
     private Float salary;
-    private Date startDate;
+    private LocalDateTime startDate;
     private String email;
     private String username;
     private String password;
