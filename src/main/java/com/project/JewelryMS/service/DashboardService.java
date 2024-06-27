@@ -22,7 +22,8 @@ public class DashboardService {
     CustomerService customerService;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
-
+    @Autowired
+    private StaffAccountRepository staffAccountRepository;
 
 
     public List<CategoryResponse> RevenueCategory(){
@@ -298,5 +299,32 @@ public class DashboardService {
         return response;
     }
 
+    public List<StaffRevenueResponse> getRevenueGeneratedByStaff(LocalDate date) {
+        LocalDateTime startDateTime = date.atStartOfDay();
+        LocalDateTime endDateTime = date.atTime(LocalTime.MAX);
 
+        List<PurchaseOrder> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
+        Map<Integer, Double> revenueByStaff = new HashMap<>();
+        //Looking through orders
+        for (PurchaseOrder order : orders) {
+            StaffAccount staffAccount = order.getStaffAccount();
+            if (staffAccount != null) {
+                int staffId = staffAccount.getStaffID();
+                double orderRevenue = order.getOrderDetails().stream()
+                        .mapToDouble(od -> od.getQuantity() * od.getProductSell().getCost())
+                        .sum();
+                revenueByStaff.merge(staffId, orderRevenue, Double::sum);
+            }
+        }
+
+        List<StaffRevenueResponse> responseList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : revenueByStaff.entrySet()) {
+            StaffAccount staff = staffAccountRepository.findById(entry.getKey()).orElse(null);
+            if (staff != null) {
+                responseList.add(new StaffRevenueResponse(staff.getAccount().getUsername(), entry.getValue()));
+            }
+        }
+
+        return responseList;
+    }
 }

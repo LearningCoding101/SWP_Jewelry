@@ -88,6 +88,12 @@ public class DashBoardController {
         return dashboardService.compareYear(request);
     }
 
+    @GetMapping("/revenue-by-staff")
+    public ResponseEntity<List<StaffRevenueResponse>> getRevenueByStaff(@RequestParam("date") String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        List<StaffRevenueResponse> revenueByStaff = dashboardService.getRevenueGeneratedByStaff(localDate);
+        return ResponseEntity.ok(revenueByStaff);
+    }
 
 
 }
