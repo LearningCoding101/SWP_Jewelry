@@ -45,5 +45,6 @@ public class StaffAccount {
     @OneToMany(mappedBy = "staffAccount")
     @JsonIgnoreProperties("staffAccount")
     private List<Customer> customer;
+
 }
 

@@ -5,6 +5,7 @@ import com.project.JewelryMS.entity.Staff_Shift;
 import com.project.JewelryMS.model.Shift.AssignStaffByDayOfWeekRequest;
 import com.project.JewelryMS.model.Shift.AssignStaffByShiftTypePatternRequest;
 import com.project.JewelryMS.model.Shift.AssignStaffToMultipleDaysRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import com.project.JewelryMS.model.StaffShift.IdWrapper;
 import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -163,14 +164,15 @@ public class SchedulingController {
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         try {
-            List<StaffShiftResponse> staffShiftResponses = schedulingService.assignStaffByShiftTypePattern(
+            List<StaffAccountResponse> staffAccountResponses = schedulingService.assignStaffByShiftTypePattern(
                     request.getStaffShiftPatterns(), startDate, endDate);
-            return ResponseEntity.ok("Staff assigned by shift type pattern successfully.");
+            return ResponseEntity.ok(staffAccountResponses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to assign staff by shift type pattern: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping("/removeStaffFromShiftsInRange")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
