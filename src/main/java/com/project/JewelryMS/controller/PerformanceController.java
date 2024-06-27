@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 @RestController
-@RequestMapping("/performance")
+@RequestMapping("/api/performance")
 @SecurityRequirement(name = "api")
 @CrossOrigin(origins = "*")
 public class PerformanceController {

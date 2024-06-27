@@ -19,7 +19,7 @@ public class StaffAccountResponse {
     private int staffID;
     private String phoneNumber;
     private float salary;
-    private Date startDate;
+    private String startDate; // Changed to String for formatted date
     private String accountName;
     private RoleEnum role;
     private int status;
@@ -28,16 +28,18 @@ public class StaffAccountResponse {
     private List<ShiftResponse> shift;
 
     // Getters and Setters
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ShiftResponse {
         private int shiftID;
-        private LocalDateTime endTime;
+        private String endTime; // Changed to String for formatted date
         private int register;
         private String shiftType;
-        private LocalDateTime startTime;
+        private String startTime; // Changed to String for formatted date
         private String status;
         private String workArea;
     }
 }
+
