@@ -8,6 +8,7 @@ import com.project.JewelryMS.model.Transition.TransitionResponse;
 import com.project.JewelryMS.service.DashboardService;
 import com.project.JewelryMS.service.TransitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,6 +89,20 @@ public class DashBoardController {
         return dashboardService.compareYear(request);
     }
 
+    @GetMapping("/revenueByStaff")
+    public ResponseEntity<List<StaffRevenueResponse>> getRevenueGeneratedByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<StaffRevenueResponse> response = dashboardService.getRevenueGeneratedByStaff(startDate, endDate);
+        return ResponseEntity.ok(response);
+    }
 
+    @GetMapping("/salesByStaff")
+    public ResponseEntity<List<StaffSalesResponse>> getSalesMadeByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<StaffSalesResponse> response = dashboardService.getSalesMadeByStaff(startDate, endDate);
+        return ResponseEntity.ok(response);
+    }
 
 }
