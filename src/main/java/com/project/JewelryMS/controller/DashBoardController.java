@@ -53,22 +53,28 @@ public class DashBoardController {
         return ResponseEntity.ok(dashboardService.getTopSellingProducts());
     }
 
-    @GetMapping("/loyalty-customers")
-    public ResponseEntity<List<CustomerLoyalty>> getCustomerLoyaltyStatistics(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) {
-        RevenueDateRequest revenueDateRequest = new RevenueDateRequest(LocalDate.parse(startTime), LocalDate.parse(endTime));
-        return ResponseEntity.ok(dashboardService.getCustomerLoyaltyStatistics(revenueDateRequest));
-    }
-
-    @GetMapping("demographic-customers")
-    public ResponseEntity<List<CustomerDemographics>> getCustomerDemoGraphic(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) {
-        RevenueDateRequest revenueDateRequest = new RevenueDateRequest(LocalDate.parse(startTime), LocalDate.parse(endTime));
-        return ResponseEntity.ok(dashboardService.getCustomerDemoGraphicResponse(revenueDateRequest));
-    }
-
     @GetMapping("/customer-signups")
     public ResponseEntity<List<CustomerSignUp>> getCustomerSignUpsByStaff(@RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) {
         RevenueDateRequest revenueDateRequest = new RevenueDateRequest(LocalDate.parse(startTime), LocalDate.parse(endTime));
         return ResponseEntity.ok(dashboardService.getCustomerSignUpsByStaff(revenueDateRequest));
+    }
+
+    @GetMapping("/loyalty-customers")
+    public ResponseEntity<CustomerLoyalty> getCustomerLoyaltyStatistics(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        RevenueDateRequest revenueDateRequest = new RevenueDateRequest(startDate, endDate);
+        List<CustomerLoyalty> loyaltyStats = dashboardService.getCustomerLoyaltyStatistics(revenueDateRequest);
+        return ResponseEntity.ok(loyaltyStats.get(0));
+    }
+
+    @GetMapping("/demographic-customers")
+    public ResponseEntity<CustomerDemographics> getCustomerDemoGraphic(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        RevenueDateRequest revenueDateRequest = new RevenueDateRequest(startDate, endDate);
+        List<CustomerDemographics> demographicStats = dashboardService.getCustomerDemoGraphicResponse(revenueDateRequest);
+        return ResponseEntity.ok(demographicStats.get(0));
     }
 
     @GetMapping("compare-day")
