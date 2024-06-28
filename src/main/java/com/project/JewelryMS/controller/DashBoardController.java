@@ -8,6 +8,7 @@ import com.project.JewelryMS.model.Transition.TransitionResponse;
 import com.project.JewelryMS.service.DashboardService;
 import com.project.JewelryMS.service.TransitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,18 +89,20 @@ public class DashBoardController {
         return dashboardService.compareYear(request);
     }
 
-    @GetMapping("/revenue-by-staff")
-    public ResponseEntity<List<StaffRevenueResponse>> getRevenueByStaff(@RequestParam("date") String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        List<StaffRevenueResponse> revenueByStaff = dashboardService.getRevenueGeneratedByStaff(localDate);
-        return ResponseEntity.ok(revenueByStaff);
+    @GetMapping("/revenueByStaff")
+    public ResponseEntity<List<StaffRevenueResponse>> getRevenueGeneratedByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<StaffRevenueResponse> response = dashboardService.getRevenueGeneratedByStaff(startDate, endDate);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/sales-by-staff")
-    public ResponseEntity<List<StaffSalesResponse>> getSalesByStaff(@RequestParam("date") String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        List<StaffSalesResponse> salesByStaff = dashboardService.getSalesMadeByStaff(localDate);
-        return ResponseEntity.ok(salesByStaff);
+    @GetMapping("/salesByStaff")
+    public ResponseEntity<List<StaffSalesResponse>> getSalesMadeByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<StaffSalesResponse> response = dashboardService.getSalesMadeByStaff(startDate, endDate);
+        return ResponseEntity.ok(response);
     }
 
 }
