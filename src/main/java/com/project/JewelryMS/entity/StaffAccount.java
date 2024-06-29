@@ -31,7 +31,7 @@ public class StaffAccount {
     private float salary;
 
     @Column(name = "startDate")
-    private LocalDateTime startDate;
+    private String startDate;
 
     @OneToMany(mappedBy = "staffAccount", fetch = FetchType.EAGER) // Ensure eager fetching here
     @JsonIgnoreProperties("staffAccount")

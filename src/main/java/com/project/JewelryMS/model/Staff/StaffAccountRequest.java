@@ -17,7 +17,7 @@ public class StaffAccountRequest {
 
     private float salary;
 
-    private LocalDateTime startDate;
+    private String startDate;
 
     private RoleEnum role;
 

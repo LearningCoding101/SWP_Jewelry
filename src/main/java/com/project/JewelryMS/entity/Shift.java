@@ -25,7 +25,7 @@ public class Shift {
     private int shiftID;
 
     @Column(name = "endTime")
-    private LocalDateTime endTime;
+    private String endTime;
 
     @Column(name = "register")
     private int register;
@@ -34,7 +34,7 @@ public class Shift {
     private String shiftType;
 
     @Column(name = "startTime")
-    private LocalDateTime startTime;
+    private String startTime;
 
     @Column(name = "status")
     private String status;
