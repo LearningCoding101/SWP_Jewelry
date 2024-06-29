@@ -15,7 +15,6 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ImageController.jav
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\InfoController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ManagerAccountController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\OrderController.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\controller\PerformanceController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ProductBuyController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ProductSellController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ProfileController.java
@@ -31,15 +30,15 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Customer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Guarantee.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\OrderBuyDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\OrderDetail.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Performance.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\ProductBuy.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\ProductSell.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Promotion.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\PurchaseOrder.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\entity\RoleEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Shift.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Staff_Shift.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\StaffAccount.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\OrderTypeEnum.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\RoleEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\exception\APIhandleException.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\exception\AuthException.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\JewelryMsApplication.java
@@ -63,6 +62,9 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\Custo
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DayComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\MonthComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffSalesResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
@@ -77,6 +79,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\CreateManagerAcc
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\ManagerAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\ManagerAccountResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ConfirmPaymentPBRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderBuyDetailRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderBuyWrapper.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderDetailRequest.java
@@ -92,6 +95,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductBuyResponse
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\TotalOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\TotalOrderResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\UpdateOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\CalculatePointsRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.java
@@ -100,10 +104,6 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\CreatePerformanceRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\DeletePerformanceRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Performance\PerformanceResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.java
@@ -139,6 +139,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountReques
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\StaffShift\IdWrapper.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\StaffShift\StaffShiftResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Transition\TransitionResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\AuthenticationRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\CategoryRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\CustomerRepository.java
@@ -147,8 +148,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ManagerAccountRepos
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderBuyDetailRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderDetailProjection.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderDetailRepository.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderRepositiory.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PerformanceRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductBuyRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PromotionRepository.java
@@ -170,7 +170,6 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\service\Order\OrderBuyDetailSe
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\Order\OrderDetailService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\Order\OrderHandlerService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\Order\OrderService.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\service\PerformanceService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProductBuyService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProductSellService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProfileService.java
@@ -179,4 +178,5 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\service\QRService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\SchedulingService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ShiftService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\StaffAccountService.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\TransitionService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\VNPAYservice.java
