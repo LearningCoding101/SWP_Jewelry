@@ -380,8 +380,8 @@ public class DashboardService {
         List<OrderDetail> orderDetails = orderDetailRepository.findAll();
 
         Map<String, Long> discountCodeCount = orderDetails.stream()
-                .filter(orderDetail -> orderDetail.getDiscountCode() != null)
-                .collect(Collectors.groupingBy(OrderDetail::getDiscountCode, Collectors.counting()));
+                .filter(orderDetail -> orderDetail.getPromotion() != null && orderDetail.getPromotion().getCode() != null)
+                .collect(Collectors.groupingBy(orderDetail -> orderDetail.getPromotion().getCode(), Collectors.counting()));
 
         return discountCodeCount.entrySet().stream()
                 .map(entry -> {
@@ -390,7 +390,7 @@ public class DashboardService {
                     response.setNumberUse(Math.toIntExact(entry.getValue()));
                     return response;
                 })
-                .sorted(Comparator.comparingLong(DiscountEffectivenessResponse::getNumberUse).reversed())
+                .sorted(Comparator.comparingInt(DiscountEffectivenessResponse::getNumberUse).reversed())
                 .collect(Collectors.toList());
     }
 }

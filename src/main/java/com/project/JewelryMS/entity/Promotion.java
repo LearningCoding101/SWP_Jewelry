@@ -38,4 +38,7 @@ public class Promotion {
     @ManyToMany(mappedBy = "promotion", fetch = FetchType.LAZY)
     private List<ProductSell> productSell ;
 
+    @OneToMany(mappedBy = "promotion")
+    @JsonIgnoreProperties
+    private List<OrderDetail> orderDetails;
 }

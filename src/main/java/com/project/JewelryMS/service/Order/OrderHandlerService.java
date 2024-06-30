@@ -495,7 +495,7 @@ public class OrderHandlerService {
                         Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findById(request.getOrderDetail_ID());
                         if(orderDetailOptional.isPresent()){
                             OrderDetail orderDetail = orderDetailOptional.get();
-                            orderDetail.setDiscountCode(promotionOptional.get().getCode());
+                            orderDetail.setPromotion(promotionOptional.get());
                             orderDetailRepository.save(orderDetail);
                         }
                         float percentage = discount / 100.0F;
