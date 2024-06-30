@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardService {
@@ -23,7 +24,8 @@ public class DashboardService {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-
+    @Autowired
+    StaffAccountRepository staffAccountRepository;
 
     public List<CategoryResponse> RevenueCategory(){
         Optional<List<Category>> optionalCategoryList = Optional.ofNullable(categoryRepository.findAllCategories());
@@ -305,23 +307,6 @@ public class DashboardService {
 
         List<PurchaseOrder> orders = orderRepository.findOrdersByDateRange(startDateTime, endDateTime);
         Map<Integer, Double> revenueByStaff = new HashMap<>();
-    public List<DiscountEffectivenessResponse> getDiscountCodeEffectiveness() {
-        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
-
-        Map<String, Long> discountCodeCount = orderDetails.stream()
-                .filter(orderDetail -> orderDetail.getDiscountCode() != null)
-                .collect(Collectors.groupingBy(OrderDetail::getDiscountCode, Collectors.counting()));
-
-        return discountCodeCount.entrySet().stream()
-                .map(entry -> {
-                    DiscountEffectivenessResponse response = new DiscountEffectivenessResponse();
-                    response.setDiscountCode(entry.getKey());
-                    response.setNumberUse(Math.toIntExact(entry.getValue()));
-                    return response;
-                })
-                .sorted(Comparator.comparingLong(DiscountEffectivenessResponse::getNumberUse).reversed())
-                .collect(Collectors.toList());
-    }
 
 
         for (PurchaseOrder order : orders) {
@@ -369,5 +354,22 @@ public class DashboardService {
         }
 
         return responseList;
+    }
+    public List<DiscountEffectivenessResponse> getDiscountCodeEffectiveness() {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+
+        Map<String, Long> discountCodeCount = orderDetails.stream()
+                .filter(orderDetail -> orderDetail.getDiscountCode() != null)
+                .collect(Collectors.groupingBy(OrderDetail::getDiscountCode, Collectors.counting()));
+
+        return discountCodeCount.entrySet().stream()
+                .map(entry -> {
+                    DiscountEffectivenessResponse response = new DiscountEffectivenessResponse();
+                    response.setDiscountCode(entry.getKey());
+                    response.setNumberUse(Math.toIntExact(entry.getValue()));
+                    return response;
+                })
+                .sorted(Comparator.comparingLong(DiscountEffectivenessResponse::getNumberUse).reversed())
+                .collect(Collectors.toList());
     }
 }
