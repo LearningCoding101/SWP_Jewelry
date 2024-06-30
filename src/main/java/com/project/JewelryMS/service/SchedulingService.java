@@ -11,6 +11,7 @@ import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
 import com.project.JewelryMS.repository.StaffShiftRepository;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,30 +197,29 @@ public class SchedulingService {
 
     @Transactional
     public StaffShiftResponse assignStaffToDay(int staffId, LocalDate date, String shiftType) {
-        // Fetch the staff entity from the database
         StaffAccount staff = staffAccountRepository.findById(staffId)
                 .orElseThrow(() -> new ShiftAssignmentException("Staff not found"));
 
-        // Check if the staff member is already assigned to a shift during the same period on the same day
+        // Explicitly initialize the collection
+        Hibernate.initialize(staff.getStaffShifts());
+
         boolean isAssigned = staff.getStaffShifts().stream()
                 .anyMatch(ss -> ss.getShift().getStartTime().toLocalDate().equals(date) && ss.getShift().getShiftType().equals(shiftType));
 
         if (isAssigned) {
             throw new ShiftAssignmentException("Staff is already assigned to a shift during this period on this day. Please choose a different shift or staff member.");
         }
-        // Find a shift on the specified date and period
+
         Shift shift = shiftRepository.findAllByDateAndType(date, shiftType)
                 .stream().findFirst().orElse(null);
 
-        // If no shift exists, create a new one using the ShiftService
         if (shift == null) {
             CreateShiftRequest createShiftRequest = new CreateShiftRequest();
             createShiftRequest.setShiftType(shiftType);
             createShiftRequest.setStatus("Active");
-            createShiftRequest.setWorkArea("Sales");  // Set this according to your requirements
+            createShiftRequest.setWorkArea("Sales");
             createShiftRequest.setRegister(0);
 
-            // Define the start and end times for each shift type
             String startTime, endTime;
             endTime = switch (shiftType) {
                 case "Morning" -> {
@@ -245,15 +245,12 @@ public class SchedulingService {
                     .orElseThrow(() -> new RuntimeException("Shift not found"));
         }
 
-        // Create a new Staff_Shift entity
         Staff_Shift staffShift = new Staff_Shift();
         staffShift.setStaffAccount(staff);
         staffShift.setShift(shift);
 
-        // Save the new Staff_Shift entity to the database
         staffShift = staffShiftRepository.save(staffShift);
 
-        // Convert the new Staff_Shift entity to a StaffShiftResponse and return it
         return toStaffShiftResponse(staffShift);
     }
 
