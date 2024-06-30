@@ -74,15 +74,8 @@ public class SchedulingService {
     }
 
     // Method to assign a shift to a staff member
-    @Transactional
-    public Staff_Shift assignShiftToStaff(int shiftId, int staffId) {
-        return assignStaffToShift(staffId, shiftId);
-    }
-
+    //Old version
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
-        // Clean up old shifts and shifts with no staff
-        cleanUpShifts();
-
         // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
@@ -104,11 +97,10 @@ public class SchedulingService {
 
             // Process each shift type concurrently
             for (String shiftType : shiftTypes) {
-                LocalDateTime startOfDay = date.atTime(LocalTime.MIN);
-
+                LocalDate finalDate = date;
                 futures.add(executorService.submit(() -> {
                     // Fetch all shifts for the current date and shift type
-                    List<Shift> shifts = shiftRepository.findAllDateAndType(startOfDay, shiftType);
+                    List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
                     List<StaffShiftResponse> shiftResponses = new CopyOnWriteArrayList<>();
 
                     for (Shift shift : shifts) {
@@ -147,8 +139,8 @@ public class SchedulingService {
         for (Future<?> future : futures) {
             try {
                 future.get();
-            } catch (Exception e) {
-                e.printStackTrace();  // Handle exception properly
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();  // Handle exception
             }
         }
         // Shutdown the executor service
@@ -156,25 +148,25 @@ public class SchedulingService {
         return matrix;
     }
 
-    // Method to clean up shifts based on criteria (no staff assigned and older than 3 months shifts)
-    public void cleanUpShifts() {
-        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
-
-        // Find shifts with no staff assigned
-        List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
-
-        // Find shifts older than 2 months
-        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo);
-
-        // Combine both lists to delete shifts that meet either criteria
-        List<Shift> shiftsToDelete = new ArrayList<>();
-        shiftsToDelete.addAll(shiftsWithoutStaff);
-        shiftsToDelete.addAll(shiftsOlderThanTwoMonths);
-
-        for (Shift shift : shiftsToDelete) {
-            shiftRepository.delete(shift);
-        }
-    }
+//    // Method to clean up shifts based on criteria (no staff assigned and older than 3 months shifts)
+//    public void cleanUpShifts() {
+//        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
+//
+//        // Find shifts with no staff assigned
+//        List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
+//
+//        // Find shifts older than 2 months
+//        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo);
+//
+//        // Combine both lists to delete shifts that meet either criteria
+//        List<Shift> shiftsToDelete = new ArrayList<>();
+//        shiftsToDelete.addAll(shiftsWithoutStaff);
+//        shiftsToDelete.addAll(shiftsOlderThanTwoMonths);
+//
+//        for (Shift shift : shiftsToDelete) {
+//            shiftRepository.delete(shift);
+//        }
+//    }
     // Method to assign multiple staff to a shift
     @Transactional
     public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
