@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardService {
@@ -296,6 +297,24 @@ public class DashboardService {
         response.setTotalRevenueDifference(totalRevenue2 - totalRevenue1);
         response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
         return response;
+    }
+
+    public List<DiscountEffectivenessResponse> getDiscountCodeEffectiveness() {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAll();
+
+        Map<String, Long> discountCodeCount = orderDetails.stream()
+                .filter(orderDetail -> orderDetail.getDiscountCode() != null)
+                .collect(Collectors.groupingBy(OrderDetail::getDiscountCode, Collectors.counting()));
+
+        return discountCodeCount.entrySet().stream()
+                .map(entry -> {
+                    DiscountEffectivenessResponse response = new DiscountEffectivenessResponse();
+                    response.setDiscountCode(entry.getKey());
+                    response.setNumberUse(Math.toIntExact(entry.getValue()));
+                    return response;
+                })
+                .sorted(Comparator.comparingLong(DiscountEffectivenessResponse::getNumberUse).reversed())
+                .collect(Collectors.toList());
     }
 
 

@@ -88,6 +88,11 @@ public class DashBoardController {
         return dashboardService.compareYear(request);
     }
 
+    @GetMapping("discount-effectiveness")
+    public List<DiscountEffectivenessResponse> getDiscountCodeEffectiveness() {
+        return dashboardService.getDiscountCodeEffectiveness();
+    }
+
 
 
 }

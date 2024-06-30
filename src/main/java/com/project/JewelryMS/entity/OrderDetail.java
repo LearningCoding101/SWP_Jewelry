@@ -3,6 +3,7 @@ package com.project.JewelryMS.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -32,4 +33,8 @@ public class OrderDetail implements Serializable {
 
     @Column(name = "guaranteeEndDate")
     Timestamp guaranteeEndDate;
+
+    @Column(name = "discountCode")
+    String discountCode;
+
 }
