@@ -5,6 +5,7 @@ import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
 import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.model.Shift.ShiftRequest;
+import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import com.project.JewelryMS.model.StaffShift.StaffShiftResponse;
 import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,6 +31,9 @@ import java.util.stream.IntStream;
 @NoArgsConstructor
 @Service
 public class SchedulingService {
+
+    private static final int THREAD_POOL_SIZE = 10;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     @Autowired
     private StaffAccountRepository staffAccountRepository;
@@ -76,40 +81,71 @@ public class SchedulingService {
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
         // Initialize the matrix
-        Map<String, Map<String, List<StaffShiftResponse>>> matrix = new LinkedHashMap<>();
+        Map<String, Map<String, List<StaffShiftResponse>>> matrix = new ConcurrentHashMap<>();
 
         // Date and Time formatters
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<?>> futures = new ArrayList<>();
+
         // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            // Initialize the map for the current date
+            // Format the current date
             String formattedDate = date.format(dateFormatter);
-            matrix.put(formattedDate, new LinkedHashMap<>());
+            matrix.putIfAbsent(formattedDate, new ConcurrentHashMap<>());
 
-            // Initialize the list for each shift type
+            // Process each shift type concurrently
             for (String shiftType : shiftTypes) {
-                matrix.get(formattedDate).put(shiftType, new ArrayList<>());
+                LocalDate finalDate = date;
+                futures.add(executorService.submit(() -> {
+                    // Fetch all shifts for the current date and shift type
+                    List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
+                    List<StaffShiftResponse> shiftResponses = new CopyOnWriteArrayList<>();
 
-                // Get all shifts of the current type for the current date
-                List<Shift> shifts = shiftRepository.findAllByDateAndType(date, shiftType);
-
-                // For each shift, get the staff assigned to it and create a StaffShiftResponse
-                for (Shift shift : shifts) {
-                    List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
-
-                    // Format the start and end times
-                    String formattedStartTime = shift.getStartTime().format(timeFormatter);
-                    String formattedEndTime = shift.getEndTime().format(timeFormatter);
-
-                    // Create a new StaffShiftResponse object and add it to the list for the current date and shift type
-                    StaffShiftResponse staffShift = new StaffShiftResponse(shift.getShiftID(), formattedStartTime, formattedEndTime, shiftType, shift.getStatus(), shift.getWorkArea(), shift.getRegister(), staffAccounts.stream().map(s -> new StaffShiftResponse.StaffResponse(s.getStaffID(), s.getAccount().getAccountName(), s.getAccount().getEmail(), s.getAccount().getUsername())).collect(Collectors.toList()));
-                    matrix.get(formattedDate).get(shiftType).add(staffShift);
-                }
+                    for (Shift shift : shifts) {
+                        // Fetch all staff accounts for the current shift
+                        List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
+                        // Format the start and end times
+                        String formattedStartTime = shift.getStartTime().format(timeFormatter);
+                        String formattedEndTime = shift.getEndTime().format(timeFormatter);
+                        // Create a StaffShiftResponse object
+                        StaffShiftResponse staffShift = new StaffShiftResponse(
+                                shift.getShiftID(),
+                                formattedStartTime,
+                                formattedEndTime,
+                                shiftType,
+                                shift.getStatus(),
+                                shift.getWorkArea(),
+                                shift.getRegister(),
+                                staffAccounts.stream()
+                                        .map(s -> new StaffShiftResponse.StaffResponse(
+                                                s.getStaffID(),
+                                                s.getAccount().getAccountName(),
+                                                s.getAccount().getEmail(),
+                                                s.getAccount().getUsername()))
+                                        .collect(Collectors.toList())
+                        );
+                        // Add the StaffShiftResponse to the list
+                        shiftResponses.add(staffShift);
+                    }
+                    // Add the shift responses to the matrix
+                    matrix.get(formattedDate).put(shiftType, shiftResponses);
+                }));
             }
         }
 
+        // Wait for all tasks to complete
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();  // Handle exception
+            }
+        }
+        // Shutdown the executor service
+        executorService.shutdown();
         return matrix;
     }
 
@@ -269,18 +305,35 @@ public class SchedulingService {
 
     @Transactional
     public List<StaffShiftResponse> assignStaffToDateRange(List<Integer> staffIds, LocalDate startDate, LocalDate endDate, List<String> shiftTypes) {
-        List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
-        // Iterate over each date in the range, including the start and end dates
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+        List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        List<LocalDate> dates = startDate.datesUntil(endDate.plusDays(1)).toList();
+
+        List<Future<?>> futures = new ArrayList<>();
+        for (LocalDate date : dates) {
             for (String shiftType : shiftTypes) {
                 for (int staffId : staffIds) {
-                    StaffShiftResponse response = tryAssignStaffToDay(staffId, date, shiftType);
-                    if (response != null) {
-                        staffShiftResponses.add(response);
-                    }
+                    futures.add(executorService.submit(() -> {
+                        StaffShiftResponse response = tryAssignStaffToDay(staffId, date, shiftType);
+                        if (response != null) {
+                            staffShiftResponses.add(response);
+                        }
+                    }));
                 }
             }
         }
+
+        // Wait for all tasks to complete
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();  // Handle exception
+            }
+        }
+
+        executorService.shutdown();
         return staffShiftResponses;
     }
 
@@ -382,6 +435,7 @@ public class SchedulingService {
 //        }
 //        return staffShiftResponses;
 //    }
+
     @Transactional
     public void removeStaffFromShiftsInRange(int staffId, LocalDate startDate, LocalDate endDate) {
         // Validate staff existence
@@ -399,12 +453,66 @@ public class SchedulingService {
         staffShiftRepository.deleteAll(staffShifts);
     }
 
-    // ASSIGN STAFF INTO SHIFT PATTERN
+    //Original shift type pattern, unused
+//    @Transactional
+//    public List<StaffShiftResponse> assignStaffByShiftTypePattern(
+//            Map<String, List<Integer>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
+//
+//        List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
+//        int totalDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
+//        List<LocalDate> dates = IntStream.range(0, totalDays)
+//                .mapToObj(startDate::plusDays)
+//                .filter(date -> date.getDayOfWeek() != DayOfWeek.SUNDAY)
+//                .toList();
+//
+//        // Create a map to track how often each staff ID appears
+//        Map<Integer, Integer> staffFrequency = new HashMap<>();
+//        for (List<Integer> staffIds : staffShiftPatterns.values()) {
+//            for (int staffId : staffIds) {
+//                staffFrequency.put(staffId, staffFrequency.getOrDefault(staffId, 0) + 1);
+//            }
+//        }
+//
+//        List<Future<?>> futures = new ArrayList<>();
+//
+//        for (Map.Entry<String, List<Integer>> entry : staffShiftPatterns.entrySet()) {
+//            String shiftType = entry.getKey();
+//            List<Integer> staffIds = entry.getValue();
+//
+//            for (int staffId : staffIds) {
+//                int frequency = staffFrequency.get(staffId);
+//                for (int i = 0; i < dates.size(); i += frequency) {
+//                    LocalDate date = dates.get(i);
+//                    futures.add(executorService.submit(() -> {
+//                        try {
+//                            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+//                            staffShiftResponses.add(response);
+//                        } catch (ShiftAssignmentException e) {
+//                            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
+//                        }
+//                    }));
+//                }
+//            }
+//        }
+//
+//        // Wait for all tasks to complete
+//        for (Future<?> future : futures) {
+//            try {
+//                future.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();  // Handle exception
+//            }
+//        }
+//
+//        return staffShiftResponses;
+//    }
+
+    //A modified version of the shift Type pattern, modified by demand by the front end team
     @Transactional
-    public List<StaffShiftResponse> assignStaffByShiftTypePattern(
+    public List<StaffAccountResponse> assignStaffByShiftTypePattern(
             Map<String, List<Integer>> staffShiftPatterns, LocalDate startDate, LocalDate endDate) {
 
-        List<StaffShiftResponse> staffShiftResponses = new ArrayList<>();
+        List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
         int totalDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
         List<LocalDate> dates = IntStream.range(0, totalDays)
                 .mapToObj(startDate::plusDays)
@@ -419,31 +527,75 @@ public class SchedulingService {
             }
         }
 
+        List<Future<?>> futures = new ArrayList<>();
+
         for (Map.Entry<String, List<Integer>> entry : staffShiftPatterns.entrySet()) {
             String shiftType = entry.getKey();
             List<Integer> staffIds = entry.getValue();
 
             for (int staffId : staffIds) {
                 int frequency = staffFrequency.get(staffId);
-                for (int i = 0; i < dates.size(); i++) {
+                for (int i = 0; i < dates.size(); i += frequency) {
                     LocalDate date = dates.get(i);
-                    if (i % frequency == 0) { // Ensure correct padding logic
-                        assignShiftsForDay(staffShiftResponses, staffId, date, shiftType);
-                    }
+                    futures.add(executorService.submit(() -> {
+                        try {
+                            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                            staffShiftResponses.add(response);
+                        } catch (ShiftAssignmentException e) {
+                            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
+                        }
+                    }));
                 }
             }
         }
 
-        return staffShiftResponses;
+        // Wait for all tasks to complete
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();  // Handle exception
+            }
+        }
+
+        // Collect unique staff IDs from the responses
+        Set<Integer> staffIds = staffShiftResponses.stream()
+                .map(StaffShiftResponse::getStaff)
+                .flatMap(List::stream)
+                .map(StaffShiftResponse.StaffResponse::getStaffID)
+                .collect(Collectors.toSet());
+
+        // Fetch staff accounts and map to responses
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAllById(staffIds);
+        return staffAccounts.stream()
+                .map(this::mapToStaffAccountResponse)
+                .collect(Collectors.toList());
     }
 
-    private void assignShiftsForDay(List<StaffShiftResponse> responses, int staffId, LocalDate date, String shiftType) {
-        try {
-            StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-            responses.add(response);
-        } catch (ShiftAssignmentException e) {
-            System.out.println("Staff ID " + staffId + " is already assigned on " + date + " for " + shiftType + " shift.");
-        }
+    // Method to map StaffAccount to StaffAccountResponse
+    private StaffAccountResponse mapToStaffAccountResponse(StaffAccount staffAccount) {
+        return new StaffAccountResponse(
+                staffAccount.getStaffID(),
+                staffAccount.getPhoneNumber(),
+                staffAccount.getSalary(),
+                staffAccount.getStartDate(),
+                staffAccount.getAccount().getAccountName(),
+                staffAccount.getAccount().getRole(),
+                staffAccount.getAccount().getStatus(),
+                staffAccount.getAccount().getEmail(),
+                staffAccount.getAccount().getUsername(),
+                staffAccount.getStaffShifts().stream()
+                        .map(shift -> new StaffAccountResponse.ShiftResponse(
+                                shift.getShift().getShiftID(),
+                                shift.getShift().getEndTime(),
+                                shift.getShift().getRegister(),
+                                shift.getShift().getShiftType(),
+                                shift.getShift().getStartTime(),
+                                shift.getShift().getStatus(),
+                                shift.getShift().getWorkArea()
+                        ))
+                        .collect(Collectors.toList())
+        );
     }
 
 }

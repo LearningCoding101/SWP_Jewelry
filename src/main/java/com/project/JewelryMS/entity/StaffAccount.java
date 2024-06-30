@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -26,8 +23,10 @@ public class StaffAccount {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
+//    @JsonBackReference
     @JsonIgnoreProperties
     private Account account;
+
 
     @Column(name = "phoneNumber")
     private String phoneNumber;

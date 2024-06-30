@@ -8,6 +8,8 @@ import com.project.JewelryMS.model.Transition.TransitionResponse;
 import com.project.JewelryMS.service.DashboardService;
 import com.project.JewelryMS.service.TransitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,12 +89,32 @@ public class DashBoardController {
         YearComparisonRequest request = new YearComparisonRequest(year1, year2);
         return dashboardService.compareYear(request);
     }
-
+    @GetMapping("/revenueByStaff")
+    public ResponseEntity<List<StaffRevenueResponse>> getRevenueGeneratedByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        try {
+            List<StaffRevenueResponse> response = dashboardService.getRevenueGeneratedByStaff(startDate, endDate);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
+        }
+    }
     @GetMapping("discount-code-effectiveness")
     public List<DiscountEffectivenessResponse> getDiscountCodeEffectiveness() {
         return dashboardService.getDiscountCodeEffectiveness();
     }
 
 
-
+    @GetMapping("/salesByStaff")
+    public ResponseEntity<List<StaffSalesResponse>> getSalesMadeByStaff(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        try {
+            List<StaffSalesResponse> response = dashboardService.getSalesMadeByStaff(startDate, endDate);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
+        }
+    }
 }
