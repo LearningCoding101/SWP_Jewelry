@@ -9,6 +9,7 @@ import com.project.JewelryMS.repository.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -200,5 +201,19 @@ public class ShiftService {
         } else {
             throw new RuntimeException("Shift ID" + id+ " not found");
         }
+    }
+
+    // Method to delete shifts with no staff and older than 2 months
+    public void deleteShiftsWithCriteria() {
+        // Calculate 2 months ago
+        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
+
+        // Fetch shifts without staff assigned
+        List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
+        shiftsWithoutStaff.forEach(shiftRepository::delete);
+
+        // Fetch shifts older than 2 months
+        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo.withDayOfMonth(1));
+        shiftsOlderThanTwoMonths.forEach(shiftRepository::delete);
     }
 }

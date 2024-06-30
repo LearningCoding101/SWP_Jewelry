@@ -200,4 +200,18 @@ public class SchedulingController {
 //        );
 //        return ResponseEntity.ok(staffShiftResponses);
 //    }
+    @PostMapping("/assignRandomStaffShiftPattern")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<?> assignRandomStaffShiftPattern(
+            @RequestBody List<Integer> staffIds,
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        try {
+            List<StaffAccountResponse> staffAccountResponses = schedulingService.assignRandomStaffShiftPattern(staffIds, startDate, endDate);
+            return ResponseEntity.ok(staffAccountResponses);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to assign random staff shift pattern: " + e.getMessage());
+        }
+    }
 }

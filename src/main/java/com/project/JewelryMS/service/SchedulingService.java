@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -33,7 +35,7 @@ import java.util.stream.IntStream;
 @Service
 public class SchedulingService {
 
-    private static final int THREAD_POOL_SIZE = 10;
+    private static final int THREAD_POOL_SIZE = 30;
     private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     @Autowired
@@ -78,6 +80,9 @@ public class SchedulingService {
     }
 
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
+        // Clean up old shifts and shifts with no staff
+        cleanUpShifts();
+
         // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
 
@@ -99,10 +104,11 @@ public class SchedulingService {
 
             // Process each shift type concurrently
             for (String shiftType : shiftTypes) {
-                LocalDate finalDate = date;
+                LocalDateTime startOfDay = date.atTime(LocalTime.MIN);
+
                 futures.add(executorService.submit(() -> {
                     // Fetch all shifts for the current date and shift type
-                    List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
+                    List<Shift> shifts = shiftRepository.findAllDateAndType(startOfDay, shiftType);
                     List<StaffShiftResponse> shiftResponses = new CopyOnWriteArrayList<>();
 
                     for (Shift shift : shifts) {
@@ -141,8 +147,8 @@ public class SchedulingService {
         for (Future<?> future : futures) {
             try {
                 future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();  // Handle exception
+            } catch (Exception e) {
+                e.printStackTrace();  // Handle exception properly
             }
         }
         // Shutdown the executor service
@@ -150,6 +156,25 @@ public class SchedulingService {
         return matrix;
     }
 
+    // Method to clean up shifts based on criteria (no staff assigned and older than 3 months shifts)
+    public void cleanUpShifts() {
+        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
+
+        // Find shifts with no staff assigned
+        List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
+
+        // Find shifts older than 2 months
+        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo);
+
+        // Combine both lists to delete shifts that meet either criteria
+        List<Shift> shiftsToDelete = new ArrayList<>();
+        shiftsToDelete.addAll(shiftsWithoutStaff);
+        shiftsToDelete.addAll(shiftsOlderThanTwoMonths);
+
+        for (Shift shift : shiftsToDelete) {
+            shiftRepository.delete(shift);
+        }
+    }
     // Method to assign multiple staff to a shift
     @Transactional
     public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
@@ -593,6 +618,109 @@ public class SchedulingService {
                         ))
                         .collect(Collectors.toList())
         );
+    }
+
+
+    //New method for fast assigning staff
+//    Staff with staffID % 3 == 1 get single shifts (morning, afternoon, or evening).
+//    Staff with staffID % 3 == 2 get double shifts (morning-afternoon).
+//    Staff with staffID % 3 == 0 get double shifts (afternoon-evening).
+//    Staff with staffId % 3 == 2 will be assigned shifts on Monday, Wednesday, and Friday.
+//    Staff with staffId % 3 == 0 will be assigned shifts on Tuesday, Thursday, and Saturday.
+
+//    If the list contains all staff types (staffId % 3 == 0, 1, 2),
+//      the schedule will be filled for the given period except for Sundays.
+    @Transactional
+    public List<StaffAccountResponse> assignRandomStaffShiftPattern(
+            List<Integer> staffIds, LocalDate startDate, LocalDate endDate) {
+
+        List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
+        int totalDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        List<LocalDate> dates = IntStream.range(0, totalDays)
+                .mapToObj(startDate::plusDays)
+                .filter(date -> date.getDayOfWeek() != DayOfWeek.SUNDAY)
+                .toList();
+
+        List<Integer> mod0Staff = staffIds.stream().filter(id -> id % 3 == 0).toList();
+        List<Integer> mod1Staff = staffIds.stream().filter(id -> id % 3 == 1).toList();
+        List<Integer> mod2Staff = staffIds.stream().filter(id -> id % 3 == 2).toList();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<?>> futures = new ArrayList<>();
+
+        for (LocalDate date : dates) {
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+            if (dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.FRIDAY) {
+                for (int staffId : mod2Staff) {
+                    futures.add(assignShift(executorService, staffId, date, "Morning", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Afternoon", staffShiftResponses));
+                }
+            } else if (dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.THURSDAY || dayOfWeek == DayOfWeek.SATURDAY) {
+                for (int staffId : mod0Staff) {
+                    futures.add(assignShift(executorService, staffId, date, "Afternoon", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Evening", staffShiftResponses));
+                }
+            }
+
+            for (int staffId : mod1Staff) {
+                futures.add(assignSingleShift(executorService, staffId, date, staffShiftResponses));
+            }
+        }
+
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        executorService.shutdown();
+
+        Set<Integer> uniqueStaffIds = staffShiftResponses.stream()
+                .map(StaffShiftResponse::getStaff)
+                .flatMap(List::stream)
+                .map(StaffShiftResponse.StaffResponse::getStaffID)
+                .collect(Collectors.toSet());
+
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAllById(uniqueStaffIds);
+        return staffAccounts.stream()
+                .map(this::mapToStaffAccountResponse)
+                .collect(Collectors.toList());
+    }
+
+    private Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, List<StaffShiftResponse> staffShiftResponses) {
+        return executorService.submit(() -> {
+            try {
+                StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                synchronized (staffShiftResponses) {
+                    staffShiftResponses.add(response);
+                }
+            } catch (ShiftAssignmentException e) {
+                System.out.println("Staff ID " + staffId + " is already assigned on " + date + ".");
+            }
+        });
+    }
+
+    private Future<?> assignSingleShift(ExecutorService executorService, int staffId, LocalDate date, List<StaffShiftResponse> staffShiftResponses) {
+        return executorService.submit(() -> {
+            try {
+                String shiftType = getRandomSingleShiftType();
+                StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                synchronized (staffShiftResponses) {
+                    staffShiftResponses.add(response);
+                }
+            } catch (ShiftAssignmentException e) {
+                System.out.println("Staff ID " + staffId + " is already assigned on " + date + ".");
+            }
+        });
+    }
+
+    private String getRandomSingleShiftType() {
+        List<String> singleShiftTypes = Arrays.asList("Morning", "Afternoon", "Evening");
+        Collections.shuffle(singleShiftTypes);
+        return singleShiftTypes.get(0);
     }
 
 }
