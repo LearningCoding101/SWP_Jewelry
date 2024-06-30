@@ -164,49 +164,59 @@ public class DashboardService {
         return topSellProductResponses;
     }
 
-    public List<CustomerLoyalty> getCustomerLoyaltyStatistics(RevenueDateRequest revenueDateRequest) {
-        // Convert LocalDate to LocalDateTime to include the whole day
-        LocalDate startDate = revenueDateRequest.getStartTime();
-        LocalDate endDate = revenueDateRequest.getEndTime();
+    public List<CustomerLoyalty> getCustomerLoyaltyStatistics(RevenueDateRequest request) {
+        LocalDateTime startDateTime = request.getStartTime().atStartOfDay();
+        LocalDateTime endDateTime = request.getEndTime().atTime(LocalTime.MAX);
+        List<Customer> customers = customerRepository.findAllByCreateDateBetween(startDateTime, endDateTime);
 
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-
-        // Fetch customers created within the date range
-        List<Customer> customers = customerRepository.findCustomersByCreateDateRange(startDateTime, endDateTime);
-
-        // Build the list of CustomerLoyalty objects
-        List<CustomerLoyalty> customerLoyalties = new ArrayList<>();
+        int connect = 0, member = 0, companion = 0, intimate = 0;
         for (Customer customer : customers) {
-            CustomerLoyalty customerLoyalty = new CustomerLoyalty();
-            customerLoyalty.setEmail(customer.getEmail());
-            customerLoyalty.setPhoneNumber(customer.getPhoneNumber());
-            customerLoyalty.setPointAmount(customer.getPointAmount());
-            customerLoyalty.setRank(customerService.getCustomerRank(customer.getPK_CustomerID()));
-            customerLoyalties.add(customerLoyalty);
+            String rank = getCustomerRank(customer);
+            switch (rank) {
+                case "Connect":
+                    connect++;
+                    break;
+                case "Member":
+                    member++;
+                    break;
+                case "Companion":
+                    companion++;
+                    break;
+                case "Intimate":
+                    intimate++;
+                    break;
+            }
         }
 
-        return customerLoyalties;
+        CustomerLoyalty loyalty = new CustomerLoyalty(connect, member, companion, intimate);
+        return Collections.singletonList(loyalty);
     }
 
-    public List<CustomerDemographics> getCustomerDemoGraphicResponse(RevenueDateRequest revenueDateRequest){
-        // Convert LocalDate to LocalDateTime to include the whole day
-        LocalDate startDate = revenueDateRequest.getStartTime();
-        LocalDate endDate = revenueDateRequest.getEndTime();
+    public List<CustomerDemographics> getCustomerDemoGraphicResponse(RevenueDateRequest request) {
+        LocalDateTime startDateTime = request.getStartTime().atStartOfDay();
+        LocalDateTime endDateTime = request.getEndTime().atTime(LocalTime.MAX);
+        List<Customer> customers = customerRepository.findAllByCreateDateBetween(startDateTime, endDateTime);
 
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-
-        // Fetch customers created within the date range
-        List<Customer> customers = customerRepository.findCustomersByCreateDateRange(startDateTime, endDateTime);
-        List<CustomerDemographics> customerDemoGraphics = new ArrayList<>();
-        for(Customer customer: customers){
-            CustomerDemographics customerDemoGraphic = new CustomerDemographics();
-            customerDemoGraphic.setGender(customer.getGender());
-            customerDemoGraphics.add(customerDemoGraphic);
+        int male = 0, female = 0, other = 0;
+        for (Customer customer : customers) {
+            switch (customer.getGender().toLowerCase()) {
+                case "male":
+                    male++;
+                    break;
+                case "female":
+                    female++;
+                    break;
+                default:
+                    other++;
+                    break;
+            }
         }
-        return customerDemoGraphics;
+
+        CustomerDemographics demographics = new CustomerDemographics(male, female, other);
+        return Collections.singletonList(demographics);
     }
+
+
 
     public List<CustomerSignUp> getCustomerSignUpsByStaff(RevenueDateRequest revenueDateRequest) {
         LocalDate startDate = revenueDateRequest.getStartTime();
