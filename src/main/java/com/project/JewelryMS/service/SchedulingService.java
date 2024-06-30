@@ -72,8 +72,13 @@ public class SchedulingService {
         // Save the new Staff_Shift entity to the database
         return staffShiftRepository.save(staffShift);
     }
-
     // Method to assign a shift to a staff member
+    @Transactional
+    public Staff_Shift assignShiftToStaff(int shiftId, int staffId) {
+        return assignStaffToShift(staffId, shiftId);
+    }
+
+    // Method to view schedule
     //Old version
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
         // Define the shift types
@@ -167,6 +172,7 @@ public class SchedulingService {
 //            shiftRepository.delete(shift);
 //        }
 //    }
+
     // Method to assign multiple staff to a shift
     @Transactional
     public List<Staff_Shift> assignMultipleStaffToShift(List<Integer> staffIds, int shiftId) {
