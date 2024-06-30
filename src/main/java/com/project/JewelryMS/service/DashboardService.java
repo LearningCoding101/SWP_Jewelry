@@ -216,7 +216,18 @@ public class DashboardService {
         return Collections.singletonList(demographics);
     }
 
-
+    private String getCustomerRank(Customer customer) {
+        int totalPoints = customer.getPointAmount();
+        if (totalPoints >= 0 && totalPoints <= 99) {
+            return "Connect";
+        } else if (totalPoints >= 100 && totalPoints <= 399) {
+            return "Member";
+        } else if (totalPoints >= 400 && totalPoints <= 999) {
+            return "Companion";
+        } else {
+            return "Intimate";
+        }
+    }
 
     public List<CustomerSignUp> getCustomerSignUpsByStaff(RevenueDateRequest revenueDateRequest) {
         LocalDate startDate = revenueDateRequest.getStartTime();
