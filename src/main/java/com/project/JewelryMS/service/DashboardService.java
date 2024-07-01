@@ -7,6 +7,8 @@ import com.project.JewelryMS.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +25,6 @@ public class DashboardService {
     CustomerService customerService;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
-
     @Autowired
     StaffAccountRepository staffAccountRepository;
 
@@ -418,5 +419,49 @@ public class DashboardService {
                 })
                 .sorted(Comparator.comparingInt(DiscountEffectivenessResponse::getNumberUse).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Float> getDailyAverageRevenuePerMonth(String startMonthYear, String endMonthYear) {
+        Map<String, Float> dailyAverageRevenueMap = new HashMap<>();
+
+        try {
+            // Parse input months and years
+            SimpleDateFormat monthYearFormat = new SimpleDateFormat("yyyy-MM");
+            Date startDate = monthYearFormat.parse(startMonthYear);
+            Date endDate = monthYearFormat.parse(endMonthYear);
+
+            // Adjust end date to include the whole month
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(endDate);
+            cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            endDate = cal.getTime();
+
+            List<DailyRevenueProjection> dailyRevenues = orderDetailRepository.findDailyRevenueBetweenDates(startDate, endDate);
+
+            // Use a map to aggregate total revenue per month
+            Map<String, Float> monthlyRevenueMap = new HashMap<>();
+            Map<String, Integer> dailyCountMap = new HashMap<>();
+
+            for (DailyRevenueProjection dailyRevenue : dailyRevenues) {
+                String month = new SimpleDateFormat("yyyy-MM").format(dailyRevenue.getPurchaseDate());
+
+                monthlyRevenueMap.put(month, monthlyRevenueMap.getOrDefault(month, 0.0f) + dailyRevenue.getTotalRevenue());
+                dailyCountMap.put(month, dailyCountMap.getOrDefault(month, 0) + 1);
+            }
+
+            // Calculate daily average revenue for each month
+            for (Map.Entry<String, Float> entry : monthlyRevenueMap.entrySet()) {
+                String month = entry.getKey();
+                Float totalRevenue = entry.getValue();
+                Integer dayCount = dailyCountMap.get(month);
+
+                dailyAverageRevenueMap.put(month, totalRevenue / dayCount);
+            }
+        } catch (ParseException e) {
+            // Log the error or handle it as needed
+            e.printStackTrace();
+        }
+
+        return dailyAverageRevenueMap;
     }
 }

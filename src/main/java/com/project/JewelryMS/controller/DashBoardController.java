@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/Dashboard")
@@ -115,6 +117,17 @@ public class DashBoardController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
+        }
+    }
+
+    @GetMapping("/daily-average-revenue")
+    public ResponseEntity<Map<String, Float>> getDailyAverageRevenue(
+            @RequestParam String startMonthYear, @RequestParam String endMonthYear) {
+        Map<String, Float> dailyAverageRevenue = dashboardService.getDailyAverageRevenuePerMonth(startMonthYear, endMonthYear);
+        if (dailyAverageRevenue.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        } else {
+            return ResponseEntity.ok(dailyAverageRevenue);
         }
     }
 }
