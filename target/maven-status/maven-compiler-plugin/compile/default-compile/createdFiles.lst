@@ -99,6 +99,7 @@ com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\config\SecurityConfig.class
 com\project\JewelryMS\model\Order\OrderBuyResponse.class
+com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.class
 com\project\JewelryMS\model\ProductSell\ProductSellRequest.class
 com\project\JewelryMS\repository\CustomerRepository.class
 com\project\JewelryMS\controller\CategoryController.class

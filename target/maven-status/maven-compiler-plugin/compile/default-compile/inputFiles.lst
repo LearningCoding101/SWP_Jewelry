@@ -60,6 +60,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\Custo
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DayComparisonRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\MonthComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRequest.java
