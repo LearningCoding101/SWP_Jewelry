@@ -54,6 +54,11 @@ public class DashboardService {
             for(OrderDetail orderDetail : orderDetails){
                 if(Long.valueOf(orderDetail.getProductSell().getCategory().getId()).equals(Category_ID)){
                     float orderDetailTotal = orderDetail.getQuantity() * orderDetail.getProductSell().getCost();
+                    // Apply discount if promotion is available
+                    if (orderDetail.getPromotion() != null) {
+                        float discount = orderDetail.getPromotion().getDiscount() / 100.0F;
+                        orderDetailTotal -= orderDetailTotal * discount;
+                    }
                     totalRevenue += orderDetailTotal;
                 }
             }
@@ -76,7 +81,15 @@ public class DashboardService {
                 TopSellProductResponse topSellProductResponse = productSalesMap.getOrDefault(productId, new TopSellProductResponse());
                 topSellProductResponse.setProduct_Name(product.getPName());
                 topSellProductResponse.setUnitSold(topSellProductResponse.getUnitSold() != null ? topSellProductResponse.getUnitSold() + orderDetail.getQuantity() : orderDetail.getQuantity());
-                topSellProductResponse.setRevenueSold(topSellProductResponse.getRevenueSold() != null ? topSellProductResponse.getRevenueSold() + (orderDetail.getQuantity() * product.getCost()) : orderDetail.getQuantity() * product.getCost());
+
+                float orderDetailRevenue = orderDetail.getQuantity() * product.getCost();
+                // Apply discount if promotion is available
+                if (orderDetail.getPromotion() != null) {
+                    float discount = orderDetail.getPromotion().getDiscount() / 100.0F;
+                    orderDetailRevenue -= orderDetailRevenue * discount;
+                }
+                topSellProductResponse.setRevenueSold(topSellProductResponse.getRevenueSold() != null ? topSellProductResponse.getRevenueSold() + orderDetailRevenue : orderDetailRevenue);
+
                 productSalesMap.put(productId, topSellProductResponse);
             }
         }
@@ -123,6 +136,11 @@ public class DashboardService {
             for(OrderDetail orderDetail : orderDetails){
                 if(Long.valueOf(orderDetail.getProductSell().getCategory().getId()).equals(Category_ID)){
                     float orderDetailTotal = orderDetail.getQuantity() * orderDetail.getProductSell().getCost();
+                    // Apply discount if promotion is available
+                    if (orderDetail.getPromotion() != null) {
+                        float discount = orderDetail.getPromotion().getDiscount() / 100.0F;
+                        orderDetailTotal -= orderDetailTotal * discount;
+                    }
                     totalRevenue += orderDetailTotal;
                 }
             }
@@ -153,7 +171,15 @@ public class DashboardService {
                 TopSellProductResponse topSellProductResponse = productSalesMap.getOrDefault(productId, new TopSellProductResponse());
                 topSellProductResponse.setProduct_Name(product.getPName());
                 topSellProductResponse.setUnitSold(topSellProductResponse.getUnitSold() != null ? topSellProductResponse.getUnitSold() + orderDetail.getQuantity() : orderDetail.getQuantity());
-                topSellProductResponse.setRevenueSold(topSellProductResponse.getRevenueSold() != null ? topSellProductResponse.getRevenueSold() + (orderDetail.getQuantity() * product.getCost()) : orderDetail.getQuantity() * product.getCost());
+
+                float orderDetailRevenue = orderDetail.getQuantity() * product.getCost();
+                // Apply discount if promotion is available
+                if (orderDetail.getPromotion() != null) {
+                    float discount = orderDetail.getPromotion().getDiscount() / 100.0F;
+                    orderDetailRevenue -= orderDetailRevenue * discount;
+                }
+                topSellProductResponse.setRevenueSold(topSellProductResponse.getRevenueSold() != null ? topSellProductResponse.getRevenueSold() + orderDetailRevenue : orderDetailRevenue);
+
                 productSalesMap.put(productId, topSellProductResponse);
             }
         }
