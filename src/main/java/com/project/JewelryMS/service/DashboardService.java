@@ -464,4 +464,27 @@ public class DashboardService {
 
         return dailyAverageRevenueMap;
     }
+
+    public Map<String, Double> getDailyRevenue(String startDateStr, String endDateStr) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = sdf.parse(startDateStr);
+        Date endDate = sdf.parse(endDateStr);
+
+        List<DailyRevenueProjection> dailyRevenues = orderDetailRepository.findDailyRevenue(startDate, endDate);
+
+        Map<String, Double> dailyRevenueMap = new HashMap<>();
+
+        for (DailyRevenueProjection revenue : dailyRevenues) {
+            String date = sdf.format(revenue.getPurchaseDate());
+            double totalRevenue = (double) revenue.getTotalRevenue();
+
+            if (dailyRevenueMap.containsKey(date)) {
+                totalRevenue += dailyRevenueMap.get(date);
+            }
+
+            dailyRevenueMap.put(date, totalRevenue);
+        }
+
+        return dailyRevenueMap;
+    }
 }

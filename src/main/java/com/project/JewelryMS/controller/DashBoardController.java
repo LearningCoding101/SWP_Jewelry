@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -120,14 +121,25 @@ public class DashBoardController {
         }
     }
 
-    @GetMapping("/daily-average-revenue")
-    public ResponseEntity<Map<String, Float>> getDailyAverageRevenue(
+    @GetMapping("/monthlyAverageRevenue")
+    public ResponseEntity<Map<String, Float>> getMonthlyAverageRevenue(
             @RequestParam String startMonthYear, @RequestParam String endMonthYear) {
         Map<String, Float> dailyAverageRevenue = dashboardService.getDailyAverageRevenuePerMonth(startMonthYear, endMonthYear);
         if (dailyAverageRevenue.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         } else {
             return ResponseEntity.ok(dailyAverageRevenue);
+        }
+    }
+
+    @GetMapping("/dailyAverageRevenue")
+    public ResponseEntity<Map<String, Double>> getDailyRevenue(
+            @RequestParam String startDate, @RequestParam String endDate) {
+        try {
+            Map<String, Double> dailyRevenue = dashboardService.getDailyRevenue(startDate, endDate);
+            return ResponseEntity.ok(dailyRevenue);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }
