@@ -13,13 +13,13 @@ import com.project.JewelryMS.repository.StaffShiftRepository;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -33,9 +33,10 @@ import java.util.stream.IntStream;
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
+@EnableScheduling
 public class SchedulingService {
 
-    private static final int THREAD_POOL_SIZE = 30;
+    private static final int THREAD_POOL_SIZE = 100;
     private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     @Autowired
@@ -152,26 +153,6 @@ public class SchedulingService {
         executorService.shutdown();
         return matrix;
     }
-
-//    // Method to clean up shifts based on criteria (no staff assigned and older than 3 months shifts)
-//    public void cleanUpShifts() {
-//        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
-//
-//        // Find shifts with no staff assigned
-//        List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
-//
-//        // Find shifts older than 2 months
-//        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo);
-//
-//        // Combine both lists to delete shifts that meet either criteria
-//        List<Shift> shiftsToDelete = new ArrayList<>();
-//        shiftsToDelete.addAll(shiftsWithoutStaff);
-//        shiftsToDelete.addAll(shiftsOlderThanTwoMonths);
-//
-//        for (Shift shift : shiftsToDelete) {
-//            shiftRepository.delete(shift);
-//        }
-//    }
 
     // Method to assign multiple staff to a shift
     @Transactional
@@ -473,6 +454,31 @@ public class SchedulingService {
         staffShiftRepository.deleteAll(staffShifts);
     }
 
+    @Transactional
+    public void removeAllStaffFromShiftsInRange(LocalDate startDate, LocalDate endDate) {
+        // Retrieve all shifts within the date range
+        List<Shift> shifts = shiftRepository.findAllByStartTimeBetween(
+                startDate.atStartOfDay(), // Start of day
+                endDate.plusDays(1).atStartOfDay().minusNanos(1) // End of day
+        );
+
+        for (Shift shift : shifts) {
+            // Retrieve all staff shifts for the current shift
+            List<Staff_Shift> staffShifts = new ArrayList<>(shift.getStaffShifts());
+
+            // Clear the association between shift and staff
+            for (Staff_Shift staffShift : staffShifts) {
+                staffShift.setShift(null); // Remove the reference to shift
+            }
+
+            // Clear the staff shifts collection
+            shift.getStaffShifts().clear();
+
+            // Save the updated shift entity
+            shiftRepository.save(shift);
+        }
+    }
+
     //Original shift type pattern, unused
 //    @Transactional
 //    public List<StaffShiftResponse> assignStaffByShiftTypePattern(
@@ -629,9 +635,7 @@ public class SchedulingService {
 //    If the list contains all staff types (staffId % 3 == 0, 1, 2),
 //      the schedule will be filled for the given period except for Sundays.
     @Transactional
-    public List<StaffAccountResponse> assignRandomStaffShiftPattern(
-            List<Integer> staffIds, LocalDate startDate, LocalDate endDate) {
-
+    public List<StaffAccountResponse> assignRandomStaffShiftPattern(List<Integer> staffIds, LocalDate startDate, LocalDate endDate) {
         List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
         int totalDays = (int) ChronoUnit.DAYS.between(startDate, endDate) + 1;
         List<LocalDate> dates = IntStream.range(0, totalDays)
@@ -687,6 +691,22 @@ public class SchedulingService {
                 .map(this::mapToStaffAccountResponse)
                 .collect(Collectors.toList());
     }
+
+    @Scheduled(fixedRate = 1209600000) // 2 weeks in milliseconds
+    public void scheduleShiftsAutomatically() {
+        List<Integer> staffIds = getAllStaffIds();
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate.plusDays(13); // Schedule for the next two weeks
+
+        assignRandomStaffShiftPattern(staffIds, startDate, endDate);
+    }
+
+    private List<Integer> getAllStaffIds() {
+        return staffAccountRepository.findAllStaffAccountsByRoleStaff().stream()
+                .map(StaffAccount::getStaffID)
+                .collect(Collectors.toList());
+    }
+
 
     private Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, List<StaffShiftResponse> staffShiftResponses) {
         return executorService.submit(() -> {

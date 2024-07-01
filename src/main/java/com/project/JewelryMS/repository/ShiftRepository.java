@@ -67,4 +67,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     @Query("SELECT s FROM Shift s WHERE s.startTime < :cutoffDate")
     List<Shift> findShiftsOlderThan(LocalDate cutoffDate);
 
+    List<Shift> findAllByStartTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
+
 }

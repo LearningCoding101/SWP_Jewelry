@@ -45,4 +45,15 @@ public class Shift {
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     @JsonManagedReference
     Set<Staff_Shift> staffShifts;
+
+    // Add helper methods to manage bidirectional relationship
+    public void addStaffShift(Staff_Shift staffShift) {
+        staffShifts.add(staffShift);
+        staffShift.setShift(this);
+    }
+
+    public void removeStaffShift(Staff_Shift staffShift) {
+        staffShifts.remove(staffShift);
+        staffShift.setShift(null);
+    }
 }
