@@ -216,4 +216,6 @@ public class ShiftService {
         List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo.withDayOfMonth(1));
         shiftsOlderThanTwoMonths.forEach(shiftRepository::delete);
     }
+
+
 }

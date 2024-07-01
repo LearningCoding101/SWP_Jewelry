@@ -80,7 +80,6 @@ public class SchedulingService {
     }
 
     // Method to view schedule
-    //Old version
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
         // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
@@ -94,6 +93,9 @@ public class SchedulingService {
 
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<?>> futures = new ArrayList<>();
+
+        // Clean up shifts without staff within the date range
+        cleanupShiftsWithoutStaff(startDate, endDate);
 
         // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
@@ -153,6 +155,21 @@ public class SchedulingService {
         executorService.shutdown();
         return matrix;
     }
+
+    @Transactional
+    public void cleanupShiftsWithoutStaff(LocalDate startDate, LocalDate endDate) {
+        // Retrieve all shifts within the date range
+        List<Shift> shifts = shiftRepository.findAllByStartTimeBetween(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay().minusNanos(1));
+
+        // Iterate through each shift and remove if no staff are assigned
+        for (Shift shift : shifts) {
+            if (shift.getStaffShifts().isEmpty()) {
+                // Delete the shift from the database
+                shiftRepository.delete(shift);
+            }
+        }
+    }
+
 
     // Method to assign multiple staff to a shift
     @Transactional
@@ -468,10 +485,13 @@ public class SchedulingService {
 
             // Clear the association between shift and staff
             for (Staff_Shift staffShift : staffShifts) {
-                staffShift.setShift(null); // Remove the reference to shift
+                // Remove the reference to shift
+                staffShift.setShift(null);
+                // Delete the staff shift entry from the database
+                staffShiftRepository.delete(staffShift);
             }
 
-            // Clear the staff shifts collection
+            // Clear the staff shifts collection from the shift entity
             shift.getStaffShifts().clear();
 
             // Save the updated shift entity
