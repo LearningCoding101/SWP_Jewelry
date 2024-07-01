@@ -8,7 +8,9 @@ import com.project.JewelryMS.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
@@ -63,15 +65,17 @@ public class PromotionService {
 
     public Promotion createPromotion(CreatePromotionRequest createPromotionRequest) {
         Promotion promotion = new Promotion();
+        // Lấy start và end dates từ request và chuyển đổi thành LocalDateTime
+        LocalDate startDate = createPromotionRequest.getStartDate();
+        LocalDate endDate = createPromotionRequest.getEndDate();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
-        LocalDateTime startDate = LocalDateTime.parse(createPromotionRequest.getStartDate(), formatter);
-        LocalDateTime endDate = LocalDateTime.parse(createPromotionRequest.getEndDate(), formatter);
+        LocalDateTime startDateTime = startDate.atStartOfDay(); // 00:00:00
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX); // 23:59:59.999999999
 
         promotion.setCode(createPromotionRequest.getCode());
         promotion.setDescription(createPromotionRequest.getDescription());
-        promotion.setStartDate(startDate);
-        promotion.setEndDate(endDate);
+        promotion.setStartDate(startDateTime);
+        promotion.setEndDate(endDateTime);
         if(createPromotionRequest.getDiscount()>=0 && createPromotionRequest.getDiscount()<=100) {
             promotion.setDiscount(createPromotionRequest.getDiscount());
         }else{
@@ -138,19 +142,22 @@ public class PromotionService {
         if (promotionUpdate.isPresent()) {
             Promotion promotion = promotionUpdate.get();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
-            LocalDateTime startDate = LocalDateTime.parse(promotionRequest.getStartDate(), formatter);
-            LocalDateTime endDate = LocalDateTime.parse(promotionRequest.getEndDate(), formatter);
+            // Lấy start và end dates từ request và chuyển đổi thành LocalDateTime
+            LocalDate startDate = promotionRequest.getStartDate();
+            LocalDate endDate = promotionRequest.getEndDate();
 
-            validateEndDate(promotion, endDate);
-            validateStartDate(promotion, startDate);
-            validateDateOrder(startDate, endDate);
-            validateDateDifference(startDate, endDate);
+            LocalDateTime startDateTime = startDate.atStartOfDay(); // 00:00:00
+            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX); // 23:59:59.999999999
+
+            validateEndDate(promotion, endDateTime);
+            validateStartDate(promotion, startDateTime);
+            validateDateOrder(startDateTime, endDateTime);
+            validateDateDifference(startDateTime, endDateTime);
 
             promotion.setCode(promotionRequest.getCode());
             promotion.setDescription(promotionRequest.getDescription());
-            promotion.setStartDate(startDate);
-            promotion.setEndDate(endDate);
+            promotion.setStartDate(startDateTime);
+            promotion.setEndDate(endDateTime);
             if(promotionRequest.getDiscount()>=0 && promotionRequest.getDiscount()<=100) {
                 promotion.setDiscount(promotionRequest.getDiscount());
                 promotionRepository.save(promotion);
