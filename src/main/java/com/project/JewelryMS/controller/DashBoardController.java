@@ -126,6 +126,7 @@ public class DashBoardController {
     public ResponseEntity<List<CustomerPurchaseHistoryResponse>> getCustomerPurchaseHistory() {
         List<CustomerPurchaseHistoryResponse> response = dashboardService.getCustomerPurchaseHistory();
         return ResponseEntity.ok(response);
+    }
     @GetMapping("/monthlyAverageRevenue")
     public ResponseEntity<Map<String, Float>> getMonthlyAverageRevenue(
             @RequestParam String startMonthYear, @RequestParam String endMonthYear) {
