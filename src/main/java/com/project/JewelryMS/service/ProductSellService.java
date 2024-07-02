@@ -114,10 +114,43 @@ public class ProductSellService {
             List<String> promotionIdStrings = promotionIds.stream().map(String::valueOf).collect(Collectors.toList());
             response.setPromotion_id(promotionIdStrings);
             responses.add(response);
+
+        }
+    }
+
+    private ProductSellResponse mapProductSellToResponse(ProductSell productSell) {
+        ProductSellResponse response = new ProductSellResponse();
+
+        response.setProductID(productSell.getProductID());
+        response.setCarat(productSell.getCarat());
+        response.setChi(productSell.getChi());
+        response.setCost(productSell.getCost());
+        response.setPDescription(productSell.getPDescription());
+        response.setGemstoneType(productSell.getGemstoneType());
+        response.setImage(productSell.getImage());
+        response.setManufacturer(productSell.getManufacturer());
+        response.setManufactureCost(productSell.getManufactureCost());
+        response.setMetalType(productSell.getMetalType());
+        response.setPName(productSell.getPName());
+        response.setProductCode(productSell.getProductCode());
+        response.setStatus(productSell.isPStatus());
+
+        Category category = productSell.getCategory();
+        if (category != null) {
+            response.setCategory_id(category.getId());
+            response.setCategory_name(category.getName());
         }
 
-        return responses;
+        List<String> promotionIds = productSellRepository.findPromotionIdsByProductSellId(productSell.getProductID())
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+        response.setPromotion_id(promotionIds);
+
+        return response;
     }
+
+
 
     public ProductSellResponse createProductSell(CreateProductSellRequest request) {
         ProductSell productSell = new ProductSell();
