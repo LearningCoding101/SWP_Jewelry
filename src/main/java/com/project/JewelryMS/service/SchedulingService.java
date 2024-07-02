@@ -87,56 +87,60 @@ public class SchedulingService {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
-        List<Future<?>> futures = new ArrayList<>();
-
         cleanupShiftsWithoutStaff(startDate, endDate);
+
+        // Fetch all shifts in the date range
+        List<Shift> allShifts = shiftRepository.findAllByDateRange(startDate.atStartOfDay(), endDate.atStartOfDay());
+
+        // Fetch all staff accounts related to the fetched shifts
+        List<StaffAccount> allStaffAccounts = staffAccountRepository.findAllByShifts(allShifts);
+
+        // Group shifts by date and type
+        Map<LocalDate, Map<String, List<Shift>>> shiftsByDateAndType = allShifts.stream()
+                .collect(Collectors.groupingBy(shift -> shift.getStartTime().toLocalDate(),
+                        Collectors.groupingBy(Shift::getShiftType)));
+        // Group staff accounts by shift ID
+        Map<Integer, List<StaffAccount>> staffAccountsByShiftId = allStaffAccounts.stream()
+                .flatMap(staffAccount -> staffAccount.getStaffShifts().stream()) // Flatten to Staff_Shift objects
+                .collect(Collectors.groupingBy(
+                        staffShift -> staffShift.getShift().getShiftID(), // Group by Shift ID
+                        Collectors.mapping(Staff_Shift::getStaffAccount, Collectors.toList()) // Map to StaffAccount list
+                ));
 
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             String formattedDate = date.format(dateFormatter);
             matrix.putIfAbsent(formattedDate, new ConcurrentHashMap<>());
 
             for (String shiftType : shiftTypes) {
-                LocalDate finalDate = date;
-                futures.add(executorService.submit(() -> {
-                    List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
-                    List<StaffShiftResponse> shiftResponses = new ArrayList<>();
+                List<Shift> shifts = shiftsByDateAndType.getOrDefault(date, Collections.emptyMap())
+                        .getOrDefault(shiftType, Collections.emptyList());
 
-                    shifts.parallelStream().forEach(shift -> {
-                        List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
-                        String formattedStartTime = shift.getStartTime().format(timeFormatter);
-                        String formattedEndTime = shift.getEndTime().format(timeFormatter);
-                        StaffShiftResponse staffShift = new StaffShiftResponse(
-                                shift.getShiftID(),
-                                formattedStartTime,
-                                formattedEndTime,
-                                shiftType,
-                                shift.getStatus(),
-                                shift.getWorkArea(),
-                                shift.getRegister(),
-                                staffAccounts.stream()
-                                        .map(s -> new StaffShiftResponse.StaffResponse(
-                                                s.getStaffID(),
-                                                s.getAccount().getAccountName(),
-                                                s.getAccount().getEmail(),
-                                                s.getAccount().getUsername()))
-                                        .collect(Collectors.toList())
-                        );
-                        shiftResponses.add(staffShift);
-                    });
+                List<StaffShiftResponse> shiftResponses = shifts.stream().map(shift -> {
+                    List<StaffAccount> staffAccounts = staffAccountsByShiftId.getOrDefault(shift.getShiftID(), Collections.emptyList());
+                    String formattedStartTime = shift.getStartTime().format(timeFormatter);
+                    String formattedEndTime = shift.getEndTime().format(timeFormatter);
+                    return new StaffShiftResponse(
+                            shift.getShiftID(),
+                            formattedStartTime,
+                            formattedEndTime,
+                            shiftType,
+                            shift.getStatus(),
+                            shift.getWorkArea(),
+                            shift.getRegister(),
+                            staffAccounts.stream()
+                                    .map(s -> new StaffShiftResponse.StaffResponse(
+                                            s.getStaffID(),
+                                            s.getAccount().getAccountName(),
+                                            s.getAccount().getEmail(),
+                                            s.getAccount().getUsername()))
+                                    .collect(Collectors.toList())
+                    );
+                }).collect(Collectors.toList());
 
-                    matrix.get(formattedDate).put(shiftType, shiftResponses);
-                }));
+                matrix.get(formattedDate).put(shiftType, shiftResponses);
             }
         }
 
-        for (Future<?> future : futures) {
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                // Use a proper logging framework
-                e.printStackTrace();
-            }
-        }
         return matrix;
     }
 
