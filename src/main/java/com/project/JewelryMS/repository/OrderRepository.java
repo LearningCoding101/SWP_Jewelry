@@ -12,4 +12,9 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<PurchaseOrder, Long> {
     @Query("SELECT o FROM PurchaseOrder o WHERE o.purchaseDate BETWEEN :startDate AND :endDate")
     List<PurchaseOrder> findOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query("SELECT o.purchaseOrder.customer.PK_CustomerID, o.purchaseOrder.customer.cusName, COUNT(o.purchaseOrder.PK_OrderID), o.productSell.pName, COUNT(o.productSell.pName) " +
+            "FROM OrderDetail o " +
+            "GROUP BY o.purchaseOrder.customer.PK_CustomerID, o.purchaseOrder.customer.cusName, o.productSell.pName")
+    List<Object[]> findCustomerPurchaseHistory();
 }

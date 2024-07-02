@@ -342,9 +342,9 @@ public class DashboardService {
     private ComparisonResponse calculateDifference(long totalQuantity1, float totalRevenue1, long customerCount1,
                                                    long totalQuantity2, float totalRevenue2, long customerCount2) {
         ComparisonResponse response = new ComparisonResponse();
-        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
+//        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
         response.setTotalRevenueDifference(totalRevenue2 - totalRevenue1);
-        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
+//        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
         return response;
     }
 
@@ -420,6 +420,37 @@ public class DashboardService {
                 .sorted(Comparator.comparingInt(DiscountEffectivenessResponse::getNumberUse).reversed())
                 .collect(Collectors.toList());
     }
+
+    public List<CustomerPurchaseHistoryResponse> getCustomerPurchaseHistory() {
+        List<Object[]> rawData = orderRepository.findCustomerPurchaseHistory();
+
+        Map<Long, CustomerPurchaseHistoryResponse> customerHistoryMap = rawData.stream().collect(Collectors.toMap(
+                row -> (Long) row[0], // customer ID
+                row -> {
+                    CustomerPurchaseHistoryResponse response = new CustomerPurchaseHistoryResponse();
+                    response.setCusName((String) row[1]);
+                    response.setPurchaseCount(((Number) row[2]).intValue());
+                    response.setProductTrend(row[3] + " (" + ((Number) row[4]).intValue() + ")");
+                    return response;
+                },
+                (existing, replacement) -> {
+                    // Combine the data if the same customer has multiple products
+                    existing.setPurchaseCount(existing.getPurchaseCount() + replacement.getPurchaseCount());
+                    existing.setProductTrend(existing.getProductTrend() + ", " + replacement.getProductTrend());
+                    return existing;
+                }
+        ));
+
+        // Find the most frequently purchased product for each customer
+        customerHistoryMap.values().forEach(response -> {
+            String mostPurchasedProduct = response.getProductTrend().split(",")[0].split(" \\(")[0];
+            response.setProductTrend(mostPurchasedProduct);
+        });
+
+        return customerHistoryMap.values().stream().collect(Collectors.toList());
+    }
+
+
 
     public Map<String, Float> getDailyAverageRevenuePerMonth(String startMonthYear, String endMonthYear) {
         Map<String, Float> dailyAverageRevenueMap = new HashMap<>();
