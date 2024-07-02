@@ -89,7 +89,7 @@ public class DashBoardController {
     }
 
     @GetMapping("compare-sale-year")
-    public ComparisonResponse compareYear(@RequestParam("year1") String year1, @RequestParam("year2") String year2) {
+    public YearComparisonResponse comparationYear(@RequestParam("year1") String year1, @RequestParam("year2") String year2) {
         YearComparisonRequest request = new YearComparisonRequest(year1, year2);
         return dashboardService.compareYear(request);
     }
