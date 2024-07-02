@@ -15,6 +15,7 @@ com\project\JewelryMS\entity\CoverageEnum.class
 com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
 com\project\JewelryMS\controller\OrderController.class
 com\project\JewelryMS\model\Customer\CustomerRequest.class
+com\project\JewelryMS\model\Dashboard\DailyRevenueResponse.class
 com\project\JewelryMS\service\AuthenticationService.class
 com\project\JewelryMS\controller\PromotionController.class
 com\project\JewelryMS\model\Order\CreateOrderRequest.class
@@ -77,10 +78,12 @@ com\project\JewelryMS\model\Profile\ViewShiftResponse.class
 com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
+com\project\JewelryMS\repository\DailyRevenueProjection.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\repository\OrderRepository.class
 com\project\JewelryMS\repository\GuaranteeRepository.class
 com\project\JewelryMS\model\Dashboard\MonthComparisonRequest.class
+com\project\JewelryMS\model\Customer\CustomerResponse.class
 com\project\JewelryMS\controller\VNPAYController.class
 com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class

@@ -53,12 +53,14 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\CodeService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\CategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\ComparisonResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DailyRevenueResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DayComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\MonthComparisonRequest.java
@@ -144,6 +146,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Transition\TransitionRes
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\AuthenticationRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\CategoryRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\CustomerRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\DailyRevenueProjection.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\GuaranteeRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ManagerAccountRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderBuyDetailRepository.java
