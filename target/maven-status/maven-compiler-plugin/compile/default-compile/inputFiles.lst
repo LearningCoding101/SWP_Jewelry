@@ -59,6 +59,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\CategoryRespon
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\ComparisonResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerPurchaseHistoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DailyRevenueResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DayComparisonRequest.java

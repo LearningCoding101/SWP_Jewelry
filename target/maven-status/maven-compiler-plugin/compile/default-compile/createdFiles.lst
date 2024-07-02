@@ -28,6 +28,7 @@ com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
 com\project\JewelryMS\service\SchedulingService$ShiftAssignmentException.class
 com\project\JewelryMS\controller\StaffAccountController.class
+com\project\JewelryMS\model\Dashboard\Customer\CustomerPurchaseHistoryResponse.class
 com\project\JewelryMS\service\ApiService.class
 com\project\JewelryMS\service\Order\OrderBuyDetailService.class
 com\project\JewelryMS\service\GuaranteeService.class
