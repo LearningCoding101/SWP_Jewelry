@@ -81,43 +81,30 @@ public class SchedulingService {
 
     // Method to view schedule
     public Map<String, Map<String, List<StaffShiftResponse>>> getScheduleMatrix(LocalDate startDate, LocalDate endDate) {
-        // Define the shift types
         String[] shiftTypes = {"Morning", "Afternoon", "Evening"};
-
-        // Initialize the matrix
         Map<String, Map<String, List<StaffShiftResponse>>> matrix = new ConcurrentHashMap<>();
 
-        // Date and Time formatters
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd-MM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<?>> futures = new ArrayList<>();
 
-        // Clean up shifts without staff within the date range
         cleanupShiftsWithoutStaff(startDate, endDate);
 
-        // Iterate over each date in the range
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            // Format the current date
             String formattedDate = date.format(dateFormatter);
             matrix.putIfAbsent(formattedDate, new ConcurrentHashMap<>());
 
-            // Process each shift type concurrently
             for (String shiftType : shiftTypes) {
                 LocalDate finalDate = date;
                 futures.add(executorService.submit(() -> {
-                    // Fetch all shifts for the current date and shift type
                     List<Shift> shifts = shiftRepository.findAllByDateAndType(finalDate, shiftType);
-                    List<StaffShiftResponse> shiftResponses = new CopyOnWriteArrayList<>();
+                    List<StaffShiftResponse> shiftResponses = new ArrayList<>();
 
-                    for (Shift shift : shifts) {
-                        // Fetch all staff accounts for the current shift
+                    shifts.parallelStream().forEach(shift -> {
                         List<StaffAccount> staffAccounts = staffAccountRepository.findAllByShift(shift);
-                        // Format the start and end times
                         String formattedStartTime = shift.getStartTime().format(timeFormatter);
                         String formattedEndTime = shift.getEndTime().format(timeFormatter);
-                        // Create a StaffShiftResponse object
                         StaffShiftResponse staffShift = new StaffShiftResponse(
                                 shift.getShiftID(),
                                 formattedStartTime,
@@ -134,25 +121,22 @@ public class SchedulingService {
                                                 s.getAccount().getUsername()))
                                         .collect(Collectors.toList())
                         );
-                        // Add the StaffShiftResponse to the list
                         shiftResponses.add(staffShift);
-                    }
-                    // Add the shift responses to the matrix
+                    });
+
                     matrix.get(formattedDate).put(shiftType, shiftResponses);
                 }));
             }
         }
 
-        // Wait for all tasks to complete
         for (Future<?> future : futures) {
             try {
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();  // Handle exception
+                // Use a proper logging framework
+                e.printStackTrace();
             }
         }
-        // Shutdown the executor service
-        executorService.shutdown();
         return matrix;
     }
 

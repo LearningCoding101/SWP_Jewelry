@@ -8,6 +8,7 @@ import com.project.JewelryMS.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,20 +24,11 @@ public class PromotionService {
     @Autowired
     PromotionRepository promotionRepository;
 
-    // Helper method to format the date
-    private String formatDate(LocalDateTime date) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH");
-        String formattedDate = date.toLocalDate().format(dateFormatter);
-        String formattedTime = date.toLocalTime().format(timeFormatter);
-        String dayOfWeek = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-
-        return formattedDate;
-//                + " " + formattedTime + " (" + dayOfWeek + ")";
-        //Date formatted changed by demand from the Front-end team
+    private String formatDate(Date date) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormatter.format(date);
     }
 
-    // Helper method to convert a Promotion entity to a PromotionResponse DTO
     private PromotionResponse toPromotionResponse(Promotion promotion) {
         PromotionResponse promotionResponse = new PromotionResponse();
         promotionResponse.setPromotionID(promotion.getPK_promotionID());
@@ -46,7 +38,6 @@ public class PromotionService {
         promotionResponse.setStartDate(formatDate(promotion.getStartDate()));
         promotionResponse.setEndDate(formatDate(promotion.getEndDate()));
         promotionResponse.setStatus(promotion.isStatus());
-        // Assuming you have a method in your repository to get productSellIds by promotionId
         List<Long> listPromotion = promotionRepository.findProductSellIdsByPromotionId(promotion.getPK_promotionID());
         List<String> promotionIds = new ArrayList<>();
         for (Long promotionId : listPromotion) {
@@ -65,26 +56,24 @@ public class PromotionService {
 
     public Promotion createPromotion(CreatePromotionRequest createPromotionRequest) {
         Promotion promotion = new Promotion();
-        // Lấy start và end dates từ request và chuyển đổi thành LocalDateTime
-        LocalDate startDate = createPromotionRequest.getStartDate();
-        LocalDate endDate = createPromotionRequest.getEndDate();
-
-        LocalDateTime startDateTime = startDate.atStartOfDay(); // 00:00:00
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX); // 23:59:59.999999999
-
         promotion.setCode(createPromotionRequest.getCode());
         promotion.setDescription(createPromotionRequest.getDescription());
-        promotion.setStartDate(startDateTime);
-        promotion.setEndDate(endDateTime);
-        if(createPromotionRequest.getDiscount()>=0 && createPromotionRequest.getDiscount()<=100) {
+
+        Date startDate = java.sql.Date.valueOf(createPromotionRequest.getStartDate());
+        Date endDate = java.sql.Date.valueOf(createPromotionRequest.getEndDate());
+
+        promotion.setStartDate(startDate);
+        promotion.setEndDate(endDate);
+
+        if (createPromotionRequest.getDiscount() >= 0 && createPromotionRequest.getDiscount() <= 100) {
             promotion.setDiscount(createPromotionRequest.getDiscount());
-        }else{
+        } else {
             throw new RuntimeException("Can't Set Promotion <0 and >100");
         }
         validateDateOrder(promotion.getStartDate(), promotion.getEndDate());
 
-        LocalDateTime currentDate = LocalDateTime.now();
-        promotion.setStatus(!promotion.getEndDate().isBefore(currentDate));
+        Date currentDate = new Date();
+        promotion.setStatus(!promotion.getEndDate().before(currentDate));
 
         return promotionRepository.save(promotion);
     }
@@ -115,22 +104,21 @@ public class PromotionService {
                 .collect(Collectors.toList());
     }
 
-    public List<PromotionResponse> getPromotionsByDate(LocalDateTime targetDate) {
+    public List<PromotionResponse> getPromotionsByDate(Date targetDate) {
         List<Promotion> allPromotions = promotionRepository.findAll();
         updatePromotionStatusBasedOnEndDate(allPromotions);
 
         return allPromotions.stream()
-                .filter(promotion -> (promotion.getStartDate().isBefore(targetDate) || promotion.getStartDate().isEqual(targetDate))
-                        && (promotion.getEndDate().isAfter(targetDate) || promotion.getEndDate().isEqual(targetDate)))
+                .filter(promotion -> !promotion.getStartDate().after(targetDate) && !promotion.getEndDate().before(targetDate))
                 .map(this::toPromotionResponse)
                 .collect(Collectors.toList());
     }
 
     private void updatePromotionStatusBasedOnEndDate(List<Promotion> promotions) {
-        LocalDateTime currentTime = LocalDateTime.now();
+        Date currentTime = new Date();
 
         for (Promotion promotion : promotions) {
-            if (promotion.getEndDate().isBefore(currentTime)) {
+            if (promotion.getEndDate().before(currentTime)) {
                 promotion.setStatus(false);
                 promotionRepository.save(promotion);
             }
@@ -142,66 +130,54 @@ public class PromotionService {
         if (promotionUpdate.isPresent()) {
             Promotion promotion = promotionUpdate.get();
 
-            // Lấy start và end dates từ request và chuyển đổi thành LocalDateTime
-            LocalDate startDate = promotionRequest.getStartDate();
-            LocalDate endDate = promotionRequest.getEndDate();
+            Date startDate = java.sql.Date.valueOf(promotionRequest.getStartDate());
+            Date endDate = java.sql.Date.valueOf(promotionRequest.getEndDate());
 
-            LocalDateTime startDateTime = startDate.atStartOfDay(); // 00:00:00
-            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX); // 23:59:59.999999999
-
-            validateEndDate(promotion, endDateTime);
-            validateStartDate(promotion, startDateTime);
-            validateDateOrder(startDateTime, endDateTime);
-            validateDateDifference(startDateTime, endDateTime);
+            validateEndDate(promotion, endDate);
+            validateStartDate(promotion, startDate);
+            validateDateOrder(startDate, endDate);
+            validateDateDifference(startDate, endDate);
 
             promotion.setCode(promotionRequest.getCode());
             promotion.setDescription(promotionRequest.getDescription());
-            promotion.setStartDate(startDateTime);
-            promotion.setEndDate(endDateTime);
-            if(promotionRequest.getDiscount()>=0 && promotionRequest.getDiscount()<=100) {
+            promotion.setStartDate(startDate);
+            promotion.setEndDate(endDate);
+
+            if (promotionRequest.getDiscount() >= 0 && promotionRequest.getDiscount() <= 100) {
                 promotion.setDiscount(promotionRequest.getDiscount());
                 promotionRepository.save(promotion);
-            }else{
+            } else {
                 throw new RuntimeException("Can't Set Promotion <0 and >100");
             }
         }
     }
 
-    private void validateEndDate(Promotion promotion, LocalDateTime newEndDate) {
-        if (promotion.getEndDate().isAfter(newEndDate)) {
+    private void validateEndDate(Promotion promotion, Date newEndDate) {
+        if (promotion.getEndDate().after(newEndDate)) {
             throw new IllegalArgumentException("End date cannot be earlier than the current end date");
         }
     }
 
-    private void validateStartDate(Promotion promotion, LocalDateTime newStartDate) {
-        LocalDateTime currentTime = LocalDateTime.now();
+    private void validateStartDate(Promotion promotion, Date newStartDate) {
+        Date currentTime = new Date();
 
-        if (newStartDate.isBefore(currentTime)) {
+        if (newStartDate.before(currentTime)) {
             throw new IllegalArgumentException("Start date cannot be earlier than the current time");
         }
     }
 
-    private void validateDateOrder(LocalDateTime startDate, LocalDateTime endDate) {
-        if (endDate.isBefore(startDate)) {
+    private void validateDateOrder(Date startDate, Date endDate) {
+        if (endDate.before(startDate)) {
             throw new IllegalArgumentException("End date cannot be before the start date");
         }
     }
 
-//    private void validateDateDifference(LocalDateTime startDate, LocalDateTime endDate) {
-//        long diffInMilliseconds = Math.abs(endDate.getDayOfYear() - startDate.getDayOfYear());
-//        long diffInDays = TimeUnit.DAYS.convert(diffInMilliseconds, TimeUnit.MILLISECONDS);
-//        if (diffInDays < 3) {
-//            throw new IllegalArgumentException("End date should be apart from the start date for at least 3 days");
-//        }
-//    }//This method is incorrectly performed
-
-    private void validateDateDifference(LocalDateTime startDate, LocalDateTime endDate) {
-        long diffInDays = ChronoUnit.DAYS.between(startDate, endDate);
+    private void validateDateDifference(Date startDate, Date endDate) {
+        long diffInDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
         if (diffInDays < 3) {
             throw new IllegalArgumentException("End date should be apart from the start date for at least 3 days");
         }
     }
-
 
     public void deletePromotionById(long id) {
         Optional<Promotion> promotionUpdate = promotionRepository.findById(id);
