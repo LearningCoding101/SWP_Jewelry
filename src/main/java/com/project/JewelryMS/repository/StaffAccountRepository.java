@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,9 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
     // Find all staff accounts assigned to a specific shift
     @Query("SELECT sa FROM StaffAccount sa JOIN sa.staffShifts ss WHERE ss.shift = :shift")
     List<StaffAccount> findAllByShift(@Param("shift") Shift shift);
+
+    // Find all staff accounts assigned to shifts within a specific date range
+    @Query("SELECT DISTINCT sa FROM StaffAccount sa JOIN sa.staffShifts ss WHERE ss.shift.startTime >= :startDate AND ss.shift.startTime <= :endDate")
+    List<StaffAccount> findAllStaffAccountsByShifts(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }
