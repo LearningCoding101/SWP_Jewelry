@@ -3,6 +3,7 @@ package com.project.JewelryMS.controller;
 import com.project.JewelryMS.model.Dashboard.*;
 import com.project.JewelryMS.model.Dashboard.Customer.CustomerDemographics;
 import com.project.JewelryMS.model.Dashboard.Customer.CustomerLoyalty;
+import com.project.JewelryMS.model.Dashboard.Customer.CustomerPurchaseHistoryResponse;
 import com.project.JewelryMS.model.Dashboard.Customer.CustomerSignUp;
 import com.project.JewelryMS.model.Transition.TransitionResponse;
 import com.project.JewelryMS.service.DashboardService;
@@ -72,19 +73,19 @@ public class DashBoardController {
         return ResponseEntity.ok(dashboardService.getCustomerSignUpsByStaff(revenueDateRequest));
     }
 
-    @GetMapping("compare-day")
+    @GetMapping("compare-sale-day")
     public ComparisonResponse compareDay(@RequestParam("date1") String date1, @RequestParam("date2") String date2) {
         DayComparisonRequest request = new DayComparisonRequest(LocalDate.parse(date1), LocalDate.parse(date2));
         return dashboardService.compareDay(request);
     }
 
-    @GetMapping("compare-month")
+    @GetMapping("compare-sale-month")
     public ComparisonResponse compareMonth(@RequestParam("month1") String month1, @RequestParam("month2") String month2) {
         MonthComparisonRequest request = new MonthComparisonRequest(month1, month2);
         return dashboardService.compareMonth(request);
     }
 
-    @GetMapping("compare-year")
+    @GetMapping("compare-sale-year")
     public ComparisonResponse compareYear(@RequestParam("year1") String year1, @RequestParam("year2") String year2) {
         YearComparisonRequest request = new YearComparisonRequest(year1, year2);
         return dashboardService.compareYear(request);
@@ -116,5 +117,11 @@ public class DashBoardController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Handle other exceptions
         }
+    }
+
+    @GetMapping("/customer-purchase-history")
+    public ResponseEntity<List<CustomerPurchaseHistoryResponse>> getCustomerPurchaseHistory() {
+        List<CustomerPurchaseHistoryResponse> response = dashboardService.getCustomerPurchaseHistory();
+        return ResponseEntity.ok(response);
     }
 }
