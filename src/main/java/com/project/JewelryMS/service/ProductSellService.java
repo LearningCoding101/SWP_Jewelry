@@ -116,6 +116,7 @@ public class ProductSellService {
             responses.add(response);
 
         }
+        return responses;
     }
 
     private ProductSellResponse mapProductSellToResponse(ProductSell productSell) {
