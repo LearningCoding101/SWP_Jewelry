@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,43 +77,43 @@ public class ProductSellService {
     public List<ProductSellResponse> getAllProductSellResponses() {
         List<ProductSellResponse> responses = new ArrayList<>();
 
-        try {
-            List<ProductSell> productSells = productSellRepository.findAllWithCategoryAndPromotion();
+        // Fetch all products with category and promotion details in one go
+        List<ProductSell> productSells = productSellRepository.findAllWithCategoryAndPromotion();
 
-            for (ProductSell productSell : productSells) {
-                ProductSellResponse response = new ProductSellResponse();
-                response.setProductID(productSell.getProductID());
-                response.setCarat(productSell.getCarat());
-                response.setChi(productSell.getChi());
-                response.setCost(productSell.getCost());
-                response.setPDescription(productSell.getPDescription());
-                response.setGemstoneType(productSell.getGemstoneType());
-                response.setImage(productSell.getImage());
-                response.setManufacturer(productSell.getManufacturer());
-                response.setManufactureCost(productSell.getManufactureCost());
-                response.setMetalType(productSell.getMetalType());
-                response.setPName(productSell.getPName());
-                response.setProductCode(productSell.getProductCode());
-                response.setStatus(productSell.isPStatus());
+        // Map product ID to a list of promotion IDs
+        Map<Long, List<Long>> productPromotionMap = new HashMap<>();
+        List<Object[]> promotionData = productSellRepository.findAllPromotionIds();
+        for (Object[] entry : promotionData) {
+            Long productId = (Long) entry[0];
+            Long promotionId = (Long) entry[1];
+            productPromotionMap.computeIfAbsent(productId, k -> new ArrayList<>()).add(promotionId);
+        }
 
-                if (productSell.getCategory() != null) {
-                    response.setCategory_id(productSell.getCategory().getId());
-                    response.setCategory_name(productSell.getCategory().getName());
-                }
-                int id = (int) productSell.getProductID();
-                List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId((productSell.getProductID()));
-                List<String> promotionIds = new ArrayList<>();
+        for (ProductSell productSell : productSells) {
+            ProductSellResponse response = new ProductSellResponse();
+            response.setProductID(productSell.getProductID());
+            response.setCarat(productSell.getCarat());
+            response.setChi(productSell.getChi());
+            response.setCost(productSell.getCost());
+            response.setPDescription(productSell.getPDescription());
+            response.setGemstoneType(productSell.getGemstoneType());
+            response.setImage(productSell.getImage());
+            response.setManufacturer(productSell.getManufacturer());
+            response.setManufactureCost(productSell.getManufactureCost());
+            response.setMetalType(productSell.getMetalType());
+            response.setPName(productSell.getPName());
+            response.setProductCode(productSell.getProductCode());
+            response.setStatus(productSell.isPStatus());
 
-                for (Long promotionId : listPromotion) {
-                    promotionIds.add(String.valueOf(promotionId));
-                }
-
-                response.setPromotion_id(promotionIds);
-                responses.add(response);
+            if (productSell.getCategory() != null) {
+                response.setCategory_id(productSell.getCategory().getId());
+                response.setCategory_name(productSell.getCategory().getName());
             }
-        } catch (Exception e) {
-            logger.error("An error occurred while retrieving product sell responses: {}", e.getMessage());
-            // Optionally, you can re-throw the exception here or handle it differently based on your requirements
+
+            List<Long> promotionIds = productPromotionMap.getOrDefault(productSell.getProductID(), new ArrayList<>());
+            List<String> promotionIdStrings = promotionIds.stream().map(String::valueOf).collect(Collectors.toList());
+            response.setPromotion_id(promotionIdStrings);
+            responses.add(response);
         }
 
         return responses;
