@@ -3,6 +3,7 @@ package com.project.JewelryMS.repository;
 import com.project.JewelryMS.entity.PurchaseOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -17,4 +18,9 @@ public interface OrderRepository extends JpaRepository<PurchaseOrder, Long> {
             "FROM OrderDetail o " +
             "GROUP BY o.purchaseOrder.customer.PK_CustomerID, o.purchaseOrder.customer.cusName, o.productSell.pName")
     List<Object[]> findCustomerPurchaseHistory();
+    @Query("SELECT SUM(o.totalAmount) FROM PurchaseOrder o WHERE FUNCTION('YEAR', o.purchaseDate) = :year")
+    Double findTotalRevenueByYear(@Param("year") String year);
+
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od JOIN od.purchaseOrder o WHERE FUNCTION('YEAR', o.purchaseDate) = :year")
+    Long findTotalQuantityByYear(@Param("year") String year);
 }

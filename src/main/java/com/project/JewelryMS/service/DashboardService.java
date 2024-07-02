@@ -451,6 +451,34 @@ public class DashboardService {
     }
 
 
+//    private Map<String, Double> getRevenueByYear(List<String> years) {
+//        Map<String, Double> result = new HashMap<>();
+//        for (String year : years) {
+//            Double totalRevenue = orderRepository.findTotalRevenueByYear(year);
+//            result.put(year, totalRevenue);
+//        }
+//        return result;
+//    }
+//
+//    private Map<String, Long> getQuantityByYear(List<String> years) {
+//        Map<String, Long> result = new HashMap<>();
+//        for (String year : years) {
+//            Long totalQuantity = orderRepository.findTotalQuantityByYear(year);
+//            result.put(year, totalQuantity);
+//        }
+//        return result;
+//    }
+//
+//    private Map<String, Long> getCustomerSignupsByYear(List<String> years) {
+//        Map<String, Long> result = new HashMap<>();
+//        for (String year : years) {
+//            Long signups = customerRepository.findCustomerSignupsByYear(year);
+//            result.put(year, signups);
+//        }
+//        return result;
+//    }
+
+
 
     public Map<String, Float> getDailyAverageRevenuePerMonth(String startMonthYear, String endMonthYear) {
         Map<String, Float> dailyAverageRevenueMap = new HashMap<>();
