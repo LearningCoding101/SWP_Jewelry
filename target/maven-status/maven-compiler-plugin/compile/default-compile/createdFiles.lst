@@ -50,6 +50,7 @@ com\project\JewelryMS\model\ChangePasswordRequest.class
 com\project\JewelryMS\model\Dashboard\ComparisonResponse.class
 com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.class
 com\project\JewelryMS\entity\Account.class
+com\project\JewelryMS\model\Dashboard\YearComparisonResponse.class
 com\project\JewelryMS\model\Image\ImgbbResponse.class
 com\project\JewelryMS\model\Order\ProductResponse.class
 com\project\JewelryMS\entity\ProductBuy.class

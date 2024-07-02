@@ -71,6 +71,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRe
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffSalesResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeRequest.java
