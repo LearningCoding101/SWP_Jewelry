@@ -320,7 +320,7 @@ public class DashboardService {
         return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
     }
 
-    public ComparisonResponse compareYear(YearComparisonRequest request) {
+    public ComparisonResponse compareTheYear(YearComparisonRequest request) {
         Year year1 = Year.parse(request.getYear1());
         Year year2 = Year.parse(request.getYear2());
 
@@ -342,9 +342,9 @@ public class DashboardService {
     private ComparisonResponse calculateDifference(long totalQuantity1, float totalRevenue1, long customerCount1,
                                                    long totalQuantity2, float totalRevenue2, long customerCount2) {
         ComparisonResponse response = new ComparisonResponse();
-        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
+//        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
         response.setTotalRevenueDifference(totalRevenue2 - totalRevenue1);
-        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
+//        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
         return response;
     }
 
@@ -420,6 +420,80 @@ public class DashboardService {
                 .sorted(Comparator.comparingInt(DiscountEffectivenessResponse::getNumberUse).reversed())
                 .collect(Collectors.toList());
     }
+
+    public List<CustomerPurchaseHistoryResponse> getCustomerPurchaseHistory() {
+        List<Object[]> rawData = orderRepository.findCustomerPurchaseHistory();
+
+        Map<Long, CustomerPurchaseHistoryResponse> customerHistoryMap = rawData.stream().collect(Collectors.toMap(
+                row -> (Long) row[0], // customer ID
+                row -> {
+                    CustomerPurchaseHistoryResponse response = new CustomerPurchaseHistoryResponse();
+                    response.setCusName((String) row[1]);
+                    response.setPurchaseCount(((Number) row[2]).intValue());
+                    response.setProductTrend(row[3] + " (" + ((Number) row[4]).intValue() + ")");
+                    return response;
+                },
+                (existing, replacement) -> {
+                    // Combine the data if the same customer has multiple products
+                    existing.setPurchaseCount(existing.getPurchaseCount() + replacement.getPurchaseCount());
+                    existing.setProductTrend(existing.getProductTrend() + ", " + replacement.getProductTrend());
+                    return existing;
+                }
+        ));
+
+        // Find the most frequently purchased product for each customer
+        customerHistoryMap.values().forEach(response -> {
+            String mostPurchasedProduct = response.getProductTrend().split(",")[0].split(" \\(")[0];
+            response.setProductTrend(mostPurchasedProduct);
+        });
+
+        return customerHistoryMap.values().stream().collect(Collectors.toList());
+    }
+
+
+    public YearComparisonResponse compareYear(YearComparisonRequest request) {
+        List<String> years = Arrays.asList(request.getYear1(), request.getYear2());
+
+        Map<String, Double> revenue = getRevenueByYear(years);
+        Map<String, Long> quantity = getQuantityByYear(years);
+        Map<String, Long> customerSignup = getCustomerSignupsByYear(years);
+
+        YearComparisonResponse response = new YearComparisonResponse();
+        response.setRevenue(revenue);
+        response.setQuantity(quantity);
+        response.setCustomerSignup(customerSignup);
+
+        return response;
+    }
+
+    private Map<String, Double> getRevenueByYear(List<String> years) {
+        Map<String, Double> result = new HashMap<>();
+        for (String year : years) {
+            Double totalRevenue = orderRepository.findTotalRevenueByYear(year);
+            result.put(year, totalRevenue);
+        }
+        return result;
+    }
+
+    private Map<String, Long> getQuantityByYear(List<String> years) {
+        Map<String, Long> result = new HashMap<>();
+        for (String year : years) {
+            Long totalQuantity = orderRepository.findTotalQuantityByYear(year);
+            result.put(year, totalQuantity);
+        }
+        return result;
+    }
+
+    private Map<String, Long> getCustomerSignupsByYear(List<String> years) {
+        Map<String, Long> result = new HashMap<>();
+        for (String year : years) {
+            Long signups = customerRepository.findCustomerSignupsByYear(year);
+            result.put(year, signups);
+        }
+        return result;
+    }
+
+
 
     public Map<String, Float> getDailyAverageRevenuePerMonth(String startMonthYear, String endMonthYear) {
         Map<String, Float> dailyAverageRevenueMap = new HashMap<>();
