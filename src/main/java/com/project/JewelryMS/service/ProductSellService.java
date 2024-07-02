@@ -75,17 +75,46 @@ public class ProductSellService {
     }
 
     public List<ProductSellResponse> getAllProductSellResponses() {
-        try {
-            List<ProductSell> productSells = productSellRepository.findAllWithCategoryAndPromotion();
+        List<ProductSellResponse> responses = new ArrayList<>();
 
-            return productSells.stream()
-                    .map(this::mapProductSellToResponse)
-                    .collect(Collectors.toList());
+        // Fetch all products with category and promotion details in one go
+        List<ProductSell> productSells = productSellRepository.findAllWithCategoryAndPromotion();
 
-        } catch (Exception e) {
-            logger.error("An error occurred while retrieving product sell responses: {}", e.getMessage());
-            // Handle the exception as per your application's requirements
-            return Collections.emptyList(); // or throw a custom exception
+        // Map product ID to a list of promotion IDs
+        Map<Long, List<Long>> productPromotionMap = new HashMap<>();
+        List<Object[]> promotionData = productSellRepository.findAllPromotionIds();
+        for (Object[] entry : promotionData) {
+            Long productId = (Long) entry[0];
+            Long promotionId = (Long) entry[1];
+            productPromotionMap.computeIfAbsent(productId, k -> new ArrayList<>()).add(promotionId);
+        }
+
+        for (ProductSell productSell : productSells) {
+            ProductSellResponse response = new ProductSellResponse();
+            response.setProductID(productSell.getProductID());
+            response.setCarat(productSell.getCarat());
+            response.setChi(productSell.getChi());
+            response.setCost(productSell.getCost());
+            response.setPDescription(productSell.getPDescription());
+            response.setGemstoneType(productSell.getGemstoneType());
+            response.setImage(productSell.getImage());
+            response.setManufacturer(productSell.getManufacturer());
+            response.setManufactureCost(productSell.getManufactureCost());
+            response.setMetalType(productSell.getMetalType());
+            response.setPName(productSell.getPName());
+            response.setProductCode(productSell.getProductCode());
+            response.setStatus(productSell.isPStatus());
+
+            if (productSell.getCategory() != null) {
+                response.setCategory_id(productSell.getCategory().getId());
+                response.setCategory_name(productSell.getCategory().getName());
+            }
+
+            List<Long> promotionIds = productPromotionMap.getOrDefault(productSell.getProductID(), new ArrayList<>());
+            List<String> promotionIdStrings = promotionIds.stream().map(String::valueOf).collect(Collectors.toList());
+            response.setPromotion_id(promotionIdStrings);
+            responses.add(response);
+
         }
     }
 
