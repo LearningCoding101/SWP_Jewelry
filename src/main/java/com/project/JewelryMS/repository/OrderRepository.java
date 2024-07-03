@@ -18,9 +18,10 @@ public interface OrderRepository extends JpaRepository<PurchaseOrder, Long> {
             "FROM OrderDetail o " +
             "GROUP BY o.purchaseOrder.customer.PK_CustomerID, o.purchaseOrder.customer.cusName, o.productSell.pName")
     List<Object[]> findCustomerPurchaseHistory();
+
     @Query("SELECT SUM(o.totalAmount) FROM PurchaseOrder o WHERE FUNCTION('YEAR', o.purchaseDate) = :year AND o.orderBuyDetails IS EMPTY")
     Double findTotalRevenueByYear(@Param("year") String year);
 
-    @Query("SELECT SUM(od.quantity) FROM OrderDetail od JOIN od.purchaseOrder o WHERE FUNCTION('YEAR', o.purchaseDate) = :year")
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE FUNCTION('YEAR', od.purchaseOrder.purchaseDate) = :year AND od.purchaseOrder.orderBuyDetails IS EMPTY")
     Long findTotalQuantityByYear(@Param("year") String year);
 }
