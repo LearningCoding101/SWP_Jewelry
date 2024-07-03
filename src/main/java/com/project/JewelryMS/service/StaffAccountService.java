@@ -98,6 +98,7 @@ public class StaffAccountService {
         // Update fields from StaffAccountRequest
         existingStaffAccount.setPhoneNumber(staffAccountRequest.getPhoneNumber());
         existingStaffAccount.setSalary(staffAccountRequest.getSalary());
+        existingStaffAccount.setStartDate(staffAccountRequest.getStartDate());
 
         // Update account information
         Optional<Account> accountOpt = authenticationRepository.findById((long) existingStaffAccount.getAccount().getPK_userID());
