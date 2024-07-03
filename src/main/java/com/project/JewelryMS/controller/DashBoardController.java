@@ -76,17 +76,17 @@ public class DashBoardController {
         return ResponseEntity.ok(dashboardService.getCustomerSignUpsByStaff(revenueDateRequest));
     }
 
-    @GetMapping("compare-sale-day")
-    public ComparisonResponse compareDay(@RequestParam("date1") String date1, @RequestParam("date2") String date2) {
-        DayComparisonRequest request = new DayComparisonRequest(LocalDate.parse(date1), LocalDate.parse(date2));
-        return dashboardService.compareDay(request);
-    }
-
-    @GetMapping("compare-sale-month")
-    public ComparisonResponse compareMonth(@RequestParam("month1") String month1, @RequestParam("month2") String month2) {
-        MonthComparisonRequest request = new MonthComparisonRequest(month1, month2);
-        return dashboardService.compareMonth(request);
-    }
+//    @GetMapping("compare-sale-day")
+//    public ComparisonResponse compareDay(@RequestParam("date1") String date1, @RequestParam("date2") String date2) {
+//        DayComparisonRequest request = new DayComparisonRequest(LocalDate.parse(date1), LocalDate.parse(date2));
+//        return dashboardService.compareDay(request);
+//    }
+//
+//    @GetMapping("compare-sale-month")
+//    public ComparisonResponse compareMonth(@RequestParam("month1") String month1, @RequestParam("month2") String month2) {
+//        MonthComparisonRequest request = new MonthComparisonRequest(month1, month2);
+//        return dashboardService.compareMonth(request);
+//    }
 
     @GetMapping("compare-sale-year")
     public YearComparisonResponse comparationYear(@RequestParam("year1") String year1, @RequestParam("year2") String year2) {
