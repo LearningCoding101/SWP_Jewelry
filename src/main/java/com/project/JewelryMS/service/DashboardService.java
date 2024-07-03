@@ -283,70 +283,70 @@ public class DashboardService {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public ComparisonResponse compareDay(DayComparisonRequest request) {
-        Date Date1 =  convertLocalDateToDate(request.getDate1());
-        Date Date2= convertLocalDateToDate(request.getDate2());
-        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueOnDate(Date1);
-        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueOnDate(Date2);
-
-        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
-        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
-
-        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
-        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
-
-        long customerCount1 = customerRepository.countCustomersOnDate(Date1);
-        long customerCount2 = customerRepository.countCustomersOnDate(Date2);
-
-        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
-    }
-
-    public ComparisonResponse compareMonth(MonthComparisonRequest request) {
-        String month1 = request.getMonth1();
-        String month2 = request.getMonth2();
-
-        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueInMonth(month1);
-        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueInMonth(month2);
-
-        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
-        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
-
-        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
-        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
-
-        long customerCount1 = customerRepository.countCustomersInMonth(month1);
-        long customerCount2 = customerRepository.countCustomersInMonth(month2);
-
-        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
-    }
-
-    public ComparisonResponse compareTheYear(YearComparisonRequest request) {
-        Year year1 = Year.parse(request.getYear1());
-        Year year2 = Year.parse(request.getYear2());
-
-        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueInYear(year1);
-        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueInYear(year2);
-
-        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
-        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
-
-        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
-        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
-
-        long customerCount1 = customerRepository.countCustomersInYear(year1);
-        long customerCount2 = customerRepository.countCustomersInYear(year2);
-
-        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
-    }
-
-    private ComparisonResponse calculateDifference(long totalQuantity1, float totalRevenue1, long customerCount1,
-                                                   long totalQuantity2, float totalRevenue2, long customerCount2) {
-        ComparisonResponse response = new ComparisonResponse();
-//        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
-        response.setTotalRevenueDifference(totalRevenue2 - totalRevenue1);
-//        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
-        return response;
-    }
+//    public ComparisonResponse compareDay(DayComparisonRequest request) {
+//        Date Date1 =  convertLocalDateToDate(request.getDate1());
+//        Date Date2= convertLocalDateToDate(request.getDate2());
+//        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueOnDate(Date1);
+//        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueOnDate(Date2);
+//
+//        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
+//        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
+//
+//        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
+//        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
+//
+//        long customerCount1 = customerRepository.countCustomersOnDate(Date1);
+//        long customerCount2 = customerRepository.countCustomersOnDate(Date2);
+//
+//        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
+//    }
+//
+//    public ComparisonResponse compareMonth(MonthComparisonRequest request) {
+//        String month1 = request.getMonth1();
+//        String month2 = request.getMonth2();
+//
+//        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueInMonth(month1);
+//        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueInMonth(month2);
+//
+//        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
+//        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
+//
+//        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
+//        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
+//
+//        long customerCount1 = customerRepository.countCustomersInMonth(month1);
+//        long customerCount2 = customerRepository.countCustomersInMonth(month2);
+//
+//        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
+//    }
+//
+//    public ComparisonResponse compareTheYear(YearComparisonRequest request) {
+//        Year year1 = Year.parse(request.getYear1());
+//        Year year2 = Year.parse(request.getYear2());
+//
+//        OrderDetailProjection result1 = orderDetailRepository.findTotalQuantityAndRevenueInYear(year1);
+//        OrderDetailProjection result2 = orderDetailRepository.findTotalQuantityAndRevenueInYear(year2);
+//
+//        long totalQuantity1 = (result1 != null && result1.getTotalQuantity() != null) ? result1.getTotalQuantity() : 0;
+//        float totalRevenue1 = (result1 != null && result1.getTotalRevenue() != null) ? result1.getTotalRevenue() : 0;
+//
+//        long totalQuantity2 = (result2 != null && result2.getTotalQuantity() != null) ? result2.getTotalQuantity() : 0;
+//        float totalRevenue2 = (result2 != null && result2.getTotalRevenue() != null) ? result2.getTotalRevenue() : 0;
+//
+//        long customerCount1 = customerRepository.countCustomersInYear(year1);
+//        long customerCount2 = customerRepository.countCustomersInYear(year2);
+//
+//        return calculateDifference(totalQuantity1, totalRevenue1, customerCount1, totalQuantity2, totalRevenue2, customerCount2);
+//    }
+//
+//    private ComparisonResponse calculateDifference(long totalQuantity1, float totalRevenue1, long customerCount1,
+//                                                   long totalQuantity2, float totalRevenue2, long customerCount2) {
+//        ComparisonResponse response = new ComparisonResponse();
+////        response.setTotalQuantityDifference(totalQuantity2 - totalQuantity1);
+//        response.setTotalRevenueDifference(totalRevenue2 - totalRevenue1);
+////        response.setTotalCustomerAccountsDifference(customerCount2 - customerCount1);
+//        return response;
+//    }
 
     //Get Revenue Generated by a Staff in a single day
     public List<StaffRevenueResponse> getRevenueGeneratedByStaff(LocalDate startDate, LocalDate endDate) {
@@ -452,7 +452,13 @@ public class DashboardService {
 
 
     public YearComparisonResponse compareYear(YearComparisonRequest request) {
-        List<String> years = Arrays.asList(request.getYear1(), request.getYear2());
+        int startYear = Integer.parseInt(request.getYear1());
+        int endYear = Integer.parseInt(request.getYear2());
+
+        List<String> years = new ArrayList<>();
+        for (int year = startYear; year <= endYear; year++) {
+            years.add(String.valueOf(year));
+        }
 
         Map<String, Double> revenue = getRevenueByYear(years);
         Map<String, Long> quantity = getQuantityByYear(years);
@@ -470,7 +476,7 @@ public class DashboardService {
         Map<String, Double> result = new HashMap<>();
         for (String year : years) {
             Double totalRevenue = orderRepository.findTotalRevenueByYear(year);
-            result.put(year, totalRevenue);
+            result.put(year, totalRevenue != null ? totalRevenue : 0.0);
         }
         return result;
     }
@@ -479,7 +485,7 @@ public class DashboardService {
         Map<String, Long> result = new HashMap<>();
         for (String year : years) {
             Long totalQuantity = orderRepository.findTotalQuantityByYear(year);
-            result.put(year, totalQuantity);
+            result.put(year, totalQuantity != null ? totalQuantity : 0L);
         }
         return result;
     }
@@ -488,10 +494,12 @@ public class DashboardService {
         Map<String, Long> result = new HashMap<>();
         for (String year : years) {
             Long signups = customerRepository.findCustomerSignupsByYear(year);
-            result.put(year, signups);
+            result.put(year, signups != null ? signups : 0L);
         }
         return result;
     }
+
+
 
 
 
