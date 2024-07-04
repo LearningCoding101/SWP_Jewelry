@@ -44,9 +44,4 @@ public class Shift {
     @JsonManagedReference
     Set<Staff_Shift> staffShifts;
 
-    // Method to check if the work area is for cashiers
-    public boolean isCashier() {
-        return "cashier".equalsIgnoreCase(this.workArea);
-    }
-
 }
