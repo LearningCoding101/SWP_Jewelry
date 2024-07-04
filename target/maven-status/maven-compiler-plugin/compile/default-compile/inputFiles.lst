@@ -54,6 +54,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerSearchResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\CategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\ComparisonResponse.java

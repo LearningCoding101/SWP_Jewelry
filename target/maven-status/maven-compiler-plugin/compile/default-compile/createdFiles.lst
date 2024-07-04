@@ -171,6 +171,7 @@ com\project\JewelryMS\model\EmailDetail.class
 com\project\JewelryMS\model\Dashboard\CategoryResponse.class
 com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
 com\project\JewelryMS\model\Customer\CreateCustomerRequest.class
+com\project\JewelryMS\model\Customer\CustomerSearchResponse.class
 com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.class
 com\project\JewelryMS\repository\StaffShiftRepository.class
 com\project\JewelryMS\enumClass\RoleEnum.class
