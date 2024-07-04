@@ -407,10 +407,6 @@ public class DashboardService {
         return result;
     }
 
-
-
-
-
     public Map<String, Float> getDailyAverageRevenuePerMonth(String startMonthYear, String endMonthYear) {
         Map<String, Float> dailyAverageRevenueMap = new HashMap<>();
 
