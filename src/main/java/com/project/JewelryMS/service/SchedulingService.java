@@ -322,6 +322,19 @@ public class SchedulingService {
     }
 
     @Transactional
+    public Shift updateShiftRegister(long shiftId, int register) {
+        // Fetch the shift entity from the database
+        Shift shift = shiftRepository.findById(shiftId)
+                .orElseThrow(() -> new RuntimeException("Shift not found"));
+
+        // Update the register station for cashier
+        shift.setRegister(register);
+
+        // Save the updated shift entity to the database
+        return shiftRepository.save(shift);
+    }
+
+    @Transactional
     public List<StaffShiftResponse> assignStaffToDateRange(List<Integer> staffIds, LocalDate startDate, LocalDate endDate, List<String> shiftTypes) {
         List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());

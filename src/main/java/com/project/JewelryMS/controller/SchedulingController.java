@@ -141,6 +141,18 @@ public class SchedulingController {
         }
     }
 
+    @PutMapping("/update-shift-register")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<?> updateShiftRegister(@RequestParam long shiftId, @RequestParam int register) {
+        try {
+            Shift updatedShift = schedulingService.updateShiftRegister(shiftId, register);
+            return ResponseEntity.ok("Shift register updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update shift register: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/assignStaffToDateRange")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
     public ResponseEntity<?> assignStaffToDateRange(@RequestBody AssignStaffToMultipleDaysRequest request) {
