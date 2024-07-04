@@ -118,6 +118,7 @@ public class DashBoardController {
         return ResponseEntity.ok(responses);
     }
 
+
     @GetMapping("/monthlyAverageRevenue")
     public ResponseEntity<Map<String, Float>> getMonthlyAverageRevenue(
             @RequestParam String startMonthYear, @RequestParam String endMonthYear) {
@@ -129,7 +130,7 @@ public class DashBoardController {
         }
     }
 
-    @GetMapping("/dailyAverageRevenue")
+    @GetMapping("/daily-revenue")
     public ResponseEntity<Map<String, Double>> getDailyRevenue(
             @RequestParam String startDate, @RequestParam String endDate) {
         try {

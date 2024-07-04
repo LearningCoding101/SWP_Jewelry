@@ -1,6 +1,5 @@
 package com.project.JewelryMS.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -45,5 +43,10 @@ public class Shift {
     @OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
     @JsonManagedReference
     Set<Staff_Shift> staffShifts;
+
+    // Method to check if the work area is for cashiers
+    public boolean isCashier() {
+        return "cashier".equalsIgnoreCase(this.workArea);
+    }
 
 }

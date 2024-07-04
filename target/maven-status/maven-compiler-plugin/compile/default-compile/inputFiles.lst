@@ -65,6 +65,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DailyRevenueRe
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DayComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\MonthComparisonRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\ProductSellTrendResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueResponse.java

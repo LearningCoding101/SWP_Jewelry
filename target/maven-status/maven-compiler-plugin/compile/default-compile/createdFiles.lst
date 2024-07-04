@@ -194,3 +194,4 @@ com\project\JewelryMS\model\Dashboard\Customer\CustomerDemographics.class
 com\project\JewelryMS\model\Shift\StaffAvailabilityDeserializer.class
 com\project\JewelryMS\model\Guarantee\GuaranteeRequest.class
 com\project\JewelryMS\repository\StaffAccountRepository.class
+com\project\JewelryMS\model\Dashboard\ProductSellTrendResponse.class
