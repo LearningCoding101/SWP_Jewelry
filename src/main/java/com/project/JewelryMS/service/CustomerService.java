@@ -174,4 +174,11 @@ public class CustomerService {
 
         return genderCount;
     }
+
+     public String getCustomerNameById(Long customerId) {
+        // This method should fetch the customer's name using the customer repository.
+        // Assuming there is a method in CustomerRepository to fetch the customer by ID.
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        return customerOptional.map(Customer::getCusName).orElse("Unknown");
+    }
 }
