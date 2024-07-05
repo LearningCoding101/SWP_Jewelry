@@ -635,13 +635,13 @@ public class SchedulingService {
 
             if (dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.FRIDAY) {
                 for (int staffId : mod2Staff) {
-                    futures.add(assignShift(executorService, staffId, date, "Morning", "Sales", staffShiftResponses));
-                    futures.add(assignShift(executorService, staffId, date, "Afternoon", "Sales", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Morning", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Afternoon", staffShiftResponses));
                 }
             } else if (dayOfWeek == DayOfWeek.TUESDAY || dayOfWeek == DayOfWeek.THURSDAY || dayOfWeek == DayOfWeek.SATURDAY) {
                 for (int staffId : mod0Staff) {
-                    futures.add(assignShift(executorService, staffId, date, "Afternoon", "Sales", staffShiftResponses));
-                    futures.add(assignShift(executorService, staffId, date, "Evening", "Sales", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Afternoon", staffShiftResponses));
+                    futures.add(assignShift(executorService, staffId, date, "Evening", staffShiftResponses));
                 }
             }
 
@@ -672,6 +672,7 @@ public class SchedulingService {
                 .collect(Collectors.toList());
     }
 
+
     @Scheduled(fixedRate = 1209600000) // 2 weeks in milliseconds
     public void scheduleShiftsAutomatically() {
         List<Integer> staffIds = getAllStaffIds();
@@ -687,17 +688,13 @@ public class SchedulingService {
                 .collect(Collectors.toList());
     }
 
-    private Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, String workArea, List<StaffShiftResponse> staffShiftResponses) {
+    private Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, List<StaffShiftResponse> staffShiftResponses) {
         return executorService.submit(() -> {
             try {
-                if ("Sales".equalsIgnoreCase(workArea)) {
-                    StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
-                    synchronized (staffShiftResponses) {
-                        staffShiftResponses.add(response);
-                    }
-                } else {
-                    // Handle assignment to other work areas (if needed)
-                    System.out.println("Skipping assignment to " + workArea + " shift for staff ID " + staffId);
+                // Ensure only assigning to sales shifts
+                StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
+                synchronized (staffShiftResponses) {
+                    staffShiftResponses.add(response);
                 }
             } catch (ShiftAssignmentException e) {
                 System.out.println("Staff ID " + staffId + " is already assigned on " + date + ".");
@@ -709,6 +706,7 @@ public class SchedulingService {
         return executorService.submit(() -> {
             try {
                 String shiftType = getRandomSingleShiftType();
+                // Ensure only assigning to sales shifts
                 StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
                 synchronized (staffShiftResponses) {
                     staffShiftResponses.add(response);
