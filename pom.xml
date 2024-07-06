@@ -113,8 +113,21 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>9.1.1</version>
 		</dependency>
-	</dependencies>
 
+		<!--Temporarily Test Package for Automation Testing-->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--Automation Testing dependencies ends here-->
+
+	</dependencies>
 	<build>
 		<finalName>jewelry</finalName>
 		<plugins>
