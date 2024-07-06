@@ -1,19 +1,13 @@
 package com.project.JewelryMS.service;
 
-import com.project.JewelryMS.entity.Category;
-import com.project.JewelryMS.entity.ProductSell;
-import com.project.JewelryMS.entity.Promotion;
+import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.ProductSell.*;
-import com.project.JewelryMS.repository.CategoryRepository;
-import com.project.JewelryMS.repository.ProductSellRepository;
-import com.project.JewelryMS.repository.PromotionRepository;
-import jakarta.transaction.Transactional;
+import com.project.JewelryMS.repository.*;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +16,8 @@ import java.util.stream.Collectors;
 public class ProductSellService {
     private static final Logger logger = LoggerFactory.getLogger(ProductSellService.class);
 
+    @Autowired
+    PricingRatioRepository pricingRatioRepository;
 
     @Autowired
     ProductSellRepository productSellRepository;
@@ -38,6 +34,9 @@ public class ProductSellService {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    ProductSellPromotionRepository productSellPromotionRepository;
+
     public ProductSell removePromotionsFromProductSell(RemovePromotionRequest request) {
         Optional<ProductSell> productSellOpt = productSellRepository.findById(request.getProductSellId());
         if (!productSellOpt.isPresent()) {
@@ -45,12 +44,13 @@ public class ProductSellService {
         }
 
         ProductSell productSell = productSellOpt.get();
-        List<Promotion> existingPromotions = productSell.getPromotion();
+        List<ProductSell_Promotion> existingPromotions = productSellPromotionRepository.findByProductSell(productSell);
+
         for (Long promotionId : request.getPromotionIds()) {
-            existingPromotions.removeIf(promotion -> promotion.getPK_promotionID() == promotionId);
+            existingPromotions.removeIf(promotion -> promotion.getPromotion().getPK_promotionID() == promotionId);
         }
 
-        productSell.setPromotion(existingPromotions);
+        productSell.setProductSellPromotions(existingPromotions);
         return productSellRepository.save(productSell);
     }
 
@@ -61,15 +61,20 @@ public class ProductSellService {
         }
 
         ProductSell productSell = productSellOpt.get();
-        List<Promotion> existingPromotions = productSell.getPromotion();
+        List<ProductSell_Promotion> existingPromotions = productSellPromotionRepository.findByProductSell(productSell);
+
         for (Long promotionId : request.getPromotionIds()) {
             Optional<Promotion> promotionOpt = promotionRepository.findById(promotionId);
-            if (promotionOpt.isPresent() && !existingPromotions.contains(promotionOpt.get())) {
-                existingPromotions.add(promotionOpt.get());
+            if (promotionOpt.isPresent() && existingPromotions.stream().noneMatch(p -> p.getPromotion().equals(promotionOpt.get()))) {
+                ProductSell_Promotion newProductSellPromotion = new ProductSell_Promotion();
+                newProductSellPromotion.setProductSell(productSell);
+                newProductSellPromotion.setPromotion(promotionOpt.get());
+                productSellPromotionRepository.save(newProductSellPromotion);
+                existingPromotions.add(newProductSellPromotion);
             }
         }
 
-        productSell.setPromotion(existingPromotions);
+        productSell.setProductSellPromotions(existingPromotions);
         return productSellRepository.save(productSell);
     }
 
@@ -179,6 +184,12 @@ public class ProductSellService {
         ProductSell productSell1 = productSellRepository.save(productSell);
         return getProductSellById2(productSell1.getProductID());
     }
+    private Float goldPrice;
+
+    @PostConstruct
+    private void initializeGoldPrice() {
+        this.goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
+    }
 
     public Float calculateProductSellCost(Integer chi, Float carat, String gemstoneType, String metalType, Float manufacturerCost){
         Float totalGemPrice = 0.0F;
@@ -191,22 +202,32 @@ public class ProductSellService {
 
         Float totalGoldPrice = 0.0F;
         if (metalType != null && chi != null) {
-            Float goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-            totalGoldPrice = (goldPrice / 10) * chi;
+            Float goldPrices = goldPrice;
+            totalGoldPrice = (goldPrices / 10) * chi;
         }
 
-        totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * 1.2F;
+        totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * getPricingRatioPS();
 
         return totalPrice / 1000.0F;
     }
-    private Float pricingRatio = 1.20F;
-    public Float GetPricingRatio() {
-        return pricingRatio;
+
+    public Float getPricingRatioPS(){
+        Optional<PricingRatio> pricingRatioOptional = pricingRatioRepository.findById(1L);
+        if(pricingRatioOptional.isPresent()){
+            PricingRatio pricingRatio1 = pricingRatioOptional.get();
+            return pricingRatio1.getPricingRatioPS();
+        }
+        return 0.0F;
     }
 
-    public Float updatePricingRatio(Float newRatio) {
-        this.pricingRatio = newRatio;
-        return pricingRatio;
+    public Float updatePricingRatioPS(Float newRatio) {
+        Optional<PricingRatio> pricingRatioOptional = pricingRatioRepository.findById(1L);
+        if(pricingRatioOptional.isPresent()) {
+            PricingRatio pricingRatio = pricingRatioOptional.get();
+            pricingRatio.setPricingRatioPS(newRatio);
+            pricingRatioRepository.save(pricingRatio);
+        }
+        return newRatio;
     }
 
     // Read all ProductSell entries

@@ -63,21 +63,22 @@ public class ProductSellController {
     // Adjust pricing ratio
     @PostMapping("/adjust-ratio/{ratio}")
     public ResponseEntity<Float> adjustRatio(@PathVariable Float ratio) {
-        productSellService.updatePricingRatio(ratio);
+        productSellService.updatePricingRatioPS(ratio);
         return ResponseEntity.ok(ratio);
     }
 
     // Add promotions to a ProductSell
     @PostMapping("/promotions")
-    public ResponseEntity<ProductSell> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
+    public ResponseEntity<String> addPromotionsToProductSell(@RequestBody AddPromotionsRequest request) {
         ProductSell updatedProductSell = productSellService.addPromotionsToProductSell(request);
-        return ResponseEntity.ok(updatedProductSell);
+        return ResponseEntity.ok("Add Successfully");
     }
 
     // Remove promotions from a ProductSell
     @DeleteMapping("/promotions")
-    public ResponseEntity<ProductSell> removePromotionsFromProductSell(@RequestBody RemovePromotionRequest request) {
+    public ResponseEntity<String> removePromotionsFromProductSell(@RequestBody RemovePromotionRequest request) {
         ProductSell updatedProductSell = productSellService.removePromotionsFromProductSell(request);
-        return ResponseEntity.ok(updatedProductSell);
+        return ResponseEntity.ok("Remove Successfully");
     }
+
 }
