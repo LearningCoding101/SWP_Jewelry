@@ -3,7 +3,7 @@ package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.model.ProductSell.*;
-import com.project.JewelryMS.service.ImageService;
+import com.project.JewelryMS.model.Promotion.AssignPromotionRequest;
 import com.project.JewelryMS.service.ProductSellService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,5 +80,21 @@ public class ProductSellController {
         ProductSell updatedProductSell = productSellService.removePromotionsFromProductSell(request);
         return ResponseEntity.ok("Remove Successfully");
     }
+    @PostMapping("/assign")
+    public ResponseEntity<String> assignPromotionToProductSells(@RequestBody AssignPromotionRequest request) {
+        productSellService.assignPromotionToProductSells(request);
+        return ResponseEntity.ok("Promotion assigned to product sells successfully");
+    }
 
+    @PostMapping("/remove")
+    public ResponseEntity<String> removePromotionFromProductSells(@RequestBody AssignPromotionRequest request) {
+        productSellService.removePromotionFromProductSells(request);
+        return ResponseEntity.ok("Promotion removed from product sells successfully");
+    }
+
+    @PostMapping("/removeAll")
+    public ResponseEntity<String> removeAllPromotionsFromProductSells(@RequestBody List<Long> productSellIds) {
+        productSellService.removeAllPromotionsFromProductSells(productSellIds);
+        return ResponseEntity.ok("All promotions removed from product sells successfully");
+    }
 }

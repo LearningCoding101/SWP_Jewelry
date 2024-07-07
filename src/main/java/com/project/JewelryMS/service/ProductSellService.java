@@ -2,12 +2,16 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.ProductSell.*;
+import com.project.JewelryMS.model.Promotion.AssignPromotionRequest;
 import com.project.JewelryMS.repository.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -324,8 +328,60 @@ public class ProductSellService {
         }
     }
 
+    @Transactional
+    public void assignPromotionToProductSells(AssignPromotionRequest request) {
+        Promotion promotion = promotionRepository.findById(request.getPromotionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found"));
 
+        List<ProductSell> productSells = productSellRepository.findAllById(request.getProductSellIds());
+        if (productSells.isEmpty()) {
+            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
+        }
 
+        for (ProductSell productSell : productSells) {
+            ProductSell_Promotion psp = new ProductSell_Promotion();
+            psp.setProductSell(productSell);
+            psp.setPromotion(promotion);
+            productSellPromotionRepository.save(psp);
+        }
+    }
 
+    @Transactional
+    public void removePromotionFromProductSells(AssignPromotionRequest request) {
+        Promotion promotion = promotionRepository.findById(request.getPromotionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found"));
+
+        List<ProductSell> productSells = productSellRepository.findAllById(request.getProductSellIds());
+        if (productSells.isEmpty()) {
+            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
+        }
+
+        for (ProductSell productSell : productSells) {
+            ProductSell_Promotion psp = productSellPromotionRepository
+                    .findByProductSellAndPromotion(productSell, promotion)
+                    .orElseThrow(() -> new ResourceNotFoundException("ProductSell_Promotion not found"));
+            productSellPromotionRepository.delete(psp);
+        }
+    }
+
+    @Transactional
+    public void removeAllPromotionsFromProductSells(List<Long> productSellIds) {
+        List<ProductSell> productSells = productSellRepository.findAllById(productSellIds);
+        if (productSells.isEmpty()) {
+            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
+        }
+
+        for (ProductSell productSell : productSells) {
+            List<ProductSell_Promotion> psps = productSellPromotionRepository.findByProductSell(productSell);
+            productSellPromotionRepository.deleteAll(psps);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
 }
 
