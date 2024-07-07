@@ -4,7 +4,6 @@ import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.ProductSell;
 import com.project.JewelryMS.entity.Promotion;
 import com.project.JewelryMS.model.ProductSell.*;
-import com.project.JewelryMS.model.Promotion.AssignPromotionRequest;
 import com.project.JewelryMS.repository.CategoryRepository;
 import com.project.JewelryMS.repository.ProductSellRepository;
 import com.project.JewelryMS.repository.PromotionRepository;
@@ -12,9 +11,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -306,72 +303,7 @@ public class ProductSellService {
         }
     }
 
-    //Assign productsell to promotion id
-    @Transactional
-    public void assignPromotionToProductSells(AssignPromotionRequest request) {
-        // Fetch the promotion
-        Promotion promotion = promotionRepository.findById(request.getPromotionId())
-                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found"));
 
-        // Fetch the product sells
-        List<ProductSell> productSells = productSellRepository.findAllById(request.getProductSellIds());
-        if (productSells.isEmpty()) {
-            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
-        }
-
-        // Assign the promotion to each product sell
-        for (ProductSell productSell : productSells) {
-            productSell.getPromotion().add(promotion);
-        }
-
-        // Save the changes
-        productSellRepository.saveAll(productSells);
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    @Transactional
-    public void removePromotionFromProductSells(AssignPromotionRequest request) {
-        // Fetch the promotion
-        Promotion promotion = promotionRepository.findById(request.getPromotionId())
-                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found"));
-
-        // Fetch the product sells
-        List<ProductSell> productSells = productSellRepository.findAllById(request.getProductSellIds());
-        if (productSells.isEmpty()) {
-            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
-        }
-
-        // Remove the promotion from each product sell
-        for (ProductSell productSell : productSells) {
-            productSell.getPromotion().remove(promotion);
-        }
-
-        // Save the changes
-        productSellRepository.saveAll(productSells);
-    }
-
-    @Transactional
-    public void removeAllPromotionsFromProductSells(List<Long> productSellIds) {
-        // Fetch the product sells
-        List<ProductSell> productSells = productSellRepository.findAllById(productSellIds);
-        if (productSells.isEmpty()) {
-            throw new ResourceNotFoundException("No ProductSell entities found for the given IDs");
-        }
-
-        // Remove all promotions from each product sell
-        for (ProductSell productSell : productSells) {
-            productSell.getPromotion().clear();
-        }
-
-        // Save the changes
-        productSellRepository.saveAll(productSells);
-    }
 
 
 }

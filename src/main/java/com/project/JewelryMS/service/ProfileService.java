@@ -2,7 +2,6 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.enumClass.RoleEnum;
-import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.model.AccountResponse;
 import com.project.JewelryMS.model.Profile.*;
@@ -12,9 +11,6 @@ import com.project.JewelryMS.repository.StaffAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,7 +63,7 @@ public class ProfileService {
         Optional<Account> authenticationOptional = authenticationRepository.findById(adminId);
         if (authenticationOptional.isPresent() && authenticationOptional.get().getRole() == RoleEnum.ROLE_ADMIN) {
             Account account = authenticationOptional.get();
-            account.setAccountName(updateAdminRequest.getAccountname());
+            account.setAccountName(updateAdminRequest.getAccountName());
             account.setAUsername(updateAdminRequest.getUsername());
             account.setEmail(updateAdminRequest.getEmail());
             authenticationRepository.save(account);
