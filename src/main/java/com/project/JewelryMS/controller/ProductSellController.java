@@ -86,13 +86,13 @@ public class ProductSellController {
         return ResponseEntity.ok("Promotion assigned to product sells successfully");
     }
 
-    @PostMapping("/remove")
+    @DeleteMapping("/remove")
     public ResponseEntity<String> removePromotionFromProductSells(@RequestBody AssignPromotionRequest request) {
         productSellService.removePromotionFromProductSells(request);
         return ResponseEntity.ok("Promotion removed from product sells successfully");
     }
 
-    @PostMapping("/removeAll")
+    @DeleteMapping("/remove-all-promotion-from-product")
     public ResponseEntity<String> removeAllPromotionsFromProductSells(@RequestBody List<Long> productSellIds) {
         productSellService.removeAllPromotionsFromProductSells(productSellIds);
         return ResponseEntity.ok("All promotions removed from product sells successfully");
