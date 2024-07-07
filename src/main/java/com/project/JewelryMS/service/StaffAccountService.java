@@ -110,7 +110,6 @@ public class StaffAccountService {
         account.setAUsername(staffAccountRequest.getUsername());
 //        account.setAPassword(passwordEncoder.encode(staffAccountRequest.getPassword()));
         account.setAccountName(staffAccountRequest.getAccountName());
-        account.setRole(staffAccountRequest.getRole()); // Update role from request
 
         // Save the updated entities
         authenticationRepository.save(account);
