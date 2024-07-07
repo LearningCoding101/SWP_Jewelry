@@ -127,42 +127,16 @@ public class ProfileService {
 //        return null; // Staff not found
 //    }
 
-    public List<Object> getAllAccounts() {
-        List<Account> accounts = authenticationRepository.findAll();
-        return accounts.stream().map(account -> {
-            switch (account.getRole()) {
-                case ROLE_MANAGER:
-                    return new ManagerProfileResponse(
-                            account.getRole(),
-                            account.getEmail(),
-                            account.getUsername(),
-                            account.getAccountName(),
-                            account.getStatus() != null ? account.getStatus() : 0 // Default to 0 if status is null
-                    );
-                case ROLE_ADMIN:
-                    return new AdminProfileResponse(
-                            account.getRole(),
-                            account.getEmail(),
-                            account.getUsername(),
-                            account.getAccountName(),
-                            account.getStatus() != null ? account.getStatus() : 0 // Default to 0 if status is null
-                    );
-                case ROLE_STAFF:
-                    Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(account.getPK_userID());
-                    if (staffAccountOptional.isPresent()) {
-                        StaffAccount staffAccount = staffAccountOptional.get();
-                        return new StaffListResponse(
-                                staffAccount.getAccount().getRole(),
-                                staffAccount.getAccount().getEmail(),
-                                staffAccount.getAccount().getUsername(),
-                                staffAccount.getAccount().getAccountName(),
-                                staffAccount.getAccount().getStatus() != null ? staffAccount.getAccount().getStatus() : 0 // Default to 0 if status is null
-                        );
-                    }
-                    return null;
-                default:
-                    return null;
-            }
-        }).collect(Collectors.toList());
+    public List<StaffListResponse> getAllAccounts() {
+        List<Account> accounts = authenticationRepository.findAllAccounts();
+        return accounts.parallelStream()
+                .map(a -> new StaffListResponse(
+                        a.getRole(),
+                        a.getEmail(),
+                        a.getAUsername(),
+                        a.getAccountName(),
+                        a.getStatus() != null ? a.getStatus() : 0 // handle null status
+                ))
+                .collect(Collectors.toList());
     }
 }
