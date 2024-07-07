@@ -30,8 +30,10 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Customer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Guarantee.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\OrderBuyDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\OrderDetail.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\entity\PricingRatio.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\ProductBuy.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\ProductSell.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\entity\ProductSell_Promotion.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Promotion.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\PurchaseOrder.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Shift.java
@@ -121,6 +123,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\ProductSellR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\AdminProfileResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\ManagerProfileResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\StaffListResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\StaffProfileResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateAdminResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateManagerResponse.java
@@ -157,7 +160,9 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderBuyDetailRepos
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderDetailProjection.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderDetailRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\OrderRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PricingRatioRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductBuyRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellPromotionRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PromotionRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ShiftRepository.java

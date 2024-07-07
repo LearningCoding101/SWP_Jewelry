@@ -59,6 +59,7 @@ com\project\JewelryMS\model\Order\CreateOrderBuyWrapper.class
 com\project\JewelryMS\repository\ManagerAccountRepository.class
 com\project\JewelryMS\model\Order\ProductBuyResponse.class
 com\project\JewelryMS\model\AccountResponseGG.class
+com\project\JewelryMS\model\Profile\StaffListResponse.class
 com\project\JewelryMS\service\ShiftService.class
 com\project\JewelryMS\entity\OrderBuyDetail.class
 com\project\JewelryMS\model\Order\CreateOrderWrapper.class
@@ -102,6 +103,7 @@ com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.class
 com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\service\CustomerService.class
+com\project\JewelryMS\repository\ProductSellPromotionRepository.class
 com\project\JewelryMS\config\SecurityConfig.class
 com\project\JewelryMS\model\Order\OrderBuyResponse.class
 com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.class
@@ -132,10 +134,12 @@ com\project\JewelryMS\service\Order\OrderDetailService.class
 com\project\JewelryMS\repository\ShiftRepository.class
 com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.class
 com\project\JewelryMS\model\Guarantee\GuaranteeResponse.class
+com\project\JewelryMS\entity\PricingRatio.class
 com\project\JewelryMS\entity\Customer.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\service\TransitionService.class
 com\project\JewelryMS\service\QRService.class
+com\project\JewelryMS\entity\ProductSell_Promotion.class
 com\project\JewelryMS\model\Promotion\PromotionRequest.class
 com\project\JewelryMS\model\ProductSell\CreateProductSellRequest.class
 com\project\JewelryMS\entity\ProductSell.class
@@ -156,6 +160,7 @@ com\project\JewelryMS\model\Order\UpdateOrderRequest.class
 com\project\JewelryMS\repository\OrderDetailProjection.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.class
+com\project\JewelryMS\repository\PricingRatioRepository.class
 com\project\JewelryMS\model\CodeService.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.class
 com\project\JewelryMS\JewelryMsApplication.class
@@ -170,6 +175,7 @@ com\project\JewelryMS\model\Image\ImgbbResponse$Data$Thumb.class
 com\project\JewelryMS\model\EmailDetail.class
 com\project\JewelryMS\model\Dashboard\CategoryResponse.class
 com\project\JewelryMS\model\Manager\ManagerAccountRequest.class
+com\project\JewelryMS\service\ProfileService$1.class
 com\project\JewelryMS\model\Customer\CreateCustomerRequest.class
 com\project\JewelryMS\model\Customer\CustomerSearchResponse.class
 com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.class
