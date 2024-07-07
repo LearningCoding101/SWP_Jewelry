@@ -68,8 +68,8 @@ public class ProfileController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Object>> getAllAccounts() {
-        List<Object> accounts = profileService.getAllAccounts();
-        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    public ResponseEntity<List<StaffListResponse>> getAllAccounts() {
+        List<StaffListResponse> accounts = profileService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
     }
 }

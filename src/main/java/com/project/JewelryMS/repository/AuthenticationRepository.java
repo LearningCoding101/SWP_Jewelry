@@ -23,7 +23,6 @@ public interface AuthenticationRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.aPassword = :password AND a.PK_userID = :id")
     Account checkAccountByPassword(@Param("password") String password, @Param("id") Long id);
 
-    // New query to retrieve all accounts
     @Query("SELECT a FROM Account a")
     List<Account> findAllAccounts();
 }
