@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -215,22 +216,31 @@ public class ShiftServiceUnitTest {
 
     @Test
     public void testDeleteShiftsWithCriteria() {
-        List<Shift> shiftsWithoutStaff = new ArrayList<>();
-        shiftsWithoutStaff.add(shift);
+        // Create a shift object
+        Shift shiftWithoutStaff = new Shift();
+        shiftWithoutStaff.setShiftID(1);
 
-        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
-        List<Shift> shiftsOlderThanTwoMonths = new ArrayList<>();
-        shiftsOlderThanTwoMonths.add(shift);
+        Shift shiftOlderThanTwoMonths = new Shift();
+        shiftOlderThanTwoMonths.setShiftID(2);
 
-        when(shiftRepository.findShiftsWithoutStaff()).thenReturn(shiftsWithoutStaff);
-        when(shiftRepository.findShiftsOlderThan(any(LocalDate.class))).thenReturn(shiftsOlderThanTwoMonths);
+        // Mock the repository responses
+        when(shiftRepository.findShiftsWithoutStaff()).thenReturn(Collections.singletonList(shiftWithoutStaff));
+        when(shiftRepository.findShiftsOlderThan(any(LocalDate.class))).thenReturn(Collections.singletonList(shiftOlderThanTwoMonths));
 
+        // Call the method to test
         shiftService.deleteShiftsWithCriteria();
 
+        // Verify interactions with the repository
         verify(shiftRepository, times(1)).findShiftsWithoutStaff();
         verify(shiftRepository, times(1)).findShiftsOlderThan(any(LocalDate.class));
+
         // Ensure delete is called the correct number of times
-        verify(shiftRepository, times(1)).delete(any(Shift.class));
+        verify(shiftRepository, times(2)).delete(any(Shift.class));
+
+        // Verify that delete is called with the correct shifts
+        verify(shiftRepository).delete(shiftWithoutStaff);
+        verify(shiftRepository).delete(shiftOlderThanTwoMonths);
     }
+
 
 }
