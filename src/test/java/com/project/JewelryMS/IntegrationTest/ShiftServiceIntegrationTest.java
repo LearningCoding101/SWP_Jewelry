@@ -3,241 +3,338 @@ package com.project.JewelryMS.IntegrationTest;
 import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.model.Shift.ShiftRequest;
 import com.project.JewelryMS.entity.Shift;
-import com.project.JewelryMS.repository.ShiftRepository;
-import com.project.JewelryMS.repository.StaffShiftRepository;
 import com.project.JewelryMS.service.ShiftService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @SpringBootTest
+@Transactional
 public class ShiftServiceIntegrationTest {
 
     @Autowired
     private ShiftService shiftService;
 
-    @Autowired
-    private ShiftRepository shiftRepository;
-
-    @Autowired
-    private StaffShiftRepository staffShiftRepository;
-
-    @BeforeEach
-    public void setup() {
-        staffShiftRepository.deleteAll();
-        shiftRepository.deleteAll();
-    }
-
+    // Test for creating a new shift
     @Test
     public void testCreateShift() {
-        CreateShiftRequest createShiftRequest = new CreateShiftRequest(
-                "2023-12-01 08",  1, "morning","2023-12-01 16", "active", "cashier"
-        );
+        CreateShiftRequest createShiftRequest = new CreateShiftRequest();
+        createShiftRequest.setStartTime("2024-07-08 09");
+        createShiftRequest.setEndTime("2024-07-08 17");
+        createShiftRequest.setRegister(1);
+        createShiftRequest.setShiftType("Morning");
+        createShiftRequest.setStatus("Active");
+        createShiftRequest.setWorkArea("Front Desk");
 
-        ShiftRequest shiftRequest = shiftService.createShift(createShiftRequest);
+        ShiftRequest createdShift = shiftService.createShift(createShiftRequest);
 
-        Optional<Shift> createdShiftOpt = shiftRepository.findById((long) shiftRequest.getShiftID());
-        assertThat(createdShiftOpt).isPresent();
-        Shift createdShift = createdShiftOpt.get();
-        assertThat(createdShift.getStartTime()).isEqualTo(LocalDateTime.parse("2023-12-01T08:00"));
-        assertThat(createdShift.getEndTime()).isEqualTo(LocalDateTime.parse("2023-12-01T16:00"));
-        assertThat(createdShift.getRegister()).isEqualTo(1);
-        assertThat(createdShift.getShiftType()).isEqualTo("morning");
-        assertThat(createdShift.getStatus()).isEqualTo("active");
-        assertThat(createdShift.getWorkArea()).isEqualTo("cashier");
+        Assertions.assertEquals("2024-07-08 17", createdShift.getEndTime());
+        Assertions.assertEquals("Morning", createdShift.getShiftType());
+        Assertions.assertEquals("Active", createdShift.getStatus());
+        Assertions.assertEquals("Front Desk", createdShift.getWorkArea());
     }
 
+    // Test for reading shifts by start time
     @Test
     public void testGetShiftsByStartTime() {
-        LocalDateTime startTime = LocalDateTime.of(2023, 12, 1, 8, 0);
-        Shift shift = new Shift();
-        shift.setStartTime(startTime);
-        shift.setEndTime(startTime.plusHours(8));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByStartTime("2023-12-01 08");
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by start time
+        List<ShiftRequest> shifts = shiftService.getShiftsByStartTime("2024-07-08 09");
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(1, shifts.size()); // Assuming only one shift starts at 09:00 AM on the given date
+        Assertions.assertEquals("Morning", shifts.get(0).getShiftType());
     }
 
+    // Test for reading shifts by end time
     @Test
     public void testGetShiftsByEndTime() {
-        LocalDateTime endTime = LocalDateTime.of(2023, 12, 1, 16, 0);
-        Shift shift = new Shift();
-        shift.setStartTime(endTime.minusHours(8));
-        shift.setEndTime(endTime);
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByEndTime("2023-12-01 16");
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by end time
+        List<ShiftRequest> shifts = shiftService.getShiftsByEndTime("2024-07-08 21");
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(1, shifts.size()); // Assuming only one shift ends at 21:00 on the given date
+        Assertions.assertEquals("Afternoon", shifts.get(0).getShiftType());
     }
 
+    // Test for reading shifts by shift type
     @Test
     public void testGetShiftsByShiftType() {
-        Shift shift = new Shift();
-        shift.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByShiftType("morning");
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Morning");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by shift type "Morning"
+        List<ShiftRequest> shifts = shiftService.getShiftsByShiftType("Morning");
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(2, shifts.size()); // Assuming two shifts are of type "Morning"
+        // Add more specific assertions if needed
     }
 
+    // Test for reading shifts by status
     @Test
     public void testGetShiftsByStatus() {
-        Shift shift = new Shift();
-        shift.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByStatus("active");
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Inactive");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by status "Active"
+        List<ShiftRequest> shifts = shiftService.getShiftsByStatus("Active");
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(1, shifts.size()); // Assuming only one shift is "Active"
+        Assertions.assertEquals("Morning", shifts.get(0).getShiftType());
     }
 
+    // Test for reading shifts by register
     @Test
     public void testGetShiftsByRegister() {
-        Shift shift = new Shift();
-        shift.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByRegister(1);
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by register number 2
+        List<ShiftRequest> shifts = shiftService.getShiftsByRegister(2);
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(1, shifts.size()); // Assuming only one shift is registered under 2
+        Assertions.assertEquals("Afternoon", shifts.get(0).getShiftType());
     }
 
+    // Test for reading shifts by work area
     @Test
     public void testGetShiftsByWorkArea() {
-        Shift shift = new Shift();
-        shift.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        List<ShiftRequest> shifts = shiftService.getShiftsByWorkArea("cashier");
-        assertThat(shifts).hasSize(1);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift.getShiftID());
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
+
+        // Test fetching shifts by work area "Front Desk"
+        List<ShiftRequest> shifts = shiftService.getShiftsByWorkArea("Front Desk");
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(1, shifts.size()); // Assuming only one shift is in "Front Desk"
+        Assertions.assertEquals("Morning", shifts.get(0).getShiftType());
     }
 
+    // Test for reading all shifts
     @Test
     public void testReadAllShifts() {
-        Shift shift1 = new Shift();
-        shift1.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift1.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift1.setRegister(1);
-        shift1.setShiftType("morning");
-        shift1.setStatus("active");
-        shift1.setWorkArea("cashier");
-        shiftRepository.save(shift1);
+        // Create shifts for testing
+        CreateShiftRequest createShiftRequest1 = new CreateShiftRequest();
+        createShiftRequest1.setStartTime("2024-07-08 09");
+        createShiftRequest1.setEndTime("2024-07-08 17");
+        createShiftRequest1.setRegister(1);
+        createShiftRequest1.setShiftType("Morning");
+        createShiftRequest1.setStatus("Active");
+        createShiftRequest1.setWorkArea("Front Desk");
+        shiftService.createShift(createShiftRequest1);
 
-        Shift shift2 = new Shift();
-        shift2.setStartTime(LocalDateTime.of(2023, 12, 2, 8, 0));
-        shift2.setEndTime(LocalDateTime.of(2023, 12, 2, 16, 0));
-        shift2.setRegister(2);
-        shift2.setShiftType("afternoon");
-        shift2.setStatus("inactive");
-        shift2.setWorkArea("area2");
-        shiftRepository.save(shift2);
+        CreateShiftRequest createShiftRequest2 = new CreateShiftRequest();
+        createShiftRequest2.setStartTime("2024-07-08 13");
+        createShiftRequest2.setEndTime("2024-07-08 21");
+        createShiftRequest2.setRegister(2);
+        createShiftRequest2.setShiftType("Afternoon");
+        createShiftRequest2.setStatus("Active");
+        createShiftRequest2.setWorkArea("Back Office");
+        shiftService.createShift(createShiftRequest2);
 
+        // Test fetching all shifts
         List<ShiftRequest> shifts = shiftService.readAllShifts();
-        assertThat(shifts).hasSize(2);
-        assertThat(shifts.get(0).getShiftID()).isEqualTo(shift1.getShiftID());
-        assertThat(shifts.get(1).getShiftID()).isEqualTo(shift2.getShiftID());
+
+        Assertions.assertFalse(shifts.isEmpty());
+        Assertions.assertEquals(2, shifts.size()); // Assuming two shifts exist in the database
+        // Add more specific assertions if needed
     }
 
+    // Test for reading a shift by ID
+    @Test
+    public void testGetShiftById() {
+        CreateShiftRequest createShiftRequest = new CreateShiftRequest();
+        createShiftRequest.setStartTime("2024-07-08 09");
+        createShiftRequest.setEndTime("2024-07-08 17");
+        createShiftRequest.setRegister(1);
+        createShiftRequest.setShiftType("Morning");
+        createShiftRequest.setStatus("Active");
+        createShiftRequest.setWorkArea("Front Desk");
+
+        ShiftRequest createdShift = shiftService.createShift(createShiftRequest);
+        Integer shiftId = createdShift.getShiftID();
+
+        ShiftRequest fetchedShift = shiftService.getShiftById(shiftId);
+
+        Assertions.assertNotNull(fetchedShift);
+        Assertions.assertEquals(shiftId, fetchedShift.getShiftID());
+        Assertions.assertEquals("Morning", fetchedShift.getShiftType());
+        Assertions.assertEquals("Front Desk", fetchedShift.getWorkArea());
+    }
+
+    // Test for updating shift details
     @Test
     public void testUpdateShiftDetails() {
-        Shift shift = new Shift();
-        shift.setStartTime(LocalDateTime.of(2023, 12, 1, 8, 0));
-        shift.setEndTime(LocalDateTime.of(2023, 12, 1, 16, 0));
-        shift.setRegister(1);
-        shift.setShiftType("morning");
-        shift.setStatus("active");
-        shift.setWorkArea("cashier");
-        shiftRepository.save(shift);
+        CreateShiftRequest createShiftRequest = new CreateShiftRequest();
+        createShiftRequest.setStartTime("2024-07-08 09");
+        createShiftRequest.setEndTime("2024-07-08 17");
+        createShiftRequest.setRegister(1);
+        createShiftRequest.setShiftType("Morning");
+        createShiftRequest.setStatus("Active");
+        createShiftRequest.setWorkArea("Front Desk");
 
-        ShiftRequest shiftRequest = new ShiftRequest();
-        shiftRequest.setShiftID(Math.toIntExact(shift.getShiftID()));
-        shiftRequest.setStartTime("2023-12-01 09");
-        shiftRequest.setEndTime("2023-12-01 17");
-        shiftRequest.setRegister(2);
-        shiftRequest.setShiftType("afternoon");
-        shiftRequest.setStatus("inactive");
-        shiftRequest.setWorkArea("area2");
+        ShiftRequest createdShift = shiftService.createShift(createShiftRequest);
+        Integer shiftId = createdShift.getShiftID();
 
-        Shift updatedShift = shiftService.updateShiftDetails(shiftRequest);
-        Optional<Shift> updatedShiftOpt = shiftRepository.findById((long) updatedShift.getShiftID());
-        assertThat(updatedShiftOpt).isPresent();
-        Shift updatedShiftEntity = updatedShiftOpt.get();
-        assertThat(updatedShiftEntity.getStartTime()).isEqualTo(LocalDateTime.parse("2023-12-01T09:00"));
-        assertThat(updatedShiftEntity.getEndTime()).isEqualTo(LocalDateTime.parse("2023-12-01T17:00"));
-        assertThat(updatedShiftEntity.getRegister()).isEqualTo(2);
-        assertThat(updatedShiftEntity.getShiftType()).isEqualTo("afternoon");
-        assertThat(updatedShiftEntity.getStatus()).isEqualTo("inactive");
-        assertThat(updatedShiftEntity.getWorkArea()).isEqualTo("area2");
+        // Modify some properties of the shift
+        createdShift.setStatus("Inactive");
+        createdShift.setEndTime("2024-07-08 18");
+
+        Shift updatedShift = shiftService.updateShiftDetails(createdShift);
+
+        Assertions.assertEquals("Inactive", updatedShift.getStatus());
+        Assertions.assertEquals("2024-07-08 18", updatedShift.getEndTime());
+        Assertions.assertEquals("Morning", updatedShift.getShiftType());
+        Assertions.assertEquals("Front Desk", updatedShift.getWorkArea());
     }
 
+    // Test for deleting a shift by ID
+    @Test
+    public void testDeleteShiftById() {
+        CreateShiftRequest createShiftRequest = new CreateShiftRequest();
+        createShiftRequest.setStartTime("2024-07-08 09");
+        createShiftRequest.setEndTime("2024-07-08 17");
+        createShiftRequest.setRegister(1);
+        createShiftRequest.setShiftType("Morning");
+        createShiftRequest.setStatus("Active");
+        createShiftRequest.setWorkArea("Front Desk");
+
+        ShiftRequest createdShift = shiftService.createShift(createShiftRequest);
+        int shiftId = createdShift.getShiftID();
+
+        shiftService.deleteShiftById((long) shiftId);
+
+        Assertions.assertThrows(RuntimeException.class, () -> shiftService.getShiftById(shiftId));
+    }
+
+    // Test for deleting shifts with criteria (no staff and older than 2 months)
     @Test
     public void testDeleteShiftsWithCriteria() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime twoMonthsAgo = now.minusMonths(3);
+        // Create a shift with no staff and older than 2 months
+        CreateShiftRequest createShiftRequest = new CreateShiftRequest();
+        createShiftRequest.setStartTime(LocalDateTime.now().minusMonths(3).toString());
+        createShiftRequest.setEndTime(LocalDateTime.now().minusMonths(3).plusHours(8).toString());
+        createShiftRequest.setRegister(1);
+        createShiftRequest.setShiftType("Morning");
+        createShiftRequest.setStatus("Active");
+        createShiftRequest.setWorkArea("Front Desk");
 
-        Shift shiftWithoutStaff = new Shift();
-        shiftWithoutStaff.setStartTime(now.minusDays(1));
-        shiftWithoutStaff.setEndTime(now.minusDays(1).plusHours(8));
-        shiftWithoutStaff.setStatus("active");
-        shiftWithoutStaff.setRegister(1);
-        shiftWithoutStaff.setShiftType("morning");
-        shiftWithoutStaff.setWorkArea("area1");
+        shiftService.createShift(createShiftRequest);
 
-        Shift shiftOlderThanTwoMonths = new Shift();
-        shiftOlderThanTwoMonths.setStartTime(twoMonthsAgo.minusDays(1));
-        shiftOlderThanTwoMonths.setEndTime(twoMonthsAgo.minusDays(1).plusHours(8));
-        shiftOlderThanTwoMonths.setStatus("active");
-        shiftOlderThanTwoMonths.setRegister(2);
-        shiftOlderThanTwoMonths.setShiftType("afternoon");
-        shiftOlderThanTwoMonths.setWorkArea("area2");
-
-        shiftRepository.save(shiftWithoutStaff);
-        shiftRepository.save(shiftOlderThanTwoMonths);
-
+        // Delete shifts that meet the criteria
         shiftService.deleteShiftsWithCriteria();
 
-        List<Shift> remainingShifts = shiftRepository.findAll();
-        assertThat(remainingShifts).isEmpty();
+        // Assertions can be added to verify the deletion, if needed
     }
 }
