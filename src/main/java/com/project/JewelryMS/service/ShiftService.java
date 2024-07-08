@@ -25,19 +25,6 @@ public class ShiftService {
     @Autowired
     ShiftRepository shiftRepository;
 
-//    // Create Shift
-//    public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
-//        Shift newShift = new Shift();
-//        newShift.setEndTime(createShiftRequest.getEndTime());
-//        newShift.setRegister(createShiftRequest.getRegister());
-//        newShift.setShiftType(createShiftRequest.getShiftType());
-//        newShift.setStartTime(createShiftRequest.getStartTime());
-//        newShift.setStatus(createShiftRequest.getStatus());
-//        newShift.setWorkArea(createShiftRequest.getWorkArea());
-//        Shift newShiftAddition= shiftRepository.save(newShift);
-//        return toShiftRequest(newShiftAddition);
-//    }
-
     // Helper method to convert a Shift entity to a ShiftRequest DTO
     private ShiftRequest toShiftRequest(Shift shift) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
