@@ -23,9 +23,4 @@ public interface StaffShiftRepository extends JpaRepository<Staff_Shift, Long> {
             LocalDateTime endDate
     );
 
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM StaffShift ss WHERE ss.shift = :shift")
-    void deleteByShift(Shift shift);
 }
