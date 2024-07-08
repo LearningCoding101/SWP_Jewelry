@@ -6,6 +6,8 @@ import com.project.JewelryMS.model.Shift.CreateShiftRequest;
 import com.project.JewelryMS.model.Shift.DeleteShiftRequest;
 import com.project.JewelryMS.model.Shift.ShiftRequest;
 import com.project.JewelryMS.repository.ShiftRepository;
+import com.project.JewelryMS.repository.StaffShiftRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +15,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.Date;
+import java.util.*;
 //import java.security.Timestamp;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ShiftService {
     @Autowired
     ShiftRepository shiftRepository;
+    @Autowired
+    StaffShiftRepository staffShiftRepository;
 
     // Helper method to convert a Shift entity to a ShiftRequest DTO
     private ShiftRequest toShiftRequest(Shift shift) {
@@ -49,6 +50,7 @@ public class ShiftService {
     }
 
     // Create Shift
+    @Transactional
     public ShiftRequest createShift(CreateShiftRequest createShiftRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
 
@@ -56,7 +58,6 @@ public class ShiftService {
         LocalDateTime endTime = LocalDateTime.parse(createShiftRequest.getEndTime(), formatter);
 
         Shift newShift = new Shift();
-
         newShift.setEndTime(endTime);
         newShift.setRegister(createShiftRequest.getRegister());
         newShift.setShiftType(createShiftRequest.getShiftType());
@@ -64,8 +65,8 @@ public class ShiftService {
         newShift.setStatus(createShiftRequest.getStatus());
         newShift.setWorkArea(createShiftRequest.getWorkArea());
 
-        Shift newShiftAddition= shiftRepository.save(newShift);
-        return toShiftRequest(newShiftAddition);
+        Shift savedShift = shiftRepository.save(newShift);
+        return toShiftRequest(savedShift);
     }
 
     // Read Shifts by start time
@@ -190,19 +191,24 @@ public class ShiftService {
         }
     }
 
-    // Method to delete shifts with no staff and older than 2 months
+    // Method to delete (Not changing status) shifts with no staff and older than 2 months
+    @Transactional
     public void deleteShiftsWithCriteria() {
-        // Calculate 2 months ago
-        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(3);
+        LocalDate twoMonthsAgo = LocalDate.now().minusMonths(2).withDayOfMonth(1);
 
         // Fetch shifts without staff assigned
         List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
-        shiftsWithoutStaff.forEach(shiftRepository::delete);
+        shiftsWithoutStaff.forEach(shift -> {
+            staffShiftRepository.deleteByShift(shift);
+            shiftRepository.delete(shift);
+        });
 
         // Fetch shifts older than 2 months
-        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo.withDayOfMonth(1));
-        shiftsOlderThanTwoMonths.forEach(shiftRepository::delete);
+        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(twoMonthsAgo);
+        shiftsOlderThanTwoMonths.forEach(shift -> {
+            staffShiftRepository.deleteByShift(shift);
+            shiftRepository.delete(shift);
+        });
     }
-
 
 }

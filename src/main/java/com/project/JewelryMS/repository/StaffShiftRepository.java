@@ -3,7 +3,9 @@ package com.project.JewelryMS.repository;
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.entity.Staff_Shift;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -21,4 +23,9 @@ public interface StaffShiftRepository extends JpaRepository<Staff_Shift, Long> {
             LocalDateTime endDate
     );
 
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM StaffShift ss WHERE ss.shift = :shift")
+    void deleteByShift(Shift shift);
 }
