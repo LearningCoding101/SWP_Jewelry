@@ -129,6 +129,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateAdminRespo
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateManagerResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateStaffResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\ViewShiftResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\AssignPromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\CreatePromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\PromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\PromotionResponse.java

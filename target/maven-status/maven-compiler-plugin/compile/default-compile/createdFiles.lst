@@ -158,6 +158,7 @@ com\project\JewelryMS\model\Dashboard\Customer\CustomerLoyalty.class
 com\project\JewelryMS\service\VNPAYservice.class
 com\project\JewelryMS\model\Order\UpdateOrderRequest.class
 com\project\JewelryMS\repository\OrderDetailProjection.class
+com\project\JewelryMS\service\ProductSellService$ResourceNotFoundException.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.class
 com\project\JewelryMS\repository\PricingRatioRepository.class
@@ -193,6 +194,7 @@ com\project\JewelryMS\model\Profile\UpdateAdminResponse.class
 com\project\JewelryMS\config\FileUploadConfig.class
 com\project\JewelryMS\entity\StaffAccount.class
 com\project\JewelryMS\model\Category\CreateCategoryRequest.class
+com\project\JewelryMS\model\Promotion\AssignPromotionRequest.class
 com\project\JewelryMS\service\Order\OrderHandlerService.class
 com\project\JewelryMS\model\ResetPassRequest.class
 com\project\JewelryMS\service\ProductBuyService$1.class
