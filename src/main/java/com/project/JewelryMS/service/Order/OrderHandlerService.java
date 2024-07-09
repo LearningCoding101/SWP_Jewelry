@@ -483,41 +483,6 @@ public class OrderHandlerService {
     }
 
 
-    //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
-    //Calculate SubTotal, Discount product and Total////////////////////////////////////////////////////////////////////////////////////////////////
-//    public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
-//        float totalAmount = 0;
-//        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderDetailRequest.getProductSell_ID());
-//        if (productSellOptional.isPresent()) {
-//            ProductSell productSell = productSellOptional.get();
-//            float productCost = productSell.getCost();
-//            int quantity = orderDetailRequest.getQuantity();
-//            totalAmount = productCost * quantity;
-//        }
-//        return totalAmount;
-//    }
-//
-//    public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest) {
-//        Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
-//        int discount = promotion.getDiscount();
-//        float percentage = discount / 100.0F;
-//        float totalAmount = 0.0F;
-//        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
-//        if (productSellOptional.isPresent()) {
-//            ProductSell productSell = productSellOptional.get();
-//            float productCost = productSell.getCost();
-//            int quantity = orderPromotionRequest.getQuantity();
-//            totalAmount = productCost * quantity;
-//        }
-//        return totalAmount * percentage;
-//    }
-//
-//    public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
-//        float subtotal = orderTotalRequest.getSubTotal();
-//        float discountProduct = orderTotalRequest.getDiscountProduct();
-//        return subtotal - discountProduct;//total
-//    }
-
     public TotalOrderResponse totalOrder(List<TotalOrderRequest> totalOrderRequests) {
         float subTotalResponse = 0.0F;
         float discount_priceResponse = 0.0F;
