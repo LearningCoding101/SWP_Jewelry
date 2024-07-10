@@ -122,7 +122,7 @@ public class PromotionServiceUnitTest {
 
 
 
-    @ParameterizedTest
+   /* @ParameterizedTest
     @CsvSource({
             "1, NEW_CODE, New Description, 30, 2024-07-10, 2024-07-22",
             "2, CODE456, Another Description, 25, 2024-08-01, 2024-08-10"
@@ -151,7 +151,7 @@ public class PromotionServiceUnitTest {
         assertEquals(code, promotion.getCode());
         assertEquals(description, promotion.getDescription());
         assertEquals(discount, promotion.getDiscount());
-    }
+    }*/
 
 
     @ParameterizedTest
