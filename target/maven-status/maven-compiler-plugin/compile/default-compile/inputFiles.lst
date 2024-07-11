@@ -73,6 +73,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\RevenueDateReq
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffSalesResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonResponse.java
@@ -166,6 +167,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductBuyRepositor
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellPromotionRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ProductSellRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PromotionRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PurchaseOrderRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ShiftRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\StaffAccountRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\StaffShiftRepository.java

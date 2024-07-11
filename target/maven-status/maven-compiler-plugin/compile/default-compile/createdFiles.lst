@@ -23,6 +23,7 @@ com\project\JewelryMS\entity\PurchaseOrder.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data$Medium.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data.class
 com\project\JewelryMS\model\Shift\AssignStaffToMultipleDaysRequest.class
+com\project\JewelryMS\repository\PurchaseOrderRepository.class
 com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
@@ -82,6 +83,7 @@ com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\repository\DailyRevenueProjection.class
+com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\repository\OrderRepository.class
 com\project\JewelryMS\repository\GuaranteeRepository.class
