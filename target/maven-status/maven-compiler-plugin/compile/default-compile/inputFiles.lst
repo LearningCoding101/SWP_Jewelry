@@ -5,6 +5,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\config\FirebaseConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\SecurityConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\ThymeleafConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\VNPAYConfig.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\config\WebSocketConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AuthenticationAPI.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CategoryController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CodeController.java
