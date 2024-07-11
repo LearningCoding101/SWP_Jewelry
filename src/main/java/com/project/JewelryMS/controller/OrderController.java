@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +40,8 @@ public class OrderController {
     OrderDetailService orderDetailService;
     @Autowired
     CustomerService customerService;
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     // Create a new order
     @PostMapping
@@ -90,14 +92,19 @@ public class OrderController {
 
 
         // Pass email details and QR code image data to email service
-        EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient(order.getEmail());
-        emailDetail.setSubject("Your Order QR Code");
-        emailDetail.setMsgBody("Please find your order QR code attached.");
+        if(!order.getEmail().trim().isEmpty()){
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(order.getEmail());
+            emailDetail.setSubject("Your Order QR Code");
+            emailDetail.setMsgBody("Please find your order QR code attached.");
 
-        emailService.sendMailWithEmbeddedImage(emailDetail,
-                qrImage,
-                orderHandlerService.generateEmailOrderTable(orderID));
+            emailService.sendMailWithEmbeddedImage(emailDetail,
+                    qrImage,
+                    orderHandlerService.generateEmailOrderTable(orderID));
+
+        }
+        System.out.println(orderID);
+        messagingTemplate.convertAndSend("/topic/new-order", orderID);
 
         // Return the QR code image as the HTTP response
         return ResponseEntity.ok(qrImage);
@@ -113,6 +120,8 @@ public class OrderController {
     public ResponseEntity<List<ProductResponse>> cashierGetPendingOrder(@PathVariable Long id) {
         List<ProductResponse> productResponses = orderHandlerService.getProductByOrderId(id);
         System.out.println(id);
+        messagingTemplate.convertAndSend("/topic/order-claimed", id);
+
         return ResponseEntity.ok(productResponses);
     }
 
