@@ -81,4 +81,10 @@ public class ProductSellController {
         return ResponseEntity.ok("Remove Successfully");
     }
 
+    @GetMapping("/get-by-code")
+    public ResponseEntity<ProductSellResponse> getProductByCode(@RequestParam String productCode) {
+        ProductSellResponse productSellResponse = productSellService.findByProductCode(productCode);
+        return ResponseEntity.ok(productSellResponse);
+    }
+
 }

@@ -7,7 +7,9 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,10 +83,8 @@ public class ProductSellService {
     public List<ProductSellResponse> getAllProductSellResponses() {
         List<ProductSellResponse> responses = new ArrayList<>();
 
-        // Fetch all products with category and promotion details in one go
         List<ProductSell> productSells = productSellRepository.findAllWithCategoryAndPromotion();
 
-        // Map product ID to a list of promotion IDs
         Map<Long, List<Long>> productPromotionMap = new HashMap<>();
         List<Object[]> promotionData = productSellRepository.findAllPromotionIds();
         for (Object[] entry : promotionData) {
@@ -94,31 +94,13 @@ public class ProductSellService {
         }
 
         for (ProductSell productSell : productSells) {
-            ProductSellResponse response = new ProductSellResponse();
-            response.setProductID(productSell.getProductID());
-            response.setCarat(productSell.getCarat());
-            response.setChi(productSell.getChi());
-            response.setCost(productSell.getCost());
-            response.setPDescription(productSell.getPDescription());
-            response.setGemstoneType(productSell.getGemstoneType());
-            response.setImage(productSell.getImage());
-            response.setManufacturer(productSell.getManufacturer());
-            response.setManufactureCost(productSell.getManufactureCost());
-            response.setMetalType(productSell.getMetalType());
-            response.setPName(productSell.getPName());
-            response.setProductCode(productSell.getProductCode());
-            response.setStatus(productSell.isPStatus());
-
-            if (productSell.getCategory() != null) {
-                response.setCategory_id(productSell.getCategory().getId());
-                response.setCategory_name(productSell.getCategory().getName());
-            }
+            ProductSellResponse response = mapProductSellToResponse(productSell);
 
             List<Long> promotionIds = productPromotionMap.getOrDefault(productSell.getProductID(), new ArrayList<>());
             List<String> promotionIdStrings = promotionIds.stream().map(String::valueOf).collect(Collectors.toList());
             response.setPromotion_id(promotionIdStrings);
-            responses.add(response);
 
+            responses.add(response);
         }
         return responses;
     }
@@ -127,23 +109,30 @@ public class ProductSellService {
         ProductSellResponse response = new ProductSellResponse();
 
         response.setProductID(productSell.getProductID());
-        response.setCarat(productSell.getCarat());
-        response.setChi(productSell.getChi());
+        if (productSell.getCarat() != null) {
+            response.setCarat(productSell.getCarat());
+        }
+        if (productSell.getChi() != null) {
+            response.setChi(productSell.getChi());
+        }
         response.setCost(productSell.getCost());
         response.setPDescription(productSell.getPDescription());
-        response.setGemstoneType(productSell.getGemstoneType());
+        if(productSell.getGemstoneType() !=null) {
+            response.setGemstoneType(productSell.getGemstoneType());
+        }
         response.setImage(productSell.getImage());
         response.setManufacturer(productSell.getManufacturer());
         response.setManufactureCost(productSell.getManufactureCost());
-        response.setMetalType(productSell.getMetalType());
+        if (productSell.getMetalType() != null){
+            response.setMetalType(productSell.getMetalType());
+        }
         response.setPName(productSell.getPName());
         response.setProductCode(productSell.getProductCode());
         response.setStatus(productSell.isPStatus());
 
-        Category category = productSell.getCategory();
-        if (category != null) {
-            response.setCategory_id(category.getId());
-            response.setCategory_name(category.getName());
+        if (productSell.getCategory() != null) {
+            response.setCategory_id(productSell.getCategory().getId());
+            response.setCategory_name(productSell.getCategory().getName());
         }
 
         List<String> promotionIds = productSellRepository.findPromotionIdsByProductSellId(productSell.getProductID())
@@ -159,7 +148,9 @@ public class ProductSellService {
 
     public ProductSellResponse createProductSell(CreateProductSellRequest request) {
         ProductSell productSell = new ProductSell();
-        productSell.setCarat(request.getCarat());
+        if (request.getCarat() != null) {
+            productSell.setCarat(request.getCarat());
+        }
         // Set Category
         Optional<Category> categoryOpt = categoryRepository.findById(request.getCategory_id());
         if (categoryOpt.isPresent()) {
@@ -167,17 +158,23 @@ public class ProductSellService {
         } else {
             throw new IllegalArgumentException("Category ID not found");
         }
-        productSell.setChi(request.getChi());
+        if (request.getChi() != null) {
+            productSell.setChi(request.getChi());
+        }
         productSell.setCost(calculateProductSellCost(request.getChi(),request.getCarat(),request.getGemstoneType(),request.getMetalType(),request.getManufactureCost()));
         productSell.setPDescription(request.getPdescription());
         productSell.setPName(request.getPname());
-        productSell.setGemstoneType(request.getGemstoneType());
+        if(request.getGemstoneType() != null) {
+            productSell.setGemstoneType(request.getGemstoneType());
+        }
         // Gọi phương thức uploadImageByPath và send MultipartFile file image
         String imageUrl = imageService.uploadImageByPathService(request.getImage());
         productSell.setImage(imageUrl);
         productSell.setManufacturer(request.getManufacturer());
         productSell.setManufactureCost(request.getManufactureCost());
-        productSell.setMetalType(request.getMetalType());
+        if(request.getMetalType() != null) {
+            productSell.setMetalType(request.getMetalType());
+        }
         productSell.setProductCode(request.getProductCode());
         productSell.setPStatus(true);
         // Save ProductSell
@@ -203,7 +200,7 @@ public class ProductSellService {
         Float totalGoldPrice = 0.0F;
         if (metalType != null && chi != null) {
             Float goldPrices = goldPrice;
-            totalGoldPrice = (goldPrices / 10) * chi;
+            totalGoldPrice = goldPrices  * chi;
         }
 
         totalPrice = (totalGemPrice + totalGoldPrice + manufacturerCost) * getPricingRatioPS();
@@ -249,38 +246,9 @@ public class ProductSellService {
         ProductSell productSell = productSellRepository.findByIdWithCategoryAndPromotion(id)
                 .orElseThrow(() -> new IllegalArgumentException("ProductSell ID not found"));
 
-        return mapToProductSellResponse(productSell);
+        return mapProductSellToResponse(productSell);
     }
 
-    private ProductSellResponse mapToProductSellResponse(ProductSell productSell) {
-        ProductSellResponse response = new ProductSellResponse();
-        response.setProductID(productSell.getProductID());
-        response.setCarat(productSell.getCarat());
-        response.setChi(productSell.getChi());
-        response.setCost(productSell.getCost());
-        response.setPDescription(productSell.getPDescription());
-        response.setGemstoneType(productSell.getGemstoneType());
-        response.setImage(productSell.getImage());
-        response.setManufacturer(productSell.getManufacturer());
-        response.setManufactureCost(productSell.getManufactureCost());
-        response.setMetalType(productSell.getMetalType());
-        response.setPName(productSell.getPName());
-        response.setProductCode(productSell.getProductCode());
-        response.setStatus(productSell.isPStatus());
-
-        if (productSell.getCategory() != null) {
-            response.setCategory_id(productSell.getCategory().getId());
-            response.setCategory_name(productSell.getCategory().getName());
-        }
-
-        List<Long> listPromotion = productSellRepository.findPromotionIdsByProductSellId(productSell.getProductID());
-        List<String> promotionIds = listPromotion.stream()
-                .map(String::valueOf)
-                .collect(Collectors.toList());
-        response.setPromotion_id(promotionIds);
-
-        return response;
-    }
 
     public ProductSellResponse updateProductSell(Long id, ProductSellRequest productSellRequest) {
         // Fetch the existing ProductSell entity
@@ -310,7 +278,7 @@ public class ProductSellService {
         productSellRepository.save(existingProductSell);
 
         // Return the updated ProductSellResponse
-        return mapToProductSellResponse(existingProductSell);
+        return mapProductSellToResponse(existingProductSell);
     }
 
     public void deleteProduct(long id){
@@ -324,7 +292,18 @@ public class ProductSellService {
         }
     }
 
+    public ProductSellResponse findByProductCode(String productCode) {
+        ProductSell productSell = productSellRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with code: " + productCode));
 
+        return mapProductSellToResponse(productSell);
+    }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
 
 }

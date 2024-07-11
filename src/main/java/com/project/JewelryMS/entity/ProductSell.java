@@ -16,10 +16,10 @@ public class ProductSell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PK_productID")
-    private long productID;
+    private Long productID;
 
     @Column(name = "carat")
-    private float carat;
+    private Float carat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="FK_categoryID", referencedColumnName = "id")
@@ -32,10 +32,10 @@ public class ProductSell {
     private List<ProductSell_Promotion> productSellPromotions;
 
     @Column(name = "chi")
-    private int chi;
+    private Integer chi;
 
     @Column(name = "cost")
-    private float cost;
+    private Float cost;
 
     @Column(name = "pDescription", length = 255)
     private String pDescription;

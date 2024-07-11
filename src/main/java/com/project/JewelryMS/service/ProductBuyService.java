@@ -137,7 +137,7 @@ public class ProductBuyService {
         Float totalGoldPrice = 0.0F;
         if (metalType != null && chi != null) {
             Float goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-            totalGoldPrice = (goldPrice / 10) * chi;
+            totalGoldPrice = goldPrice * chi;
         }
 
         totalPrice = (totalGemPrice + totalGoldPrice ); // Applying the markup
