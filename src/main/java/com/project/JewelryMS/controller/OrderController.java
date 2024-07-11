@@ -92,14 +92,18 @@ public class OrderController {
 
 
         // Pass email details and QR code image data to email service
-        EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient(order.getEmail());
-        emailDetail.setSubject("Your Order QR Code");
-        emailDetail.setMsgBody("Please find your order QR code attached.");
+        if(!order.getEmail().trim().isEmpty()){
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(order.getEmail());
+            emailDetail.setSubject("Your Order QR Code");
+            emailDetail.setMsgBody("Please find your order QR code attached.");
 
-        emailService.sendMailWithEmbeddedImage(emailDetail,
-                qrImage,
-                orderHandlerService.generateEmailOrderTable(orderID));
+            emailService.sendMailWithEmbeddedImage(emailDetail,
+                    qrImage,
+                    orderHandlerService.generateEmailOrderTable(orderID));
+
+        }
+        System.out.println(orderID);
         messagingTemplate.convertAndSend("/topic/new-order", orderID);
 
         // Return the QR code image as the HTTP response
