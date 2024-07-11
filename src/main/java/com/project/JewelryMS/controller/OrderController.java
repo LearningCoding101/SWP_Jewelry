@@ -44,9 +44,9 @@ public class OrderController {
     // Create a new order
     @PostMapping
     //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_MANAGER')")
-    public ResponseEntity<String> saleCreateOrder(@RequestBody CreateOrderWrapper order) {
+    public ResponseEntity<Long> saleCreateOrder(@RequestBody CreateOrderWrapper order) {
         Long ID = orderHandlerService.handleCreateOrderWithDetails(order.getOrderRequest(), order.getDetailList(), order.getEmail());
-        return ResponseEntity.ok("Create "+ ID + " Successfully");
+        return ResponseEntity.ok(ID);
     }
     @GetMapping("test/{orderId}")
     public List<OrderDetailDTO> getOrderDetails(@PathVariable Long orderId) {
