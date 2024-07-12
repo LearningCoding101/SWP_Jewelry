@@ -26,27 +26,19 @@ import java.util.stream.Collectors;
 @Service
 public class ProductBuyService {
 
-    @Autowired
-    private ProductBuyRepository productBuyRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductBuyRepository productBuyRepository;
+    private final ApiService apiService;
+    private final ImageService imageService;
+    private final PricingRatioRepository pricingRatioRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private ApiService apiService;
-
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private PricingRatioRepository pricingRatioRepository;
-
-    @Autowired
-    public ProductBuyService(CategoryRepository categoryRepository, ProductBuyRepository productBuyRepository, ApiService apiService, ImageService imageService) {
+    public ProductBuyService(CategoryRepository categoryRepository, ProductBuyRepository productBuyRepository, ApiService apiService, ImageService imageService, PricingRatioRepository pricingRatioRepository) {
         this.categoryRepository = categoryRepository;
         this.productBuyRepository = productBuyRepository;
         this.apiService = apiService;
         this.imageService = imageService;
+        this.pricingRatioRepository = pricingRatioRepository;
     }
     public Long createProductBuy(CreateProductBuyRequest request) {
         ProductBuy productBuy = new ProductBuy();
@@ -157,12 +149,7 @@ public class ProductBuyService {
         return totalPrice;
     }
     private Float goldPrice;
-    @Autowired
-    public ProductBuyService(ApiService apiService, PricingRatioRepository pricingRatioRepository) {
-        this.apiService = apiService;
-        this.pricingRatioRepository = pricingRatioRepository;
-        initializeGoldPrice();
-    }
+
 
     public void initializeGoldPrice() {
         String goldPriceString = apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v");
