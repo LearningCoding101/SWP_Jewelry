@@ -617,6 +617,9 @@ public class SchedulingService {
 
 //    If the list contains all staff types (staffId % 3 == 0, 1, 2),
 //      the schedule will be filled for the given period except for Sundays.
+
+
+    //Rework the Random pattern is a must
     @Transactional
     public List<StaffAccountResponse> assignRandomStaffShiftPattern(List<Integer> staffIds, LocalDate startDate, LocalDate endDate) {
         List<StaffShiftResponse> staffShiftResponses = new CopyOnWriteArrayList<>();

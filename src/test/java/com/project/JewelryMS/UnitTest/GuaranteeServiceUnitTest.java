@@ -216,6 +216,4 @@ public class GuaranteeServiceUnitTest {
 //        assertEquals(12, response.getWarrantyPeriod());
 //        assertTrue(response.isStatus());
 //    }
-
-
 }
