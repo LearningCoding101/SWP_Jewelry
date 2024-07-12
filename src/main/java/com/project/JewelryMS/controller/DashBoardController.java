@@ -147,7 +147,7 @@ public class DashBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/staff-statistics/{staffId}")
+    @GetMapping("/staff-statistics")
     public ResponseEntity<StaffStatisticsResponse> getStaffStats(@RequestParam("staffId") long staffId) {
         StaffStatisticsResponse response = dashboardService.getStaffStats(staffId);
         return ResponseEntity.ok(response);
