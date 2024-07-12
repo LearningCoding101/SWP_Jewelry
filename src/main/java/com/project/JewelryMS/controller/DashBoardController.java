@@ -23,6 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/Dashboard")
+@CrossOrigin(origins = "*")
 public class DashBoardController {
     @Autowired
     DashboardService dashboardService;
