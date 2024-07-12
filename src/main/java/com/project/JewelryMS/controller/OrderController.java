@@ -61,14 +61,6 @@ public class OrderController {
         return ResponseEntity.ok( ID );
     }
 
-    @PostMapping("append-productBuy")
-    public ResponseEntity<Void> addOrderBuyDetail(@RequestParam Long orderId, @RequestParam Long productBuyId) {
-        orderHandlerService.addOrderBuyDetail(orderId, productBuyId);
-        return ResponseEntity.ok().build();
-    }
-
-    // Create a new order and generate QR code
-
     @GetMapping("get-all-orderBuy")
     public ResponseEntity<List<OrderBuyResponse>> getAllBuyOrders() {
         List<OrderBuyResponse> buyOrders = orderHandlerService.getAllBuyOrder();
@@ -82,7 +74,7 @@ public class OrderController {
     }
 
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    // Create a new order and generate QR code
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value

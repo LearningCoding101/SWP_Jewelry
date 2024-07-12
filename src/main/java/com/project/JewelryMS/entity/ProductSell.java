@@ -68,4 +68,8 @@ public class ProductSell {
     @OneToMany(mappedBy = "productSell")
     @JsonIgnoreProperties
     Set<OrderDetail> orderDetails;
+
+    @OneToOne(mappedBy = "productSell")
+    @JsonIgnoreProperties
+    Guarantee guarantee;
 }
