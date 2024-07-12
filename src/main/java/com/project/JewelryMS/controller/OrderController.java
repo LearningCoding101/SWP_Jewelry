@@ -10,6 +10,7 @@ import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.Order.OrderDetailService;
 import com.project.JewelryMS.service.Order.OrderHandlerService;
 import com.project.JewelryMS.service.QRService;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,6 +61,43 @@ public class OrderController {
         Long ID = orderHandlerService.handleCreateOrderBuyWithDetails(order);
         return ResponseEntity.ok( ID );
     }
+    @PostMapping("/claim")
+    public ResponseEntity<String> claimOrder(@RequestBody ClaimOrderRequest request) {
+        boolean claimed = orderHandlerService.claimOrder(request.getOrderId(), request.getUserId());
+        if (claimed) {
+            messagingTemplate.convertAndSendToUser(
+                    request.getUserId(),
+                    "/queue/claim-responses",
+                    new ClaimResponse(true, request.getOrderId(), request.getUserId())
+            );
+            return ResponseEntity.ok("Order claimed successfully");
+        } else {
+            messagingTemplate.convertAndSendToUser(
+                    request.getUserId(),
+                    "/queue/claim-responses",
+                    new ClaimResponse(false, request.getOrderId(), request.getUserId(), "Order already claimed")
+            );
+            return ResponseEntity.badRequest().body("Failed to claim order");
+        }
+    }
+
+    @PostMapping("/release")
+    public ResponseEntity<String> releaseOrder(@RequestBody ReleaseOrderRequest request) {
+        boolean released = orderHandlerService.releaseOrder(request.getOrderId(), request.getUserId());
+        if (released) {
+            messagingTemplate.convertAndSend("/topic/new-order", request.getOrderId());
+            return ResponseEntity.ok("Order released successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to release order");
+        }
+    }
+    @PostMapping("append-productBuy")
+    public ResponseEntity<Void> addOrderBuyDetail(@RequestParam Long orderId, @RequestParam Long productBuyId) {
+        orderHandlerService.addOrderBuyDetail(orderId, productBuyId);
+        return ResponseEntity.ok().build();
+    }
+
+    // Create a new order and generate QR code
 
     @GetMapping("get-all-orderBuy")
     public ResponseEntity<List<OrderBuyResponse>> getAllBuyOrders() {
@@ -74,7 +112,7 @@ public class OrderController {
     }
 
     //Product Buy Section//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Create a new order and generate QR code
+
     @PostMapping(value = "initialize-qr", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> saleCreateOrderQR(@RequestBody CreateOrderWrapper order) {
         // Generate QR code value

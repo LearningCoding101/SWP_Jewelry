@@ -72,6 +72,7 @@ com\project\JewelryMS\model\Category\CategoryResponse.class
 com\project\JewelryMS\config\Filter.class
 com\project\JewelryMS\model\Transition\TransitionResponse.class
 com\project\JewelryMS\model\Image\ImgbbResponse$Data$Image.class
+com\project\JewelryMS\model\Order\ReleaseOrderRequest.class
 com\project\JewelryMS\model\Order\CreateOrderBuyDetailRequest.class
 com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
@@ -92,6 +93,7 @@ com\project\JewelryMS\model\Customer\CustomerResponse.class
 com\project\JewelryMS\controller\VNPAYController.class
 com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
+com\project\JewelryMS\model\Order\ClaimOrderRequest.class
 com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
@@ -188,6 +190,7 @@ com\project\JewelryMS\controller\ImageController.class
 com\project\JewelryMS\controller\SchedulingController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
 com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
+com\project\JewelryMS\model\Order\ClaimResponse.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\model\Order\DateUtils.class
