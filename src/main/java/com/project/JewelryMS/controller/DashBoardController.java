@@ -167,7 +167,7 @@ public class DashBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/staff-statistics/{staffId}")
+    @GetMapping("/staff-statistics")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffStatisticsResponse> getStaffStats(@RequestParam("staffId") long staffId) {
         StaffStatisticsResponse response = dashboardService.getStaffStats(staffId);

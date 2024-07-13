@@ -14,6 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name="Guarantee")
 @ToString(exclude = "productSell")
+
 @EqualsAndHashCode(exclude = "productSell")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "productSell.guarantee"})
 public class Guarantee {
