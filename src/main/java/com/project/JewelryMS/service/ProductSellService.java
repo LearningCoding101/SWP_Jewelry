@@ -236,7 +236,7 @@ public class ProductSellService {
     private Float goldPrice;
 
     @PostConstruct
-    private void initializeGoldPrice() {
+    public void initializeGoldPrice() {
         this.goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
     }
 
