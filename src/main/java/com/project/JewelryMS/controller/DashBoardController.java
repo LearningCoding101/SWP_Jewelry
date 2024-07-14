@@ -175,13 +175,12 @@ public class DashBoardController {
         return ResponseEntity.ok(response);
     }
 
-    // New method with date range
     @GetMapping("/staff-statistics-range")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<StaffStatisticsResponse> getStaffStatsInRange(
             @RequestParam("staffId") long staffId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         StaffStatisticsResponse response = dashboardService.getStaffStatsInRange(staffId, startDate, endDate);
         return ResponseEntity.ok(response);
     }

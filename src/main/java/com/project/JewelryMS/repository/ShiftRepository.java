@@ -75,7 +75,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     @Query("SELECT COUNT(s) FROM Shift s JOIN s.staffShifts ss WHERE ss.staffAccount.staffID = :staffId")
     long countShiftsByStaff(@Param("staffId") long staffId);
 
-    // New method with date range
-    @Query("SELECT COUNT(s) FROM Shift s JOIN s.staffShifts ss WHERE ss.staffAccount.staffID = :staffId AND s.shiftDate BETWEEN :startDate AND :endDate")
+    @Query("SELECT COUNT(s) FROM Shift s JOIN s.staffShifts ss WHERE ss.staffAccount.staffID = :staffId AND s.startTime BETWEEN :startDate AND :endDate")
     long countShiftsByStaffAndDateRange(@Param("staffId") long staffId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

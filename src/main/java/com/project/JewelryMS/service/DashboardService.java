@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class DashboardService {
     @Autowired
-    private CategoryRepository categoryRepository;
+    CategoryRepository categoryRepository;
     @Autowired
-    private OrderRepository orderRepository;
+    OrderRepository orderRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
     @Autowired
-    private CustomerService customerService;
+    CustomerService customerService;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    private StaffAccountRepository staffAccountRepository;
+    StaffAccountRepository staffAccountRepository;
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
     @Autowired
@@ -559,15 +559,22 @@ public class DashboardService {
         return mapToStaffStatisticsResponse(staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
     }
 
-    // New method with date range
-    public StaffStatisticsResponse getStaffStatsInRange(long staffId, LocalDateTime startDate, LocalDateTime endDate) {
-        long customerSignUps = customerRepository.countCustomerSignUpsByStaffInDateRange(staffId, startDate, endDate);
-        Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffAndDateRange(staffId, startDate, endDate);
-        long salesCount = purchaseOrderRepository.getSalesCountByStaffAndDateRange(staffId, startDate, endDate);
-        long shiftsCount = shiftRepository.countShiftsByStaffAndDateRange(staffId, startDate, endDate);
+    public StaffStatisticsResponse getStaffStatsInRange(long staffId, LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
+
+        long customerSignUps = customerRepository.countCustomerSignUpsByStaffAndDateRange(
+                staffId,
+                Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant()),
+                Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
+        );
+        Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffAndDateRange(staffId, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+        long salesCount = purchaseOrderRepository.getSalesCountByStaffAndDateRange(staffId, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+        long shiftsCount = shiftRepository.countShiftsByStaffAndDateRange(staffId, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
 
         return mapToStaffStatisticsResponse(staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
     }
+
     // Mapping function
     private StaffStatisticsResponse mapToStaffStatisticsResponse(long staffId, long customerSignUps, Double revenueGenerated, long salesCount, long shiftsCount) {
         return new StaffStatisticsResponse(
