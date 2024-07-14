@@ -88,7 +88,7 @@ public class ProductBuyServiceUnitTest {
         request.setGemstoneType("Diamond");
         request.setMetalType("Gold");
         request.setGemstoneWeight(5.0f);
-        request.setMetalWeight(10);
+        request.setMetalWeight(10.0F);
 
         when(apiService.getGoldBuyPricecalculate(anyString())).thenReturn("1000");
         productBuyService.initializeGoldPrice();
