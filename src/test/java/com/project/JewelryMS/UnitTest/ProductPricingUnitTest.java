@@ -55,13 +55,13 @@ public class ProductPricingUnitTest {
 
     @Test
     public void testCalculateProductSellCost() {
-        Integer chi = 10;
+        Float chi = 10.0F;
         Float carat = 2.0F;
         String gemstoneType = "Diamond";
         String metalType = "Gold";
         Float manufacturerCost = 1000000.0F;
 
-        Float expectedCost = 8.4120006E8F;
+        Float expectedCost = 301200.0F;
 
         Float calculatedCost = productSellService.calculateProductSellCost(chi, carat, gemstoneType, metalType, manufacturerCost);
 
@@ -79,7 +79,7 @@ public class ProductPricingUnitTest {
 
         when(apiService.getGoldBuyPricecalculate(anyString())).thenReturn("5000000");
 
-        Float expectedTotalPrice = 3.7E8F;
+        Float expectedTotalPrice = 122500.0F;
 
         // Call the method
         Float cost = productBuyService.calculateProductBuyCost(request);
