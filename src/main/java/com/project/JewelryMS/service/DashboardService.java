@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class DashboardService {
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
     @Autowired
-    StaffAccountRepository staffAccountRepository;
+    private StaffAccountRepository staffAccountRepository;
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
     @Autowired
@@ -556,6 +556,20 @@ public class DashboardService {
         long salesCount = purchaseOrderRepository.getSalesCountByStaff(staffId);
         long shiftsCount = shiftRepository.countShiftsByStaff(staffId);
 
+        return mapToStaffStatisticsResponse(staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
+    }
+
+    // New method with date range
+    public StaffStatisticsResponse getStaffStatsInRange(long staffId, LocalDateTime startDate, LocalDateTime endDate) {
+        long customerSignUps = customerRepository.countCustomerSignUpsByStaffInDateRange(staffId, startDate, endDate);
+        Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffAndDateRange(staffId, startDate, endDate);
+        long salesCount = purchaseOrderRepository.getSalesCountByStaffAndDateRange(staffId, startDate, endDate);
+        long shiftsCount = shiftRepository.countShiftsByStaffAndDateRange(staffId, startDate, endDate);
+
+        return mapToStaffStatisticsResponse(staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
+    }
+    // Mapping function
+    private StaffStatisticsResponse mapToStaffStatisticsResponse(long staffId, long customerSignUps, Double revenueGenerated, long salesCount, long shiftsCount) {
         return new StaffStatisticsResponse(
                 staffId,
                 customerSignUps,
