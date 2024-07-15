@@ -44,6 +44,8 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\OrderTypeEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\RoleEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\exception\APIhandleException.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\exception\AuthException.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\exception\DuplicateEmailException.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\exception\DuplicateUsernameException.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\JewelryMsApplication.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountIDRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountResponse.java
@@ -100,9 +102,13 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderRequest
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderWrapper.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreatePBOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateProductBuyRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CustomerOrderGuaranteeResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\DateFilterOrderDate.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\DateUtils.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderData.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderDetailGuaranteeResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderGuaranteeResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductResponse.java
