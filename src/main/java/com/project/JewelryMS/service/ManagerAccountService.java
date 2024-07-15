@@ -68,6 +68,7 @@ public class ManagerAccountService {
         account.setAPassword(passwordEncoder.encode(createManagerAccountRequest.getAPassword()));
         account.setAUsername(createManagerAccountRequest.getUsername());
         account.setRole(RoleEnum.ROLE_MANAGER);
+        account.setAImage("https://i.ibb.co/Gxz9md6/avatar-trang-4.jpg");
         account.setStatus(1);
         Account account1 =  authenticationRepository.save(account);
         return getManagerAccountById(account1.getPK_userID());

@@ -60,6 +60,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setAPassword(passwordEncoder.encode(createStaffAccountRequest.getPassword()));
         account.setAUsername(createStaffAccountRequest.getUsername());
         account.setRole(RoleEnum.ROLE_STAFF);
+        account.setAImage("https://i.ibb.co/Gxz9md6/avatar-trang-4.jpg");
         StaffAccount staffAccount = new StaffAccount();
         staffAccount.setSalary(createStaffAccountRequest.getSalary());
         staffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
