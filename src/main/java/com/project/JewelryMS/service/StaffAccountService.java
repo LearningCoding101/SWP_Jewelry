@@ -109,10 +109,10 @@ public class StaffAccountService {
         }
         Account account = accountOpt.get();
         if (authenticationRepository.existsByAUsernameAndPkUserIDNot(account.getAUsername(), account.getPK_userID())) {
-            throw new DuplicateUsernameException("Username is already taken.");
+            throw new DuplicateUsernameException("Username đã được sử dụng.");
         }
         if (authenticationRepository.existsByEmailAndPkUserIDNot(account.getEmail(), account.getPK_userID())) {
-            throw new DuplicateEmailException("Email is already in use.");
+            throw new DuplicateEmailException("Email đã được sử dụng.");
         }
         account.setEmail(staffAccountRequest.getEmail());
         account.setAUsername(staffAccountRequest.getUsername());
