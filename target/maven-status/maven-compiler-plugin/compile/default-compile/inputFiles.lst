@@ -8,6 +8,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\config\VNPAYConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\WebSocketConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AuthenticationAPI.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CategoryController.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ChatController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CodeController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CustomerController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\DashBoardController.java
@@ -54,6 +55,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryRequest
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CreateCategoryRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ChangePasswordRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ChatMessage.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\CodeService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CreateCustomerRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Customer\CustomerDeleteRequest.java

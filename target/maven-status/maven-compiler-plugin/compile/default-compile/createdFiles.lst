@@ -4,6 +4,7 @@ com\project\JewelryMS\controller\CustomerController.class
 com\project\JewelryMS\model\Dashboard\TopSellProductResponse.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
+com\project\JewelryMS\controller\ChatController.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailResponse.class
 com\project\JewelryMS\model\Order\OrderResponse.class
 com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.class
@@ -14,6 +15,7 @@ com\project\JewelryMS\model\Order\OrderDetailGuaranteeResponse.class
 com\project\JewelryMS\service\SchedulingService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\entity\CoverageEnum.class
+com\project\JewelryMS\model\ChatMessage$MessageType.class
 com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
 com\project\JewelryMS\controller\OrderController.class
 com\project\JewelryMS\model\Customer\CustomerRequest.class
@@ -113,6 +115,7 @@ com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\repository\ProductSellPromotionRepository.class
 com\project\JewelryMS\config\SecurityConfig.class
+com\project\JewelryMS\model\ChatMessage.class
 com\project\JewelryMS\model\Order\OrderBuyResponse.class
 com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.class
 com\project\JewelryMS\model\ProductSell\ProductSellRequest.class

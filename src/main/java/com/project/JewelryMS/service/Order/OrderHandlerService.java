@@ -508,7 +508,12 @@ public class OrderHandlerService {
                 orderToUpdate.setPaymentType("Tiền mặt");
                 calculateAndSetGuaranteeEndDate(request.getOrderID());
                 System.out.println(orderToUpdate);
-                sendConfirmationEmail(request.getOrderID(), orderToUpdate.getEmail());
+                if(orderToUpdate.getEmail() != null){
+                    if(!orderToUpdate.getEmail().trim().isEmpty()){
+                        sendConfirmationEmail(request.getOrderID(), orderToUpdate.getEmail());
+
+                    }
+                }
                 return orderService.saveOrder(orderToUpdate) != null;
             } else{
                 return false;

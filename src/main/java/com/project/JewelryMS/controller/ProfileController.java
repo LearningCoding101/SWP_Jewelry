@@ -67,7 +67,7 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/profile/all")
     public ResponseEntity<List<StaffListResponse>> getAllAccounts() {
         List<StaffListResponse> accounts = profileService.getAllAccounts();
         return ResponseEntity.ok(accounts);
