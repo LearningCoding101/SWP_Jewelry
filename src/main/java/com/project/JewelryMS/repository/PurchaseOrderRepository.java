@@ -25,17 +25,23 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
 //    @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.staffID = :staffId AND po.purchaseDate BETWEEN :startDate AND :endDate")
 //    long getSalesCountByStaffAndDateRange(@Param("staffId") long staffId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-
-    @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email AND po.purchaseDate BETWEEN :startDate AND :endDate")
-    Double getTotalRevenueByStaffEmailAndDateRange(@Param("email") String email, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
-    @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email")
+    @Query("SELECT SUM(po.totalAmount) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email")
     Double getTotalRevenueByStaffEmail(@Param("email") String email);
-
-    @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email AND po.purchaseDate BETWEEN :startDate AND :endDate")
-    long getSalesCountByStaffEmailAndDateRange(@Param("email") String email, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email")
     long getSalesCountByStaffEmail(@Param("email") String email);
 
+    @Query("SELECT SUM(po.totalAmount) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email AND po.purchaseDate BETWEEN :startDate AND :endDate")
+    Double getTotalRevenueByStaffEmailAndDateRange(
+            @Param("email") String email,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email AND po.purchaseDate BETWEEN :startDate AND :endDate")
+    long getSalesCountByStaffEmailAndDateRange(
+            @Param("email") String email,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

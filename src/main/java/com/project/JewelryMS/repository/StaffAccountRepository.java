@@ -36,4 +36,7 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
     @Query("SELECT sa FROM StaffAccount sa WHERE sa.account.email = :email")
     StaffAccount findByEmail(@Param("email") String email);
 
+    @Query("SELECT sa.account.email FROM StaffAccount sa WHERE sa.staffID = :staffId")
+    String findEmailByStaffId(@Param("staffId") long staffId);
+
 }

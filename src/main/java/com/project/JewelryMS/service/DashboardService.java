@@ -551,19 +551,17 @@ public class DashboardService {
         return responses;
     }
 
-    public StaffStatisticsResponse getStaffStats(String email) {
-        StaffAccount staffAccount = staffAccountRepository.findByEmail(email);
-        if (staffAccount == null) {
-            throw new EntityNotFoundException("Staff not found with email: " + email);
-        }
+    public StaffStatisticsResponse getStaffStats(long staffId) {
+        // Fetch the email of the staff using the staff ID
+        String email = staffAccountRepository.findEmailByStaffId(staffId);
 
-        long staffId = staffAccount.getStaffID();
+        // Fetch the statistics using the email
         long customerSignUps = customerRepository.countCustomerSignUpsByStaffEmail(email);
         Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffEmail(email);
         long salesCount = purchaseOrderRepository.getSalesCountByStaffEmail(email);
         long shiftsCount = shiftRepository.countShiftsByStaffEmail(email);
 
-        return mapToStaffStatisticsResponse(email,staffId,customerSignUps, revenueGenerated, salesCount, shiftsCount);
+        return mapToStaffStatisticsResponse(email,staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
     }
 
 
@@ -582,11 +580,20 @@ public class DashboardService {
                 Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant()),
                 Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
         );
-        Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffEmailAndDateRange(email, startDate, endDate);
-        long salesCount = purchaseOrderRepository.getSalesCountByStaffEmailAndDateRange(email, startDate, endDate);
-        long shiftsCount = shiftRepository.countShiftsByStaffEmailAndDateRange(email, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+        Double revenueGenerated = purchaseOrderRepository.getTotalRevenueByStaffEmailAndDateRange(email, startDateTime, endDateTime);
+        if (revenueGenerated == null) {
+            revenueGenerated = 0.0;
+        }
+        Long salesCount = purchaseOrderRepository.getSalesCountByStaffEmailAndDateRange(email, startDateTime, endDateTime);
+        if (salesCount == null) {
+            salesCount = 0L;
+        }
+        Long shiftsCount = shiftRepository.countShiftsByStaffEmailAndDateRange(email, startDateTime, endDateTime);
+        if (shiftsCount == null) {
+            shiftsCount = 0L;
+        }
 
-        return mapToStaffStatisticsResponse(email,staffId,customerSignUps, revenueGenerated, salesCount, shiftsCount);
+        return mapToStaffStatisticsResponse(email, staffId, customerSignUps, revenueGenerated, salesCount, shiftsCount);
     }
 
 
