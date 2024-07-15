@@ -1,10 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.project.JewelryMS.entity.StaffAccount;
-import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
-import com.project.JewelryMS.model.Staff.DeleteStaffAccountRequest;
-import com.project.JewelryMS.model.Staff.StaffAccountRequest;
-import com.project.JewelryMS.model.Staff.StaffAccountResponse;
+import com.project.JewelryMS.model.Staff.*;
 import com.project.JewelryMS.service.StaffAccountService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +58,18 @@ public class StaffAccountController {
     }
 
     @GetMapping("/without-shift")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
     public ResponseEntity<List<StaffAccountResponse>> getStaffWithoutShift() {
         List<StaffAccountResponse> staffWithoutShift = staffAccountService.getStaffWithoutShift();
         return ResponseEntity.ok(staffWithoutShift);
     }
+
+    // GET all staff accounts without displaying shifts
+    @GetMapping("/all/no-listing-shift")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
+    public ResponseEntity<List<StaffAccountWithoutShiftResponse>> getAllStaffAccountsWithoutShift() {
+        List<StaffAccountWithoutShiftResponse> staffAccounts = staffAccountService.readAllStaffAccountsWithoutShift();
+        return ResponseEntity.ok(staffAccounts);
+    }
+
 }
