@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
+import com.project.JewelryMS.model.ProductBuy.UpdateProductBuyRequest;
 import com.project.JewelryMS.service.ProductBuyService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,30 +50,26 @@ public class ProductBuyController {
         }
     }
     ////////////////////////Order of Product Buy status 3
-    // Get all product buys
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<List<ProductBuyResponse>> getAllProductBuys() {
-        List<ProductBuyResponse> productBuys = productBuyService.getAllProductBuys();
+    public ResponseEntity<List<ProductBuyResponse>> getAllProductBuysByOrderStatus3() {
+        List<ProductBuyResponse> productBuys = productBuyService.getAllProductBuysByOrderStatus3();
         return ResponseEntity.ok(productBuys);
     }
 
-
-    // Delete a product buy by ID
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<String> deleteProductBuy(@PathVariable Long id) {
-        String response = productBuyService.deleteProductBuy(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ProductBuyResponse> updateProductBuyByOrderStatus3(@PathVariable Long id, @RequestBody UpdateProductBuyRequest updateProductBuyRequest) {
+        ProductBuyResponse productBuyResponse = productBuyService.updateProductBuyByOrderStatus3(id,updateProductBuyRequest);
+        return ResponseEntity.ok(productBuyResponse);
     }
 
-//    //Update a product buy byID
-//    @PutMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-//    public ResponseEntity<ProductBuyResponse> updateProductBuy(@PathVariable Long id){
-//        ProductBuyResponse productBuyResponse = productBuyService.updateProductBuy(id);
-//        return ResponseEntity.ok(productBuyResponse);
-//    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<String> deleteProductBuyByOrderStatus3(@PathVariable Long id) {
+        String response = productBuyService.deleteProductBuyByOrderStatus3(id);
+        return ResponseEntity.ok(response);
+    }
     ////////////////////////Order of Product Buy status 3
 
     // Get a product buy by ID
