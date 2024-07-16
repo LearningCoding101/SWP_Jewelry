@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class ProductBuyResponse {
     Long ProductBuyID;
+    Long categoryID;
     String categoryName;
     String pbName;
     String metalType;

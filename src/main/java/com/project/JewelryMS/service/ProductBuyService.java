@@ -236,6 +236,7 @@ public class ProductBuyService {
     private ProductBuyResponse mapToProductBuyResponse(ProductBuy productBuy) {
         ProductBuyResponse response = new ProductBuyResponse();
         response.setProductBuyID(productBuy.getPK_ProductBuyID());
+        response.setCategoryID(productBuy.getCategory().getId());
         response.setCategoryName(productBuy.getCategory().getName());
         response.setPbName(productBuy.getPbName());
         response.setMetalType(productBuy.getMetalType());
@@ -283,9 +284,12 @@ public class ProductBuyService {
     public ProductBuyResponse updateProductBuyByOrderStatus3(Long id, UpdateProductBuyRequest updateProductBuyRequest) {
         OrderBuyDetail orderBuyDetail = orderBuyDetailRepository.findByProductBuyIdAndPurchaseOrderStatus(id, 3)
                 .orElseThrow(() -> new ResourceNotFoundException("ProductBuy with Order status 3 not found"));
-
         ProductBuy productBuy = orderBuyDetail.getProductBuy();
-
+        if(updateProductBuyRequest.getCategoryID()!=null) {
+            Category category = categoryRepository.findById(updateProductBuyRequest.getCategoryID())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category ID not found"));
+            productBuy.setCategory(category);
+        }
         if (updateProductBuyRequest.getPbName() != null) {
             productBuy.setPbName(updateProductBuyRequest.getPbName());
         }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateProductBuyRequest {
+    Long categoryID;
     String pbName;
     String metalType;
     Float chi;
