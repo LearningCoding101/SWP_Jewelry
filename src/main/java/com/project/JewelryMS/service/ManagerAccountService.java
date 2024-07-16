@@ -2,6 +2,8 @@ package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.enumClass.RoleEnum;
+import com.project.JewelryMS.exception.DuplicateEmailException;
+import com.project.JewelryMS.exception.DuplicateUsernameException;
 import com.project.JewelryMS.model.Manager.CreateManagerAccountRequest;
 import com.project.JewelryMS.model.Manager.ManagerAccountRequest;
 import com.project.JewelryMS.model.Manager.ManagerAccountResponse;
@@ -55,11 +57,18 @@ public class ManagerAccountService {
 
     public ManagerAccountResponse createManagerAccount(CreateManagerAccountRequest createManagerAccountRequest){
         Account account = new Account();
+        if(authenticationRepository.existsByAUsername(createManagerAccountRequest.getUsername())){
+            throw new DuplicateUsernameException("Username đã được sử dụng.");
+        }
+        if(authenticationRepository.existsByEmail(createManagerAccountRequest.getUsername())){
+            throw new DuplicateEmailException("Email đã được sử dụng.");
+        }
         account.setAccountName(createManagerAccountRequest.getAccountName());
         account.setEmail(createManagerAccountRequest.getEmail());
         account.setAPassword(passwordEncoder.encode(createManagerAccountRequest.getAPassword()));
         account.setAUsername(createManagerAccountRequest.getUsername());
         account.setRole(RoleEnum.ROLE_MANAGER);
+        account.setAImage("https://i.ibb.co/Gxz9md6/avatar-trang-4.jpg");
         account.setStatus(1);
         Account account1 =  authenticationRepository.save(account);
         return getManagerAccountById(account1.getPK_userID());
@@ -70,12 +79,18 @@ public class ManagerAccountService {
         if(getManagerAccountById(id)!=null) {
             Optional<Account> existingAccountOpt = managerAccountRepository.findById(id);
             if (existingAccountOpt.isPresent()) {
-                Account existingStaffAccount = existingAccountOpt.get();
-                existingStaffAccount.setAccountName(managerAccountRequest.getAccountName());
-                existingStaffAccount.setAUsername(managerAccountRequest.getUsername());
-                existingStaffAccount.setEmail(managerAccountRequest.getEmail());
-                existingStaffAccount.setRole(managerAccountRequest.getRole());
-                Account account = authenticationRepository.save(existingStaffAccount);
+                Account account = existingAccountOpt.get();
+                if (authenticationRepository.existsByAUsernameAndPkUserIDNot(account.getAUsername(), id)) {
+                    throw new DuplicateUsernameException("Username đã được sử dụng.");
+                }
+                if (authenticationRepository.existsByEmailAndPkUserIDNot(account.getEmail(), id)) {
+                    throw new DuplicateEmailException("Email đã được sử dụng.");
+                }
+                account.setAccountName(managerAccountRequest.getAccountName());
+                account.setAUsername(managerAccountRequest.getUsername());
+                account.setEmail(managerAccountRequest.getEmail());
+                account.setRole(managerAccountRequest.getRole());
+                Account account1 = authenticationRepository.save(account);
                 return getManagerAccountById(account.getPK_userID());
             } else {
                 throw new RuntimeException("ManagerAccount with ID " + id + " not found");

@@ -2,7 +2,7 @@ package com.project.JewelryMS.SystemTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.JewelryMS.controller.ProductBuyController;
-import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
+import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.service.ProductBuyService;

@@ -56,12 +56,25 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
 
-    @Query("SELECT COUNT(c) FROM Customer c WHERE c.staffAccount.staffID = :staffId AND c.createDate BETWEEN :startDate AND :endDate")
-    long countCustomerSignUpsByStaffAndDateRange(
-            @Param("staffId") long staffId,
+    @Query("SELECT COUNT(c) FROM Customer c WHERE c.staffAccount.account.email = :email AND c.createDate BETWEEN :startDate AND :endDate")
+    long countCustomerSignUpsByStaffEmailAndDateRange(
+            @Param("email") String email,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
 
+    @Query("SELECT COUNT(c) FROM Customer c WHERE c.staffAccount.account.email = :email")
+    long countCustomerSignUpsByStaffEmail(@Param("email") String email);
     @Query("SELECT COUNT(c) FROM Customer c WHERE c.staffAccount.staffID = :staffId")
     long countCustomerSignUpsByStaff(@Param("staffId") long staffId);
+
+    @Query("SELECT c FROM Customer c WHERE LOWER(c.cusName) LIKE LOWER(CONCAT('%', :cusName, '%'))")
+    List<Customer> findByCusNameContainingIgnoreCase(@Param("cusName") String cusName);
+
+    @Query("SELECT c FROM Customer c WHERE LOWER(c.email) LIKE LOWER(CONCAT('%', :email, '%'))")
+    List<Customer> findByEmailContainingIgnoreCase(@Param("email") String email);
+
+    @Query("SELECT c FROM Customer c WHERE LOWER(c.phoneNumber) LIKE LOWER(CONCAT('%', :phoneNumber, '%'))")
+    List<Customer> findByPhoneNumberContainingIgnoreCase(@Param("phoneNumber") String phoneNumber);
+
 }
+

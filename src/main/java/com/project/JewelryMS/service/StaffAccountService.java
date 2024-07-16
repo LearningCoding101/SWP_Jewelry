@@ -3,8 +3,11 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
+import com.project.JewelryMS.exception.DuplicateEmailException;
+import com.project.JewelryMS.exception.DuplicateUsernameException;
 import com.project.JewelryMS.model.Staff.StaffAccountRequest;
 import com.project.JewelryMS.model.Staff.StaffAccountResponse;
+import com.project.JewelryMS.model.Staff.StaffAccountWithoutShiftResponse;
 import com.project.JewelryMS.repository.AuthenticationRepository;
 import com.project.JewelryMS.repository.ShiftRepository;
 import com.project.JewelryMS.repository.StaffAccountRepository;
@@ -106,6 +109,12 @@ public class StaffAccountService {
             throw new RuntimeException("Account with ID " + existingStaffAccount.getAccount().getPK_userID() + " not found");
         }
         Account account = accountOpt.get();
+        if (authenticationRepository.existsByAUsernameAndPkUserIDNot(account.getAUsername(), account.getPK_userID())) {
+            throw new DuplicateUsernameException("Username đã được sử dụng.");
+        }
+        if (authenticationRepository.existsByEmailAndPkUserIDNot(account.getEmail(), account.getPK_userID())) {
+            throw new DuplicateEmailException("Email đã được sử dụng.");
+        }
         account.setEmail(staffAccountRequest.getEmail());
         account.setAUsername(staffAccountRequest.getUsername());
 //        account.setAPassword(passwordEncoder.encode(staffAccountRequest.getPassword()));
@@ -145,4 +154,25 @@ public class StaffAccountService {
                 .collect(Collectors.toList());
     }
 
+    // Method to read all staff accounts without their schedules
+    public List<StaffAccountWithoutShiftResponse> readAllStaffAccountsWithoutShift() {
+        List<StaffAccount> staffAccounts = staffAccountRepository.findAllStaffAccountsByRoleStaff();
+        return staffAccounts.stream()
+                .map(this::mapToStaffAccountWithoutShiftResponse)
+                .collect(Collectors.toList());
+    }
+
+    private StaffAccountWithoutShiftResponse mapToStaffAccountWithoutShiftResponse(StaffAccount staffAccount) {
+        StaffAccountWithoutShiftResponse response = new StaffAccountWithoutShiftResponse();
+        response.setStaffID(staffAccount.getStaffID());
+        response.setPhoneNumber(staffAccount.getPhoneNumber());
+        response.setSalary(staffAccount.getSalary());
+        response.setStartDate(staffAccount.getStartDate());
+        response.setAccountName(staffAccount.getAccount().getAccountName());
+        response.setRole(staffAccount.getAccount().getRole());
+        response.setStatus(staffAccount.getAccount().getStatus());
+        response.setEmail(staffAccount.getAccount().getEmail());
+        response.setUsername(staffAccount.getAccount().getUsername());
+        return response;
+    }
 }

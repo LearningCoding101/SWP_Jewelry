@@ -39,10 +39,10 @@ public class ProductSell {
     private List<ProductSell_Promotion> productSellPromotions;
 
     @Column(name = "chi")
-    private Integer chi;
+    private Float chi;
 
     @Column(name = "cost")
-    private float cost;
+    private Float cost;
 
     @Column(name = "pDescription", length = 255)
     private String pDescription;
