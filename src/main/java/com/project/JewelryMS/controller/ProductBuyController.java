@@ -1,7 +1,7 @@
 package com.project.JewelryMS.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
+import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
 import com.project.JewelryMS.service.ProductBuyService;
@@ -48,7 +48,7 @@ public class ProductBuyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
     }
-
+    ////////////////////////Order of Product Buy status 3
     // Get all product buys
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
@@ -57,13 +57,6 @@ public class ProductBuyController {
         return ResponseEntity.ok(productBuys);
     }
 
-    // Get a product buy by ID
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
-    public ResponseEntity<ProductBuyResponse> getProductBuyById(@PathVariable Long id) {
-        ProductBuyResponse productBuy = productBuyService.getProductBuyById(id);
-        return ResponseEntity.ok(productBuy);
-    }
 
     // Delete a product buy by ID
     @DeleteMapping("/{id}")
@@ -71,6 +64,23 @@ public class ProductBuyController {
     public ResponseEntity<String> deleteProductBuy(@PathVariable Long id) {
         String response = productBuyService.deleteProductBuy(id);
         return ResponseEntity.ok(response);
+    }
+
+//    //Update a product buy byID
+//    @PutMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+//    public ResponseEntity<ProductBuyResponse> updateProductBuy(@PathVariable Long id){
+//        ProductBuyResponse productBuyResponse = productBuyService.updateProductBuy(id);
+//        return ResponseEntity.ok(productBuyResponse);
+//    }
+    ////////////////////////Order of Product Buy status 3
+
+    // Get a product buy by ID
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF')")
+    public ResponseEntity<ProductBuyResponse> getProductBuyById(@PathVariable Long id) {
+        ProductBuyResponse productBuy = productBuyService.getProductBuyById(id);
+        return ResponseEntity.ok(productBuy);
     }
 
     @PostMapping("/calculate-cost")
@@ -86,5 +96,6 @@ public class ProductBuyController {
         productBuyService.updatePricingRatioPB(ratio);
         return ResponseEntity.ok(ratio);
     }
+
 
 }

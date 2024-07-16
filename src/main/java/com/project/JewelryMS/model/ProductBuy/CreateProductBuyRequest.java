@@ -1,9 +1,9 @@
-package com.project.JewelryMS.model.Order;
+package com.project.JewelryMS.model.ProductBuy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

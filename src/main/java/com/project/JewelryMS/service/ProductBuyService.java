@@ -3,7 +3,7 @@ package com.project.JewelryMS.service;
 import com.project.JewelryMS.entity.Category;
 import com.project.JewelryMS.entity.PricingRatio;
 import com.project.JewelryMS.entity.ProductBuy;
-import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
+import com.project.JewelryMS.model.ProductBuy.CreateProductBuyRequest;
 import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
 import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
 import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
@@ -75,8 +75,7 @@ public class ProductBuyService {
         Long ProductBuy_ID =  productBuy1.getPK_ProductBuyID();
         return ProductBuy_ID;
     }
-    public static MultipartFile base64ToMultipartFile(String base64String) {
-        String base64Data = base64String.split(",")[1];
+    public static MultipartFile base64ToMultipartFile(String base64String) {        String base64Data = base64String.split(",")[1];
 
         // Decode base64 string to byte array
         byte[] fileBytes = Base64.decodeBase64(base64Data);
@@ -173,17 +172,6 @@ public class ProductBuyService {
         }
         return newRatio;
     }
-    public CreateProductBuyResponse mapToCreateProductBuyResponse(ProductBuy productBuy) {
-        CreateProductBuyResponse response = new CreateProductBuyResponse();
-        response.setProductBuyID(productBuy.getPK_ProductBuyID());
-        response.setCategoryName(productBuy.getCategory().getName());
-        response.setPbName(productBuy.getPbName());
-        response.setMetalType(productBuy.getMetalType());
-        response.setGemstoneType(productBuy.getGemstoneType());
-        response.setCost(productBuy.getPbCost());
-        response.setImage(productBuy.getImage());
-        return response;
-    }
 
     public List<ProductBuyResponse> getAllProductBuys() {
         List<ProductBuy> productBuys = productBuyRepository.findAll();
@@ -205,7 +193,11 @@ public class ProductBuyService {
         response.setCategoryName(productBuy.getCategory().getName());
         response.setPbName(productBuy.getPbName());
         response.setMetalType(productBuy.getMetalType());
+        response.setChi(productBuy.getChi());
         response.setGemstoneType(productBuy.getGemstoneType());
+        response.setCarat(productBuy.getCarat());
+        response.setImage(productBuy.getImage());
+        response.setPbStatus(productBuy.isPbStatus());
         response.setCost(productBuy.getPbCost());
         return response;
     }
