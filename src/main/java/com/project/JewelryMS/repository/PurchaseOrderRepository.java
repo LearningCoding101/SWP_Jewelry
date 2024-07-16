@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -30,6 +32,9 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
 
     @Query("SELECT COUNT(po) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email")
     long getSalesCountByStaffEmail(@Param("email") String email);
+
+    @Query("SELECT SUM(po.totalAmount) FROM PurchaseOrder po WHERE po.staffAccount.staffID = :staffId AND po.purchaseDate BETWEEN :startDate AND :endDate")
+    Double getTotalRevenueByStaffAndDateRange(@Param("staffId") long staffId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT SUM(po.totalAmount) FROM PurchaseOrder po WHERE po.staffAccount.account.email = :email AND po.purchaseDate BETWEEN :startDate AND :endDate")
     Double getTotalRevenueByStaffEmailAndDateRange(

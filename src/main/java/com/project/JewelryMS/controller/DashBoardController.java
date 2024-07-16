@@ -93,7 +93,7 @@ public class DashBoardController {
 
     @GetMapping("compare-sale-year")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')")
-    public YearComparisonResponse comparationYear(@RequestParam("year1") String year1, @RequestParam("year2") String year2) {
+    public YearComparisonResponse comparationYear(@RequestParam("startYear") String year1, @RequestParam("endYear") String year2) {
         YearComparisonRequest request = new YearComparisonRequest(year1, year2);
         return dashboardService.compareYear(request);
     }

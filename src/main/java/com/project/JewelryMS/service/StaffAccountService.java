@@ -1,5 +1,10 @@
 package com.project.JewelryMS.service;
 
+import com.project.JewelryMS.entity.Account;
+import com.project.JewelryMS.entity.Shift;
+import com.project.JewelryMS.entity.StaffAccount;
+import com.project.JewelryMS.exception.DuplicateEmailException;
+import com.project.JewelryMS.exception.DuplicateUsernameException;
 import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.Staff.StaffAccountRequest;
 import com.project.JewelryMS.model.Staff.StaffAccountResponse;
@@ -107,6 +112,12 @@ public class StaffAccountService {
             throw new RuntimeException("Account with ID " + existingStaffAccount.getAccount().getPK_userID() + " not found");
         }
         Account account = accountOpt.get();
+        if (authenticationRepository.existsByAUsernameAndPkUserIDNot(account.getAUsername(), account.getPK_userID())) {
+            throw new DuplicateUsernameException("Username đã được sử dụng.");
+        }
+        if (authenticationRepository.existsByEmailAndPkUserIDNot(account.getEmail(), account.getPK_userID())) {
+            throw new DuplicateEmailException("Email đã được sử dụng.");
+        }
         account.setEmail(staffAccountRequest.getEmail());
         account.setAUsername(staffAccountRequest.getUsername());
 //        account.setAPassword(passwordEncoder.encode(staffAccountRequest.getPassword()));

@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseToken;
 import com.project.JewelryMS.entity.Account;
 import com.project.JewelryMS.enumClass.RoleEnum;
 import com.project.JewelryMS.entity.StaffAccount;
+import com.project.JewelryMS.exception.DuplicateEmailException;
+import com.project.JewelryMS.exception.DuplicateUsernameException;
 import com.project.JewelryMS.model.*;
 import com.project.JewelryMS.model.Staff.CreateStaffAccountRequest;
 import com.project.JewelryMS.repository.AuthenticationRepository;
@@ -46,11 +48,19 @@ public class AuthenticationService implements UserDetailsService {
 
     public CreateStaffAccountRequest register(CreateStaffAccountRequest createStaffAccountRequest){
         Account account = new Account();
+        if(authenticationRepository.existsByAUsername(createStaffAccountRequest.getUsername())){
+            throw new DuplicateUsernameException("Username đã được sử dụng.");
+        }
+        if(authenticationRepository.existsByEmail(createStaffAccountRequest.getUsername())){
+            throw new DuplicateEmailException("Email đã được sử dụng.");
+        }
         account.setAccountName(createStaffAccountRequest.getAccountName());
+
         account.setEmail(createStaffAccountRequest.getEmail());
         account.setAPassword(passwordEncoder.encode(createStaffAccountRequest.getPassword()));
         account.setAUsername(createStaffAccountRequest.getUsername());
         account.setRole(RoleEnum.ROLE_STAFF);
+        account.setAImage("https://i.ibb.co/Gxz9md6/avatar-trang-4.jpg");
         StaffAccount staffAccount = new StaffAccount();
         staffAccount.setSalary(createStaffAccountRequest.getSalary());
         staffAccount.setPhoneNumber(createStaffAccountRequest.getPhoneNumber());
@@ -111,17 +121,21 @@ public class AuthenticationService implements UserDetailsService {
         Account account = authenticationRepository.findById(id).orElse(null);
 
         if (account == null) {
-            return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Tài khoản không được tìm thấy", HttpStatus.NOT_FOUND);
+        }
+
+        if(request.getNewPassword().equals(request.getOldPassword())){
+            return new ResponseEntity<>("mật khẩu mới không được trùng với mật khẩu cũ ", HttpStatus.BAD_REQUEST);
         }
 
         if (!passwordEncoder.matches(request.getOldPassword(), account.getAPassword())) {
-            return new ResponseEntity<>("Old password does not match", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("mặt khẩu cũ không khớp", HttpStatus.BAD_REQUEST);
         }
 
         account.setAPassword(passwordEncoder.encode(request.getNewPassword()));
         authenticationRepository.save(account);
 
-        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Đã thay đổi mật khẩu thành công", HttpStatus.OK);
     }
 @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

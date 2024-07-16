@@ -1,19 +1,20 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.Category;
+import com.project.JewelryMS.entity.OrderBuyDetail;
 import com.project.JewelryMS.entity.PricingRatio;
 import com.project.JewelryMS.entity.ProductBuy;
-import com.project.JewelryMS.model.Order.CreateProductBuyRequest;
-import com.project.JewelryMS.model.ProductBuy.CalculatePBRequest;
-import com.project.JewelryMS.model.ProductBuy.CreateProductBuyResponse;
-import com.project.JewelryMS.model.ProductBuy.ProductBuyResponse;
+import com.project.JewelryMS.model.ProductBuy.*;
 import com.project.JewelryMS.repository.CategoryRepository;
+import com.project.JewelryMS.repository.OrderBuyDetailRepository;
 import com.project.JewelryMS.repository.PricingRatioRepository;
 import com.project.JewelryMS.repository.ProductBuyRepository;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 //import org.springframework.util.Base64Utils;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -35,6 +36,17 @@ public class ProductBuyService {
     private ImageService imageService;
     @Autowired
     private PricingRatioRepository pricingRatioRepository;
+    @Autowired
+    private OrderBuyDetailRepository orderBuyDetailRepository;
+
+    public void initializeGoldPrice() {
+        String goldPriceStr = apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v");
+        if (goldPriceStr != null) {
+            this.goldPrice = Float.parseFloat(goldPriceStr);
+        } else {
+            throw new IllegalArgumentException("Gold price cannot be null");
+        }
+    }
 
     public Long createProductBuy(CreateProductBuyRequest request) {
         ProductBuy productBuy = new ProductBuy();
@@ -65,6 +77,37 @@ public class ProductBuyService {
         ProductBuy productBuy1 = productBuyRepository.save(productBuy);
         Long ProductBuy_ID =  productBuy1.getPK_ProductBuyID();
         return ProductBuy_ID;
+    }
+    public ProductResponseBuy updateProductBuy(Long id, CalculatePBRequest request) {
+        Optional<ProductBuy> optionalProductBuy = productBuyRepository.findById(id);
+        if (optionalProductBuy.isPresent()) {
+            ProductBuy productBuy = optionalProductBuy.get();
+
+            // Update the fields
+            productBuy.setPbCost(request.getCost());
+            productBuy.setChi(request.getMetalWeight());
+            productBuy.setCarat(request.getGemstoneWeight());
+            productBuy.setMetalType(request.getMetalType());
+            productBuy.setGemstoneType(request.getGemstoneType());
+
+            // Save and return the updated ProductBuy
+            return mapToProductResponse(productBuyRepository.save(productBuy));
+        } else {
+            throw new IllegalArgumentException("ProductBuy with id " + id + " not found");
+        }
+    }
+    public ProductResponseBuy mapToProductResponse(ProductBuy productBuy) {
+        ProductResponseBuy response = new ProductResponseBuy();
+        response.setProductBuyID(productBuy.getPK_ProductBuyID());
+        response.setCategoryID(productBuy.getCategory().getId());
+        response.setCategoryName(productBuy.getCategory().getName());
+        response.setPbName(productBuy.getPbName());
+        response.setMetalType(productBuy.getMetalType());
+        response.setGemstoneType(productBuy.getGemstoneType());
+        response.setCost(productBuy.getPbCost());
+        response.setImage(productBuy.getImage());
+        // Set other fields as needed
+        return response;
     }
     public static MultipartFile base64ToMultipartFile(String base64String) {
         String base64Data = base64String.split(",")[1];
@@ -128,33 +171,24 @@ public class ProductBuyService {
         String gemstoneType = createProductBuyRequest.getGemstoneType();
         String metalType = createProductBuyRequest.getMetalType();
         Float carat = createProductBuyRequest.getGemstoneWeight();
-        Integer chi = createProductBuyRequest.getMetalWeight();
+        Float chi = createProductBuyRequest.getMetalWeight();
         if (gemstoneType != null && carat != null) {
-            Float gemStonePrice = 100000000.0F; // Price per carat
+            Float gemStonePrice = 10000000.0F; // Price per carat
             totalGemPrice = ((gemStonePrice * carat) * 0.8F);
         }
 
         Float totalGoldPrice = 0.0F;
         if (metalType != null && chi != null) {
             Float goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-            totalGoldPrice = (goldPrice / 10) * chi;
+            totalGoldPrice = goldPrice * chi;
         }
 
         totalPrice = (totalGemPrice + totalGoldPrice ); // Applying the markup
 
-        return totalPrice / 1000.0F;
+        return totalPrice ;
     }
     private Float goldPrice;
-    @Autowired
-    public ProductBuyService(ApiService apiService, PricingRatioRepository pricingRatioRepository) {
-        this.apiService = apiService;
-        this.pricingRatioRepository = pricingRatioRepository;
-        initializeGoldPrice();
-    }
 
-    private void initializeGoldPrice() {
-        this.goldPrice = Float.parseFloat(apiService.getGoldBuyPricecalculate("http://api.btmc.vn/api/BTMCAPI/getpricebtmc?key=3kd8ub1llcg9t45hnoh8hmn7t5kc2v"));
-    }
     public Float getPricingRatioPB(){
         Optional<PricingRatio> pricingRatioOptional = pricingRatioRepository.findById(1L);
         if(pricingRatioOptional.isPresent()){
@@ -202,10 +236,15 @@ public class ProductBuyService {
     private ProductBuyResponse mapToProductBuyResponse(ProductBuy productBuy) {
         ProductBuyResponse response = new ProductBuyResponse();
         response.setProductBuyID(productBuy.getPK_ProductBuyID());
+        response.setCategoryID(productBuy.getCategory().getId());
         response.setCategoryName(productBuy.getCategory().getName());
         response.setPbName(productBuy.getPbName());
         response.setMetalType(productBuy.getMetalType());
+        response.setChi(productBuy.getChi());
+        response.setCarat(productBuy.getCarat());
         response.setGemstoneType(productBuy.getGemstoneType());
+        response.setPbStatus(productBuy.isPbStatus());
+        response.setImage(productBuy.getImage());
         response.setCost(productBuy.getPbCost());
         return response;
     }
@@ -232,6 +271,68 @@ public class ProductBuyService {
         return "Product Buy ID Not Found!!!";
     }
 
+    public List<ProductBuyResponse> getAllProductBuysByOrderStatus3() {
+        List<ProductBuy> productBuys = orderBuyDetailRepository.findAll().stream()
+                .filter(obd -> obd.getPurchaseOrder().getStatus() == 3)
+                .map(OrderBuyDetail::getProductBuy)
+                .distinct()
+                .collect(Collectors.toList());
 
+        return productBuys.stream().map(this::mapToProductBuyResponse).collect(Collectors.toList());
+    }
+
+    public ProductBuyResponse updateProductBuyByOrderStatus3(Long id, UpdateProductBuyRequest updateProductBuyRequest) {
+        OrderBuyDetail orderBuyDetail = orderBuyDetailRepository.findByProductBuyIdAndPurchaseOrderStatus(id, 3)
+                .orElseThrow(() -> new ResourceNotFoundException("ProductBuy with Order status 3 not found"));
+        ProductBuy productBuy = orderBuyDetail.getProductBuy();
+        if(updateProductBuyRequest.getCategoryID()!=null) {
+            Category category = categoryRepository.findById(updateProductBuyRequest.getCategoryID())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category ID not found"));
+            productBuy.setCategory(category);
+        }
+        if (updateProductBuyRequest.getPbName() != null) {
+            productBuy.setPbName(updateProductBuyRequest.getPbName());
+        }
+        if (updateProductBuyRequest.getMetalType() != null) {
+            productBuy.setMetalType(updateProductBuyRequest.getMetalType());
+        }
+        if (updateProductBuyRequest.getChi() != null) {
+            productBuy.setChi(updateProductBuyRequest.getChi());
+        }
+        if (updateProductBuyRequest.getGemstoneType() != null) {
+            productBuy.setGemstoneType(updateProductBuyRequest.getGemstoneType());
+        }
+        if (updateProductBuyRequest.getCarat() != null) {
+            productBuy.setCarat(updateProductBuyRequest.getCarat());
+        }
+        if (updateProductBuyRequest.getImage() != null) {
+            String image = imageService.uploadImageByPathService(updateProductBuyRequest.getImage());
+            productBuy.setImage(image);
+        }
+        if (updateProductBuyRequest.getCost() != null) {
+            productBuy.setPbCost(updateProductBuyRequest.getCost());
+        }
+
+        productBuyRepository.save(productBuy);
+        return mapToProductBuyResponse(productBuy);
+    }
+
+    public String deleteProductBuyByOrderStatus3(Long id) {
+        OrderBuyDetail orderBuyDetail = orderBuyDetailRepository.findByProductBuyIdAndPurchaseOrderStatus(id, 3)
+                .orElseThrow(() -> new ResourceNotFoundException("ProductBuy with Order status 3 not found"));
+
+        ProductBuy productBuy = orderBuyDetail.getProductBuy();
+        productBuy.setPbStatus(false);
+        productBuyRepository.save(productBuy);
+
+        return "ProductBuy deleted successfully";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
 
 }
