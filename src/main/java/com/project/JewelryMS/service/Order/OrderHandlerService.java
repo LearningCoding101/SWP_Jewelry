@@ -694,6 +694,7 @@ public class OrderHandlerService {
                         customer.getPhoneNumber(),
                         customer.isStatus(),
                         orderRepository.findByCustomerID(customer.getPK_CustomerID()).stream()
+                                .filter(order -> order.getStaffAccount() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
@@ -721,6 +722,7 @@ public class OrderHandlerService {
                         order.getCustomer().getPhoneNumber(),
                         order.getCustomer().isStatus(),
                         orderRepository.findByCustomerID(order.getCustomer().getPK_CustomerID()).stream()
+                                .filter(order1 -> order1.getStaffAccount() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
