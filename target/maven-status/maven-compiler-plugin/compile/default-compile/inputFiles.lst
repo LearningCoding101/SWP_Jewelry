@@ -6,6 +6,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\config\SecurityConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\ThymeleafConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\VNPAYConfig.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\config\WebSocketConfig.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AppraisalController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\AuthenticationAPI.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\CategoryController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ChatController.java
@@ -41,6 +42,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\entity\PurchaseOrder.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Shift.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Staff_Shift.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\StaffAccount.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\entity\WorkArea.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\OrderTypeEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\enumClass\RoleEnum.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\exception\APIhandleException.java
@@ -51,6 +53,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\JewelryMsApplication.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountIDRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\AccountResponseGG.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\AppraiseProduct.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CategoryResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Category\CreateCategoryRequest.java
@@ -131,6 +134,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProduct
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\AddPromotionsRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\CreateProductSellRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\GuaranteeProductSellResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\ProductSellRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\ProductSellResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.java
@@ -138,9 +142,9 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\AdminProfileResp
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\ManagerProfileResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\StaffListResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\StaffProfileResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateAdminResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateManagerResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateStaffResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateAdmin.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateManager.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\UpdateStaff.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Profile\ViewShiftResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\AssignPromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Promotion\CreatePromotionRequest.java
@@ -161,6 +165,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\CreateStaffAccount
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountWithoutShiftResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\StaffShift\IdWrapper.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\StaffShift\StaffShiftResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Transition\TransitionResponse.java

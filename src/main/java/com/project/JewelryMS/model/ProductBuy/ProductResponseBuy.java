@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductBuyResponse {
-    private Long ProductBuyID;
+public class ProductResponseBuy {
+    private Long productBuyID;
     private String categoryName;
+    private Long categoryID;
     private String pbName;
     private String metalType;
     private String gemstoneType;
-    private String image;
     private Float cost;
-
+    private String image;
 }
