@@ -137,6 +137,7 @@ public class ProfileService {
         List<Account> accounts = authenticationRepository.findAllAccounts();
         return accounts.parallelStream()
                 .map(a -> new StaffListResponse(
+                        a.getPK_userID(),
                         a.getRole(),
                         a.getEmail(),
                         a.getAUsername(),

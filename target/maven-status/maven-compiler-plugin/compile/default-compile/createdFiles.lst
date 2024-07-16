@@ -4,6 +4,7 @@ com\project\JewelryMS\controller\CustomerController.class
 com\project\JewelryMS\model\Dashboard\TopSellProductResponse.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
+com\project\JewelryMS\controller\ChatController.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailResponse.class
 com\project\JewelryMS\model\Order\OrderResponse.class
 com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.class
@@ -14,6 +15,7 @@ com\project\JewelryMS\model\Order\OrderDetailGuaranteeResponse.class
 com\project\JewelryMS\service\SchedulingService.class
 com\project\JewelryMS\controller\InfoController.class
 com\project\JewelryMS\entity\CoverageEnum.class
+com\project\JewelryMS\model\ChatMessage$MessageType.class
 com\project\JewelryMS\model\Order\ConfirmCashPaymentRequest.class
 com\project\JewelryMS\controller\OrderController.class
 com\project\JewelryMS\model\Customer\CustomerRequest.class
@@ -48,9 +50,9 @@ com\project\JewelryMS\model\Manager\CreateManagerAccountRequest.class
 com\project\JewelryMS\repository\CategoryRepository.class
 com\project\JewelryMS\service\CategoryService.class
 com\project\JewelryMS\exception\AuthException.class
-com\project\JewelryMS\model\Profile\UpdateStaffResponse.class
 com\project\JewelryMS\model\Profile\ManagerProfileResponse.class
 com\project\JewelryMS\model\ChangePasswordRequest.class
+com\project\JewelryMS\model\Staff\StaffAccountWithoutShiftResponse.class
 com\project\JewelryMS\model\Dashboard\ComparisonResponse.class
 com\project\JewelryMS\model\OrderDetail\CalculateGuaranteeDateRequest.class
 com\project\JewelryMS\entity\Account.class
@@ -80,6 +82,7 @@ com\project\JewelryMS\model\Order\CreateOrderBuyDetailRequest.class
 com\project\JewelryMS\model\Order\CreateOrderDetailRequest.class
 com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\GuaranteeController.class
+com\project\JewelryMS\model\AppraiseProduct.class
 com\project\JewelryMS\controller\ProductBuyController.class
 com\project\JewelryMS\model\Shift\DeleteShiftRequest.class
 com\project\JewelryMS\model\Profile\ViewShiftResponse.class
@@ -101,7 +104,6 @@ com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
 com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
-com\project\JewelryMS\model\Profile\UpdateManagerResponse.class
 com\project\JewelryMS\repository\ProductBuyRepository.class
 com\project\JewelryMS\service\JWTservice.class
 com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.class
@@ -109,11 +111,14 @@ com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
 com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.class
 com\project\JewelryMS\config\WebSocketConfig.class
+com\project\JewelryMS\model\Profile\UpdateManager.class
 com\project\JewelryMS\model\Order\OrderData.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\repository\ProductSellPromotionRepository.class
 com\project\JewelryMS\config\SecurityConfig.class
+com\project\JewelryMS\model\ChatMessage.class
 com\project\JewelryMS\model\Order\OrderBuyResponse.class
+com\project\JewelryMS\model\ProductSell\GuaranteeProductSellResponse.class
 com\project\JewelryMS\model\Dashboard\DiscountEffectivenessResponse.class
 com\project\JewelryMS\model\ProductSell\ProductSellRequest.class
 com\project\JewelryMS\repository\CustomerRepository.class
@@ -146,6 +151,7 @@ com\project\JewelryMS\model\Dashboard\Customer\CustomerSignUp.class
 com\project\JewelryMS\model\Guarantee\GuaranteeResponse.class
 com\project\JewelryMS\entity\PricingRatio.class
 com\project\JewelryMS\entity\Customer.class
+com\project\JewelryMS\entity\WorkArea.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\service\TransitionService.class
 com\project\JewelryMS\service\QRService.class
@@ -158,6 +164,7 @@ com\project\JewelryMS\model\Staff\StaffAccountResponse.class
 com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.class
 com\project\JewelryMS\controller\ProductSellController.class
 com\project\JewelryMS\repository\PromotionRepository.class
+com\project\JewelryMS\controller\AppraisalController.class
 com\project\JewelryMS\model\Shift\AssignStaffByDayOfWeekRequest.class
 com\project\JewelryMS\config\VNPAYConfig.class
 com\project\JewelryMS\model\AccountIDRequest.class
@@ -171,6 +178,7 @@ com\project\JewelryMS\repository\OrderDetailProjection.class
 com\project\JewelryMS\service\ProductSellService$ResourceNotFoundException.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailDTO.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailGuarantee.class
+com\project\JewelryMS\model\Profile\UpdateStaff.class
 com\project\JewelryMS\repository\PricingRatioRepository.class
 com\project\JewelryMS\model\CodeService.class
 com\project\JewelryMS\model\OrderDetail\OrderDetailRequest.class
@@ -179,6 +187,7 @@ com\project\JewelryMS\entity\Category.class
 com\project\JewelryMS\service\PromotionService.class
 com\project\JewelryMS\model\OrderDetail\CalculatePointsRequest.class
 com\project\JewelryMS\enumClass\OrderTypeEnum.class
+com\project\JewelryMS\model\Profile\UpdateAdmin.class
 com\project\JewelryMS\repository\OrderDetailRepository.class
 com\project\JewelryMS\model\Category\CategoryRequest.class
 com\project\JewelryMS\exception\DuplicateUsernameException.class
@@ -202,7 +211,6 @@ com\project\JewelryMS\entity\Promotion.class
 com\project\JewelryMS\model\Order\DateUtils.class
 com\project\JewelryMS\model\Manager\ManagerAccountResponse.class
 com\project\JewelryMS\controller\ManagerAccountController.class
-com\project\JewelryMS\model\Profile\UpdateAdminResponse.class
 com\project\JewelryMS\config\FileUploadConfig.class
 com\project\JewelryMS\entity\StaffAccount.class
 com\project\JewelryMS\model\Category\CreateCategoryRequest.class
