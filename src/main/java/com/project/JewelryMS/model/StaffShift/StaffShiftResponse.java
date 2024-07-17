@@ -26,5 +26,6 @@ public class StaffShiftResponse {
         private String accountName;
         private String email;
         private String username;
+        private String workAreaID;
     }
 }

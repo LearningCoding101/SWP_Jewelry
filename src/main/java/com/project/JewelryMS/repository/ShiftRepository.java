@@ -1,6 +1,7 @@
 package com.project.JewelryMS.repository;
 
 import com.project.JewelryMS.entity.Shift;
+import com.project.JewelryMS.entity.WorkArea;
 import com.project.JewelryMS.model.Shift.ShiftRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -80,5 +81,7 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     // Find shifts by work area description
     @Query("SELECT s FROM Shift s WHERE s.workArea.description = :workAreaDescription")
     List<Shift> findByWorkAreaDescription(@Param("workAreaDescription") String workAreaDescription);
+
+    Optional<Shift> findByWorkAreaAndStartTimeBetween(WorkArea workArea, LocalDateTime startTime, LocalDateTime endTime);
 
 }

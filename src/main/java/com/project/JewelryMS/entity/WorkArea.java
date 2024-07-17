@@ -1,6 +1,7 @@
 package com.project.JewelryMS.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +12,8 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"staffAccounts"})
+@ToString(exclude = {"staffAccounts"})
 @Entity
 @Table(name = "WorkArea")
 public class WorkArea {
@@ -28,6 +31,11 @@ public class WorkArea {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "workArea", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JsonIgnoreProperties("workArea")
+    private Set<StaffAccount> staffAccounts = new HashSet<>();
 
     @OneToMany(mappedBy = "workArea", fetch = FetchType.LAZY)
     @JsonManagedReference
