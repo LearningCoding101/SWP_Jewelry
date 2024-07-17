@@ -232,27 +232,31 @@
                         .map(detail -> {
                             // Fetch the existing OrderDetail
                             OrderDetail orderDetail = orderDetailRepository.findById(detail.getOrderDetailID())
-                                    .orElseThrow(() -> new RuntimeException("OrderDetail not found"));
+                                    .orElseThrow(() -> new RuntimeException("OrderDetail not found for ID: " + detail.getOrderDetailID()));
 
-                            // Replace the old quantity with the new quantity
-                            orderDetail.setQuantity(detail.getQuantity());
+                            // Calculate the refund quantity
+                            int refundQuantity = orderDetail.getQuantity() - detail.getQuantity();
 
                             // Convert to OrderDetailDTO
                             OrderDetailDTO dto = new OrderDetailDTO();
                             dto.setOrderDetailId(orderDetail.getPK_ODID());
                             dto.setPName(orderDetail.getProductSell().getPName());
                             dto.setImage(orderDetail.getProductSell().getImage());
-                            dto.setQuantity(orderDetail.getQuantity());
-                            float promotionPercentage = orderDetail.getPromotion() != null ? orderDetail.getPromotion().getDiscount() / 100f : 1;
-                            dto.setCost(orderDetail.getProductSell().getCost() * promotionPercentage * orderDetail.getQuantity());
+                            dto.setQuantity(refundQuantity);
+                            float promotionPercentage = orderDetail.getPromotion() != null ? 1 - (orderDetail.getPromotion().getDiscount() / 100f) : 1;
+                            dto.setCost(orderDetail.getProductSell().getCost() * promotionPercentage * refundQuantity);
                             return dto;
                         })
                         .collect(Collectors.toList());
+
+                // Calculate total refund amount
+                float totalRefundAmount = orderDetails.stream().map(OrderDetailDTO::getCost).reduce(0f, Float::sum);
 
                 // Prepare the HTML content
                 Context context = new Context();
                 context.setVariable("name", orderRefundMailRequest.getMail());
                 context.setVariable("orderTable", htmlFormatterService.createRefundOrderTable(orderDetails));
+                context.setVariable("totalRefundAmount", String.format("%.2f", totalRefundAmount));
                 context.setVariable("confirmationLink", "http://yourwebsite.com/confirm-refund");
 
                 // Process the email template
@@ -271,7 +275,7 @@
                 // Send the email
                 javaMailSender.send(mimeMessage);
             } catch (MessagingException messagingException) {
-                messagingException.printStackTrace();
+                throw new RuntimeException("Failed to send refund email", messagingException);
             }
         }
     }
