@@ -39,11 +39,30 @@
     </style>
 </head>
 <body>
-<p>Dear [[${name}]],</p>
+<p>Dear {{name}},</p>
 <p>We have processed your refund request. Below are the details of the order:</p>
-<div th:utext="${orderTable}"></div>
+<table>
+    <thead>
+    <tr>
+        <th>Order Detail ID</th>
+        <th>Product Name</th>
+        <th>Image</th>
+        <th>Quantity</th>
+        <th>Cost</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="detail : ${orderDetails}">
+        <td th:text="${detail.orderID}"></td>
+        <td th:text="${detail.productName}"></td>
+        <td><img th:src="@{${detail.image}}" alt="Product Image" style="max-width: 100px;"></td>
+        <td th:text="${detail.quantity}"></td>
+        <td th:text="${#numbers.formatCurrency(detail.cost)}"></td>
+    </tr>
+    </tbody>
+</table>
 <p>Please click the button below to confirm your refund:</p>
-<a th:href="${confirmationLink}" class="confirm-button">Xác nhận Hoàn Tiền</a>
+<a href="{{confirmationLink}}" class="confirm-button">Confirm Refund</a>
 <p>Thank you for shopping with us!</p>
 <p>Best regards,</p>
 <p>Jewelry Management System</p>
