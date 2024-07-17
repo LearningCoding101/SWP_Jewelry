@@ -2,6 +2,7 @@ com\project\JewelryMS\model\Order\DateFilterOrderDate.class
 com\project\JewelryMS\model\Order\TotalOrderResponse.class
 com\project\JewelryMS\controller\CustomerController.class
 com\project\JewelryMS\model\Dashboard\TopSellProductResponse.class
+com\project\JewelryMS\model\ProductBuy\UpdateProductBuyRequest.class
 com\project\JewelryMS\model\LoginRequest.class
 com\project\JewelryMS\model\Promotion\PromotionResponse.class
 com\project\JewelryMS\controller\ChatController.class
@@ -22,6 +23,7 @@ com\project\JewelryMS\model\Customer\CustomerRequest.class
 com\project\JewelryMS\model\Dashboard\DailyRevenueResponse.class
 com\project\JewelryMS\service\AuthenticationService.class
 com\project\JewelryMS\controller\PromotionController.class
+com\project\JewelryMS\model\ProductBuy\ProductResponseBuy.class
 com\project\JewelryMS\exception\DuplicateEmailException.class
 com\project\JewelryMS\model\Order\CreateOrderRequest.class
 com\project\JewelryMS\entity\PurchaseOrder.class
@@ -109,6 +111,7 @@ com\project\JewelryMS\service\JWTservice.class
 com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.class
 com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
+com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.class
 com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.class
 com\project\JewelryMS\config\WebSocketConfig.class
 com\project\JewelryMS\model\Profile\UpdateManager.class
@@ -204,7 +207,6 @@ com\project\JewelryMS\enumClass\RoleEnum.class
 com\project\JewelryMS\controller\ImageController.class
 com\project\JewelryMS\controller\SchedulingController.class
 com\project\JewelryMS\model\Customer\ViewCustomerPointRequest.class
-com\project\JewelryMS\model\Order\CreateProductBuyRequest.class
 com\project\JewelryMS\model\Order\ClaimResponse.class
 com\project\JewelryMS\config\ThymeleafConfig.class
 com\project\JewelryMS\entity\Promotion.class
@@ -214,6 +216,7 @@ com\project\JewelryMS\controller\ManagerAccountController.class
 com\project\JewelryMS\config\FileUploadConfig.class
 com\project\JewelryMS\entity\StaffAccount.class
 com\project\JewelryMS\model\Category\CreateCategoryRequest.class
+com\project\JewelryMS\service\ProductBuyService$ResourceNotFoundException.class
 com\project\JewelryMS\model\Promotion\AssignPromotionRequest.class
 com\project\JewelryMS\service\Order\OrderHandlerService.class
 com\project\JewelryMS\model\ResetPassRequest.class
