@@ -91,7 +91,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\CreateGuarante
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Guarantee\GuaranteeResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Image\ImgbbResponse.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\ImageTestRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ImageRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginGoogleRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\LoginRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Manager\CreateManagerAccountRequest.java

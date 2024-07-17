@@ -33,6 +33,7 @@ com\project\JewelryMS\repository\PurchaseOrderRepository.class
 com\project\JewelryMS\entity\Shift.class
 com\project\JewelryMS\model\AccountResponse.class
 com\project\JewelryMS\model\RegisterRequest.class
+com\project\JewelryMS\model\ImageRequest.class
 com\project\JewelryMS\controller\StaffAccountController.class
 com\project\JewelryMS\model\Dashboard\Customer\CustomerPurchaseHistoryResponse.class
 com\project\JewelryMS\service\ApiService.class
@@ -102,7 +103,6 @@ com\project\JewelryMS\controller\VNPAYController.class
 com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\Order\ClaimOrderRequest.class
-com\project\JewelryMS\model\ImageTestRequest.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
 com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
