@@ -26,6 +26,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\controller\SchedulingControlle
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\ShiftController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\StaffAccountController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\controller\VNPAYController.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\controller\WorkAreaController.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Account.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\Category.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\entity\CoverageEnum.java
@@ -106,7 +107,6 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderDetailR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateOrderWrapper.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreatePBOrderRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CreateProductBuyRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\CustomerOrderGuaranteeResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\DateFilterOrderDate.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\DateUtils.java
@@ -130,8 +130,11 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderDetailR
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderPromotionRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\OrderDetail\OrderTotalRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CalculatePBRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\CreateProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\ProductResponseBuy.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductBuy\UpdateProductBuyRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\AddPromotionsRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\CreateProductSellRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\ProductSell\GuaranteeProductSellResponse.java
@@ -156,11 +159,13 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\AssignStaffByDayOf
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\AssignStaffToMultipleDaysRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\CreateShiftRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\CreateWorkAreaRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\DeleteShiftRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\GetWorkAreaRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\ShiftRequest.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\ShiftResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilityDeserializer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\WorkAreaRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountRequest.java
@@ -188,6 +193,7 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\repository\PurchaseOrderReposi
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\ShiftRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\StaffAccountRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\repository\StaffShiftRepository.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\repository\WorkAreaRepository.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ApiService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\AuthenticationService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\CategoryService.java
@@ -208,8 +214,9 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProductSellService.jav
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\ProfileService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\PromotionService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\QRService.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\service\SchedulingService.java
-D:\swpBackend\src\main\java\com\project\JewelryMS\service\ShiftService.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\Shift\SchedulingService.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\Shift\ShiftService.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\service\Shift\WorkAreaService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\StaffAccountService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\TransitionService.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\service\VNPAYservice.java
