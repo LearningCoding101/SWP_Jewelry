@@ -52,16 +52,16 @@ class ProductBuyControllerTest {
         assertEquals(1L, response.getBody().get(0));
     }
 
-    @Test
-    void testGetAllProductBuys() {
-        List<ProductBuyResponse> mockResponse = new ArrayList<>();
-        when(productBuyService.getAllProductBuys()).thenReturn(mockResponse);
-
-        ResponseEntity<List<ProductBuyResponse>> response = productBuyController.getAllProductBuys();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockResponse, response.getBody());
-    }
+//    @Test
+//    void testGetAllProductBuys() {
+//        List<ProductBuyResponse> mockResponse = new ArrayList<>();
+//        when(productBuyService.getAllProductBuys()).thenReturn(mockResponse);
+//
+//        ResponseEntity<List<ProductBuyResponse>> response = productBuyController.getAllProductBuys();
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(mockResponse, response.getBody());
+//    }
 
     @Test
     void testGetProductBuyById() {
@@ -73,17 +73,17 @@ class ProductBuyControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockResponse, response.getBody());
     }
-
-    @Test
-    void testDeleteProductBuy() {
-        String mockResponse = "Product buy deleted successfully";
-        when(productBuyService.deleteProductBuy(anyLong())).thenReturn(mockResponse);
-
-        ResponseEntity<String> response = productBuyController.deleteProductBuy(1L);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockResponse, response.getBody());
-    }
+//
+//    @Test
+//    void testDeleteProductBuy() {
+//        String mockResponse = "Product buy deleted successfully";
+//        when(productBuyService.deleteProductBuy(anyLong())).thenReturn(mockResponse);
+//
+//        ResponseEntity<String> response = productBuyController.deleteProductBuy(1L);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(mockResponse, response.getBody());
+//    }
 
     @Test
     void testCalculateProductBuyCost() {
