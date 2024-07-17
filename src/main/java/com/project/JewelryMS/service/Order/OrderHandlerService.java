@@ -4,6 +4,7 @@ import com.project.JewelryMS.entity.*;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
+import com.project.JewelryMS.model.Refund.RefundOrderDetailRequest;
 import com.project.JewelryMS.repository.*;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ImageService;
@@ -773,5 +774,56 @@ public class OrderHandlerService {
     }
 
 
+    @Transactional
+    public String refundOrderDetail(RefundOrderDetailRequest request) {
+        OrderDetail orderDetail = orderDetailRepository.findById(request.getOrderDetailId())
+                .orElseThrow(() -> new IllegalArgumentException("OrderDetail not found"));
 
+        if (request.getQuantityToRefund() > orderDetail.getQuantity() - orderDetail.getRefundedQuantity()) {
+            throw new IllegalArgumentException("Refund quantity exceeds available quantity");
+        }
+
+        PurchaseOrder order = orderDetail.getPurchaseOrder();
+
+        if (!isEligibleForRefund(order)) {
+            throw new IllegalStateException("This order is not eligible for refund");
+        }
+
+        // Calculate refund amount for the partial quantity
+        float refundAmount = calculateRefundAmount(orderDetail, request.getQuantityToRefund());
+
+        // Update order total
+        order.setTotalAmount(order.getTotalAmount() - refundAmount);
+
+        // Create a refund record
+        Refund refund = new Refund();
+        refund.setOrderDetail(orderDetail);
+        refund.setAmount(refundAmount);
+        refund.setReason(request.getRefundReason());
+        refund.setRefundDate(new Date());
+        refund.setRefundedQuantity(request.getQuantityToRefund());
+
+        // Update product inventory
+        ProductSell product = orderDetail.getProductSell();
+        product.setInventory(product.getInventory() + request.getQuantityToRefund());
+
+        // Update refunded quantity in OrderDetail
+        orderDetail.setRefundedQuantity(orderDetail.getRefundedQuantity() + request.getQuantityToRefund());
+
+        // Save changes
+        orderRepository.save(order);
+        productSellRepository.save(product);
+        refundRepository.save(refund);
+        orderDetailRepository.save(orderDetail);
+
+        // Send email notification
+        sendRefundNotification(order.getCustomer().getEmail(), refundAmount, order.getPK_OrderID(), request.getQuantityToRefund());
+
+        return "Refund processed successfully";
+    }
+
+    private float calculateRefundAmount(OrderDetail orderDetail, int quantityToRefund) {
+        // Calculate refund amount for the specified quantity
+        return (orderDetail.getProductSell().getCost() * quantityToRefund);
+    }
 }
