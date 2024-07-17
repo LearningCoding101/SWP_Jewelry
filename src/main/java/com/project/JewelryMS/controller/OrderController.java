@@ -254,9 +254,5 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("refund-mail")
-    public ResponseEntity<String> refundOrderEmail(@RequestBody OrderRefundMailRequest orderRefundMailRequest){
-
-    }
 
 }
