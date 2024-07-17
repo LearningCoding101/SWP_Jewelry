@@ -165,7 +165,7 @@
 
         public void sendConfirmEmail(Long orderID, EmailDetail emailDetail) {
             try {
-                // Fetch order details for the given orderID
+                // Fetch order details for the given orderDetailID
                 List<OrderDetailDTO> orderDetails = orderDetailService.getOrderDetailsByOrderId(orderID).stream()
                         .filter(orderDetail -> orderDetail.getOrderId().equals(orderID)).toList();
 
@@ -230,16 +230,17 @@
                 // Fetch and update order details based on the provided IDs
                 List<OrderDetailDTO> orderDetails = orderRefundMailRequest.getOrderDetails().stream()
                         .map(detail -> {
+                            // Fetch the existing OrderDetail
                             OrderDetail orderDetail = orderDetailRepository.findById(detail.getOrderDetailID())
                                     .orElseThrow(() -> new RuntimeException("OrderDetail not found"));
 
-                            // Update the quantity with the new value
+                            // Replace the old quantity with the new quantity
                             orderDetail.setQuantity(detail.getQuantity());
 
                             // Convert to OrderDetailDTO
                             OrderDetailDTO dto = new OrderDetailDTO();
-                            dto.setOrderID(orderDetail.getPK_ODID());
-                            dto.setProductName(orderDetail.getProductSell().getPName());
+                            dto.setOrderDetailId(orderDetail.getPK_ODID());
+                            dto.setPName(orderDetail.getProductSell().getPName());
                             dto.setImage(orderDetail.getProductSell().getImage());
                             dto.setQuantity(orderDetail.getQuantity());
                             float promotionPercentage = orderDetail.getPromotion() != null ? orderDetail.getPromotion().getDiscount() / 100f : 1;
