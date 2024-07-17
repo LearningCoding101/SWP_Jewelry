@@ -57,7 +57,7 @@ class ProductBuyControllerTest {
 //        List<ProductBuyResponse> mockResponse = new ArrayList<>();
 //        when(productBuyService.getAllProductBuys()).thenReturn(mockResponse);
 //
-//        ResponseEntity<List<ProductBuyResponse>> response = productBuyController.getAllProductBuys();
+//        ResponseEntity<List<ProductBuyResponse>> response = productBuyController.getAllProductBuysByOrderStatus3();
 //
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertEquals(mockResponse, response.getBody());
@@ -74,16 +74,16 @@ class ProductBuyControllerTest {
         assertEquals(mockResponse, response.getBody());
     }
 
-//    @Test
-//    void testDeleteProductBuy() {
-//        String mockResponse = "Product buy deleted successfully";
-//        when(productBuyService.deleteProductBuy(anyLong())).thenReturn(mockResponse);
-//
-//        ResponseEntity<String> response = productBuyController.deleteProductBuy(1L);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(mockResponse, response.getBody());
-//    }
+    @Test
+    void testDeleteProductBuy() {
+        String mockResponse = "Product buy deleted successfully";
+        when(productBuyService.deleteProductBuy(anyLong())).thenReturn(mockResponse);
+
+        ResponseEntity<String> response = productBuyController.deleteProductBuy(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockResponse, response.getBody());
+    }
 
     @Test
     void testCalculateProductBuyCost() {
