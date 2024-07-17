@@ -254,9 +254,10 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("refund-mail")
-    public ResponseEntity<String> refundOrderEmail(@RequestBody OrderRefundMailRequest orderRefundMailRequest){
-
+    @PostMapping("/send-refund-mail")
+    public ResponseEntity<String> refundOrderEmail(@RequestBody OrderRefundMailRequest orderRefundMailRequest) {
+        emailService.sendRefundEmail(orderRefundMailRequest);
+        return ResponseEntity.ok("Refund email sent successfully");
     }
 
 }

@@ -165,4 +165,41 @@ public class HtmlFormatterService {
         return htmlTable.toString();
     }
 
+    public String createRefundOrderTable(List<OrderDetailDTO> orderDetails) {
+        StringBuilder htmlTable = new StringBuilder();
+
+        // Start table structure
+        htmlTable.append("<div style='overflow: auto; width: 100%;' role='region' tabindex='0'>")
+                .append("<h2>Hóa đơn hoàn tiền</h2>")
+                .append("<table align='center' style='border: 2px solid #dededf; width: 100%; table-layout: auto; border-collapse: collapse; border-spacing: 1px; text-align: center;'>")
+                .append("<thead>")
+                .append("<tr>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Order Detail ID</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Product Name</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Image</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Quantity</th>")
+                .append("<th style='border: 2px solid #dededf; background-color: #eceff1; color: #000000; padding: 5px;'>Cost</th>")
+                .append("</tr>")
+                .append("</thead>")
+                .append("<tbody>");
+
+        // Add rows for each OrderDetailDTO
+        for (OrderDetailDTO orderDetail : orderDetails) {
+            htmlTable.append("<tr>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getOrderDetailId()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getPName()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'><img src='").append(orderDetail.getImage()).append("' alt='Product Image' style='max-width: 100px;'></td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getQuantity()).append("</td>")
+                    .append("<td style='border: 2px solid #dededf; background-color: #ffffff; color: #000000; padding: 5px;'>").append(orderDetail.getCost()).append("</td>")
+                    .append("</tr>");
+        }
+
+        // End table structure
+        htmlTable.append("</tbody>")
+                .append("</table>")
+                .append("<p><a href='${confirmationLink}' style='color: #ffffff; background-color: #4CAF50; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none; border-radius: 4px;'>Xác nhận hoàn tiền</a></p>")
+                .append("</div>");
+
+        return htmlTable.toString();
+    }
 }
