@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,6 +61,8 @@ public class OrderHandlerService {
     OrderRepository orderRepository;
     @Autowired
     ImageService imageService;
+    @Autowired
+    RefundRepository refundRepository;
     @PreDestroy
     public void cleanup() {
         scheduler.shutdown();
@@ -280,7 +284,9 @@ public class OrderHandlerService {
             for(OrderDetail item : iterateList){
                 ProductSell product = item.getProductSell();
                 ProductResponse response = new ProductResponse();
+                response.setOrderDetail_ID(item.getPK_ODID());
                 response.setQuantity(item.getQuantity());
+                response.setRefundQuantity(item.getRefundedQuantity());
                 response.setProductID(product.getProductID());
                 response.setName(product.getPName());
                 response.setCarat(product.getCarat());
@@ -772,6 +778,11 @@ public class OrderHandlerService {
                 guarantee.getWarrantyPeriodMonth()
         );
     }
+    private boolean isEligibleForRefund(PurchaseOrder order) {
+        // Implement your refund eligibility logic here
+        // For example, check if the order is within 30 days
+        return ChronoUnit.DAYS.between(order.getPurchaseDate().toInstant(), Instant.now()) <= 30;
+    }
 
 
     @Transactional
@@ -795,29 +806,29 @@ public class OrderHandlerService {
         // Update order total
         order.setTotalAmount(order.getTotalAmount() - refundAmount);
 
-        // Create a refund record
         Refund refund = new Refund();
         refund.setOrderDetail(orderDetail);
         refund.setAmount(refundAmount);
         refund.setReason(request.getRefundReason());
-        refund.setRefundDate(new Date());
-        refund.setRefundedQuantity(request.getQuantityToRefund());
 
-        // Update product inventory
-        ProductSell product = orderDetail.getProductSell();
-        product.setInventory(product.getInventory() + request.getQuantityToRefund());
+        // Convert java.util.Date to java.sql.Date
+        java.util.Date currentDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
+
+        refund.setRefundDate(sqlDate);
+        refund.setRefundedQuantity(request.getQuantityToRefund());
 
         // Update refunded quantity in OrderDetail
         orderDetail.setRefundedQuantity(orderDetail.getRefundedQuantity() + request.getQuantityToRefund());
 
         // Save changes
         orderRepository.save(order);
-        productSellRepository.save(product);
         refundRepository.save(refund);
         orderDetailRepository.save(orderDetail);
 
         // Send email notification
-        sendRefundNotification(order.getCustomer().getEmail(), refundAmount, order.getPK_OrderID(), request.getQuantityToRefund());
+        String customerEmail = order.getCustomer().getEmail();
+        emailService.sendRefundConfirmationEmail(request.getOrderDetailId(), customerEmail, refundAmount);
 
         return "Refund processed successfully";
     }
