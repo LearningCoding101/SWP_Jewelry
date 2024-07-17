@@ -29,10 +29,10 @@ public class AppraisalController {
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/initialize-product")
-    @SendTo("/topic/unappraisedProducts")-
+    @SendTo("/topic/unappraisedProducts")
     public ProductBuy initializeProduct(CreateProductBuyRequest request) {
         System.out.println(request.toString());
-        Long productBuyId = productBuyService.createProductBuy(request);
+        Long productBuyId = productBuyService.createProductBuyWithImage(request);
         return productBuyService.getProductBuyById2(productBuyId);
     }
 
