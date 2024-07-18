@@ -508,6 +508,7 @@ public class SchedulingService {
                 staffAccount.getAccount().getStatus(),
                 staffAccount.getAccount().getEmail(),
                 staffAccount.getAccount().getUsername(),
+                staffAccount.getAccount().getAImage(),
                 staffAccount.getStaffShifts().stream()
                         .map(shift -> new StaffAccountResponse.ShiftResponse(
                                 shift.getShift().getShiftID(),
