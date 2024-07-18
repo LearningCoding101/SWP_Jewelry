@@ -85,6 +85,7 @@ com\project\JewelryMS\service\HtmlFormatterService.class
 com\project\JewelryMS\controller\GuaranteeController.class
 com\project\JewelryMS\model\AppraiseProduct.class
 com\project\JewelryMS\controller\ProductBuyController.class
+com\project\JewelryMS\model\Refund\RefundResponse$RefundResponseBuilder.class
 com\project\JewelryMS\model\Shift\DeleteShiftRequest.class
 com\project\JewelryMS\model\Profile\ViewShiftResponse.class
 com\project\JewelryMS\model\Shift\WorkAreaRequest.class
@@ -143,6 +144,7 @@ com\project\JewelryMS\repository\WorkAreaRepository.class
 com\project\JewelryMS\entity\OrderDetail.class
 com\project\JewelryMS\model\Profile\AdminProfileResponse.class
 com\project\JewelryMS\service\ProductBuyService.class
+com\project\JewelryMS\model\Refund\RefundResponse.class
 com\project\JewelryMS\repository\AuthenticationRepository.class
 com\project\JewelryMS\service\EmailService.class
 com\project\JewelryMS\model\Order\CustomerOrderGuaranteeResponse.class

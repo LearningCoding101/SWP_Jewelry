@@ -5,6 +5,7 @@ import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.OrderDetailResponse;
 import com.project.JewelryMS.model.Refund.RefundOrderDetailRequest;
+import com.project.JewelryMS.model.Refund.RefundResponse;
 import com.project.JewelryMS.repository.*;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.ImageService;
@@ -851,4 +852,54 @@ public class OrderHandlerService {
         // Calculate refund amount for the specified quantity
         return (orderDetail.getProductSell().getCost() * quantityToRefund);
     }
+
+    public List<RefundResponse> getAllRefunds() {
+        List<Refund> refunds = refundRepository.findAll();
+        return refunds.stream()
+                .map(this::mapToRefundResponse)
+                .collect(Collectors.toList());
+    }
+
+    private RefundResponse mapToRefundResponse(Refund refund) {
+        OrderDetail orderDetail = refund.getOrderDetail();
+        PurchaseOrder order = orderDetail.getPurchaseOrder();
+        Customer customer = order.getCustomer();
+
+        RefundResponse.RefundResponseBuilder builder = RefundResponse.builder()
+                .refundId(refund.getId())
+                .amount(refund.getAmount())
+                .reason(refund.getReason())
+                .refundDate(refund.getRefundDate())
+                .refundedQuantity(refund.getRefundedQuantity())
+                .orderDetailId(orderDetail.getPK_ODID())
+                .orderId(order.getPK_OrderID())
+                .orderDate(order.getPurchaseDate())
+                .orderStatus(order.getStatus())
+                .orderTotalAmount(order.getTotalAmount())
+                .paymentType(order.getPaymentType());
+
+        if (customer != null) {
+            builder.customerId(customer.getPK_CustomerID())
+                    .customerName(customer.getCusName())
+                    .customerEmail(customer.getEmail())
+                    .customerPhone(customer.getPhoneNumber())
+                    .customerLoyaltyRank(customer.getLoyaltyRank());
+        }
+
+        ProductSell productSell = orderDetail.getProductSell();
+        if (productSell != null) {
+            builder.productId(productSell.getProductID())
+                    .productName(productSell.getPName())
+                    .productCode(productSell.getProductCode())
+                    .productCost(productSell.getCost());
+        }
+
+        builder.orderDetailQuantity(orderDetail.getQuantity())
+                .orderDetailRefundedQuantity(orderDetail.getRefundedQuantity())
+                .guaranteeEndDate(orderDetail.getGuaranteeEndDate());
+
+        return builder.build();
+    }
+
+
 }

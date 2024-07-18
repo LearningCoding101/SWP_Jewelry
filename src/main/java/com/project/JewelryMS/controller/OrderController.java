@@ -270,5 +270,8 @@ public class OrderController {
             return ResponseEntity.badRequest().body("Refund failed: " + e.getMessage());
         }
     }
-
+    @GetMapping("/refund")
+    public ResponseEntity getAllRefunded(){
+        return ResponseEntity.ok(orderHandlerService.getAllRefunds());
+    }
 }
