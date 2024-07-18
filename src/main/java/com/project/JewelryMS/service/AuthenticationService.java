@@ -51,7 +51,7 @@ public class AuthenticationService implements UserDetailsService {
         if(authenticationRepository.existsByAUsername(createStaffAccountRequest.getUsername())){
             throw new DuplicateUsernameException("Username đã được sử dụng.");
         }
-        if(authenticationRepository.existsByEmail(createStaffAccountRequest.getUsername())){
+        if(authenticationRepository.existsByEmail(createStaffAccountRequest.getEmail())){
             throw new DuplicateEmailException("Email đã được sử dụng.");
         }
         account.setAccountName(createStaffAccountRequest.getAccountName());
