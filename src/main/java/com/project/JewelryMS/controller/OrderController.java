@@ -4,6 +4,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.project.JewelryMS.model.EmailDetail;
 import com.project.JewelryMS.model.Order.*;
 import com.project.JewelryMS.model.OrderDetail.*;
+import com.project.JewelryMS.model.Refund.RefundOrderDetailRequest;
 import com.project.JewelryMS.service.CustomerService;
 import com.project.JewelryMS.service.EmailService;
 import com.project.JewelryMS.service.Order.OrderDetailService;
@@ -254,5 +255,17 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PostMapping("/refund")
+    public ResponseEntity<String> refundOrderDetail(@RequestBody RefundOrderDetailRequest request) {
+        try {
+            String result = orderHandlerService.refundOrderDetail(request);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Refund failed: " + e.getMessage());
+        }
+    }
+    @GetMapping("/refund")
+    public ResponseEntity getAllRefunded(){
+        return ResponseEntity.ok(orderHandlerService.getAllRefunds());
+    }
 }
