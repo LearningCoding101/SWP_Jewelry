@@ -790,7 +790,11 @@ public class OrderHandlerService {
         OrderDetail orderDetail = orderDetailRepository.findById(request.getOrderDetailId())
                 .orElseThrow(() -> new IllegalArgumentException("OrderDetail not found"));
 
-        if (request.getQuantityToRefund() > orderDetail.getQuantity() - orderDetail.getRefundedQuantity()) {
+        // Check for existing refund
+        Optional<Refund> existingRefund = refundRepository.findByOrderDetailId(request.getOrderDetailId());
+
+        int totalRefundedQuantity = orderDetail.getRefundedQuantity() + request.getQuantityToRefund();
+        if (totalRefundedQuantity > orderDetail.getQuantity()) {
             throw new IllegalArgumentException("Refund quantity exceeds available quantity");
         }
 
@@ -806,20 +810,30 @@ public class OrderHandlerService {
         // Update order total
         order.setTotalAmount(order.getTotalAmount() - refundAmount);
 
-        Refund refund = new Refund();
-        refund.setOrderDetail(orderDetail);
-        refund.setAmount(refundAmount);
-        refund.setReason(request.getRefundReason());
+        Refund refund;
+        if (existingRefund.isPresent()) {
+            // Update existing refund
+            refund = existingRefund.get();
+            refund.setAmount(refund.getAmount() + refundAmount);
+            refund.setReason(refund.getReason() + "; " + request.getRefundReason());
+            refund.setRefundedQuantity(refund.getRefundedQuantity() + request.getQuantityToRefund());
+        } else {
+            // Create new refund
+            refund = new Refund();
+            refund.setOrderDetail(orderDetail);
+            refund.setAmount(refundAmount);
+            refund.setReason(request.getRefundReason());
+            refund.setRefundedQuantity(request.getQuantityToRefund());
+        }
 
         // Convert java.util.Date to java.sql.Date
         java.util.Date currentDate = new java.util.Date();
         java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
 
         refund.setRefundDate(sqlDate);
-        refund.setRefundedQuantity(request.getQuantityToRefund());
 
         // Update refunded quantity in OrderDetail
-        orderDetail.setRefundedQuantity(orderDetail.getRefundedQuantity() + request.getQuantityToRefund());
+        orderDetail.setRefundedQuantity(totalRefundedQuantity);
 
         // Save changes
         orderRepository.save(order);
@@ -830,7 +844,7 @@ public class OrderHandlerService {
         String customerEmail = order.getCustomer().getEmail();
         emailService.sendRefundConfirmationEmail(request.getOrderDetailId(), customerEmail, refundAmount);
 
-        return "Refund processed successfully";
+        return existingRefund.isPresent() ? "Refund updated successfully" : "New refund processed successfully";
     }
 
     private float calculateRefundAmount(OrderDetail orderDetail, int quantityToRefund) {
