@@ -33,10 +33,9 @@ public class Staff_Shift implements Serializable {
     @JsonBackReference
     private Shift shift;
 
-    @Transient
-    private String workAreaID;
-
-    public String getWorkAreaID() {
-        return this.shift != null && this.shift.getWorkArea() != null ? this.shift.getWorkArea().getWorkAreaID() : null;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workAreaId", referencedColumnName = "workAreaID")
+    @JsonBackReference
+    @JsonManagedReference
+    private WorkArea workArea;
 }

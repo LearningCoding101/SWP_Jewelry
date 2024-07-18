@@ -15,7 +15,6 @@ public class StaffShiftResponse {
     private String endTime;
     private String shiftType;
     private String status;
-    private String workAreaID;
     private List<StaffResponse> staff;
 
     @Data

@@ -13,5 +13,4 @@ public class ShiftRequest {
     private String shiftType;
     private String startTime;
     private String status;
-    private WorkAreaRequest workArea;
 }

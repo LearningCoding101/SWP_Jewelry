@@ -1,6 +1,5 @@
 package com.project.JewelryMS.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -36,10 +35,6 @@ public class WorkArea {
     @JsonManagedReference
     @JsonIgnoreProperties("workArea")
     private Set<StaffAccount> staffAccounts = new HashSet<>();
-
-    @OneToMany(mappedBy = "workArea", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private Set<Shift> shifts = new HashSet<>();
 
     @Column(name = "status")
     private String status = "Active"; // Default status is "Active"
