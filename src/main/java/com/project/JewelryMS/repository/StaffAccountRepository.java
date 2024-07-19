@@ -49,4 +49,5 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
 
     Optional<StaffAccount> findByWorkArea(WorkArea workArea);
 
+
 }
