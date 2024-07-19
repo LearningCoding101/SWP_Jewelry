@@ -134,7 +134,7 @@ public class ProfileService {
             staffAccount.setPhoneNumber(updateStaffRequest.getPhoneNumber());
             staffAccountRepository.save(staffAccount);
             return new UpdateStaff(staffAccount.getAccount().getEmail(), staffAccount.getAccount().getUsername(),
-                    staffAccount.getAccount().getAccountName(), staffAccount.getPhoneNumber(), image);
+                    staffAccount.getAccount().getAccountName(), staffAccount.getPhoneNumber(), staffAccount.getAccount().getAImage());
         }
         return null;
     }
