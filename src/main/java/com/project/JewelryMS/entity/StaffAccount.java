@@ -22,7 +22,7 @@ public class StaffAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PK_staffID")
-    private int staffID;
+    private Integer staffID;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_UserID", referencedColumnName = "PK_userID")
