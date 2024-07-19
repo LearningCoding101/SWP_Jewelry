@@ -42,4 +42,7 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
 
     @Query("SELECT DISTINCT s FROM StaffAccount s LEFT JOIN FETCH s.workArea WHERE s.staffID IN :staffIds")
     List<StaffAccount> findAllByIdWithWorkAreaEagerly(Set<Integer> staffIds);
+
+    @Query("SELECT sa FROM StaffAccount sa WHERE sa.account.aUsername =:aUsername")
+    Optional<StaffAccount> findByUsername(@Param("aUsername") String username);
 }
