@@ -51,10 +51,20 @@ public class StaffAccount {
     @JsonBackReference
     private Set<Staff_Shift> staffShifts = new HashSet<>();
 
-    @OneToMany(mappedBy = "staffAccountCashier", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "staffAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties
     @JsonBackReference
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();
+
+    @OneToMany(mappedBy = "staffAccountSale", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties
+    @JsonBackReference
+    private Set<PurchaseOrder> purchaseOrdersSale = new HashSet<>();
+
+    @OneToMany(mappedBy = "staffAccountAppraisal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties
+    @JsonBackReference
+    private Set<PurchaseOrder> purchaseOrdersAppraisal = new HashSet<>();
 
     @OneToMany(mappedBy = "staffAccount")
     @JsonIgnoreProperties("staffAccount")

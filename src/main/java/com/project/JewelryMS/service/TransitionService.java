@@ -41,9 +41,9 @@ public class TransitionService {
                 response.setOrderType(OrderTypeEnum.INGOING);
             }
 
-            if (order.getStaffAccountCashier() != null) {
-                response.setStaffID(order.getStaffAccountCashier().getStaffID());
-                response.setStaffName(order.getStaffAccountCashier().getAccount().getAccountName());
+            if (order.getStaffAccount() != null) {
+                response.setStaffID(order.getStaffAccount().getStaffID());
+                response.setStaffName(order.getStaffAccount().getAccount().getAccountName());
 
             }
 

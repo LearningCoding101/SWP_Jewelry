@@ -141,7 +141,7 @@ class OrderHandlerServiceTest {
                 order.getStatus() == 1 &&
                         "Cash".equals(order.getPaymentType()) &&
                         Math.abs(1000000.0F - order.getTotalAmount()) < 0.001 &&
-                        order.getStaffAccountCashier().getStaffID() == 1 &&
+                        order.getStaffAccount().getStaffID() == 1 &&
                         "test@example.com".equals(order.getEmail()) &&
                         order.getOrderDetails().size() == 1 &&
                         order.getOrderDetails().iterator().next().getQuantity() == 2 &&

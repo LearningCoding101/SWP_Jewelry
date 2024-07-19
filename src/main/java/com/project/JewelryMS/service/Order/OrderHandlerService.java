@@ -113,9 +113,9 @@ public class OrderHandlerService {
         order.setTotalAmount(orderRequest.getTotalAmount());
 
         if (orderRequest.getStaff_ID() != null) {
-            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
         } else {
-            order.setStaffAccountCashier(null);
+            order.setStaffAccount(null);
         }
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -166,9 +166,9 @@ public class OrderHandlerService {
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         if (orderRequest.getStaff_ID() != null) {
-            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
         } else {
-            order.setStaffAccountCashier(null);
+            order.setStaffAccount(null);
         }
 
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
@@ -273,8 +273,8 @@ public class OrderHandlerService {
             } else {
                 orderToGet.setCustomer_ID(null);
             }
-            if (order.getStaffAccountCashier() != null) {
-                Integer staffID = order.getStaffAccountCashier().getStaffID();
+            if (order.getStaffAccount() != null) {
+                Integer staffID = order.getStaffAccount().getStaffID();
                 orderToGet.setStaff_ID(staffID);
             } else {
                 // Handle the case where the customer is null, if necessary
@@ -528,30 +528,30 @@ public class OrderHandlerService {
     //Thai Dang fix may thang order detail bo len day, t lamf wrapper tam thoi thoi
     //Calculate SubTotal, Discount product and Total////////////////////////////////////////////////////////////////////////////////////////////////
 //    public Float calculateSubTotal(OrderDetailRequest orderDetailRequest) {
-//        float totalAmount = 0;
+//        float revenueAmount = 0;
 //        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderDetailRequest.getProductSell_ID());
 //        if (productSellOptional.isPresent()) {
 //            ProductSell productSell = productSellOptional.get();
 //            float productCost = productSell.getCost();
 //            int quantity = orderDetailRequest.getQuantity();
-//            totalAmount = productCost * quantity;
+//            revenueAmount = productCost * quantity;
 //        }
-//        return totalAmount;
+//        return revenueAmount;
 //    }
 //
 //    public Float calculateDiscountProduct(OrderPromotionRequest orderPromotionRequest) {
 //        Promotion promotion = promotionRepository.findById(orderPromotionRequest.getPromotionID()).orElseThrow(() -> new IllegalArgumentException("Promotion ID not found"));
 //        int discount = promotion.getDiscount();
 //        float percentage = discount / 100.0F;
-//        float totalAmount = 0.0F;
+//        float revenueAmount = 0.0F;
 //        Optional<ProductSell> productSellOptional = productSellRepository.findById(orderPromotionRequest.getProductSell_ID());
 //        if (productSellOptional.isPresent()) {
 //            ProductSell productSell = productSellOptional.get();
 //            float productCost = productSell.getCost();
 //            int quantity = orderPromotionRequest.getQuantity();
-//            totalAmount = productCost * quantity;
+//            revenueAmount = productCost * quantity;
 //        }
-//        return totalAmount * percentage;
+//        return revenueAmount * percentage;
 //    }
 //
 //    public Float TotalOrderDetails(OrderTotalRequest orderTotalRequest) {
@@ -615,9 +615,9 @@ public class OrderHandlerService {
             }
 
             if (updateOrderRequest.getStaff_ID() != null) {
-                staffAccountRepository.findById(updateOrderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
+                staffAccountRepository.findById(updateOrderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
             } else {
-                order.setStaffAccountCashier(null);
+                order.setStaffAccount(null);
             }
             if(updateOrderRequest.getPaymentType()!=null) {
                 order.setPaymentType(updateOrderRequest.getPaymentType());
@@ -702,7 +702,7 @@ public class OrderHandlerService {
                         customer.getPhoneNumber(),
                         customer.isStatus(),
                         orderRepository.findByCustomerID(customer.getPK_CustomerID()).stream()
-                                .filter(order -> order.getStaffAccountCashier() != null)
+                                .filter(order -> order.getStaffAccount() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
@@ -730,7 +730,7 @@ public class OrderHandlerService {
                         order.getCustomer().getPhoneNumber(),
                         order.getCustomer().isStatus(),
                         orderRepository.findByCustomerID(order.getCustomer().getPK_CustomerID()).stream()
-                                .filter(order1 -> order1.getStaffAccountCashier() != null)
+                                .filter(order1 -> order1.getStaffAccount() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
@@ -744,8 +744,8 @@ public class OrderHandlerService {
                 order.getPurchaseDate(),
                 order.getStatus(),
                 order.getTotalAmount(),
-                order.getStaffAccountCashier().getStaffID(),
-                order.getStaffAccountCashier().getAccount().getAccountName(),
+                order.getStaffAccount().getStaffID(),
+                order.getStaffAccount().getAccount().getAccountName(),
                 order.getOrderDetails().stream().map(OrderHandlerService::mapToOrderDetailGuaranteeResponse).collect(Collectors.toList())
         );
     }
@@ -901,5 +901,37 @@ public class OrderHandlerService {
         return builder.build();
     }
 
+
+    public String updateSaleStaff(OrderStaffSaleRequest orderStaffSaleRequest) {
+        Optional<PurchaseOrder> purchaseOrderOptional = orderRepository.findById(orderStaffSaleRequest.getOrderID());
+        if (purchaseOrderOptional.isPresent()) {
+            PurchaseOrder order = purchaseOrderOptional.get();
+            Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderStaffSaleRequest.getStaffSaleID());
+            if (staffAccountOptional.isPresent()) {
+                StaffAccount staffAccount = staffAccountOptional.get();
+                order.setStaffAccountSale(staffAccount);
+                orderRepository.save(order);
+                return "Update Order with Sale Staff Successfully";
+            }
+            return "Sale Staff ID Not Found";
+        }
+        return "Order ID Not Found";
+    }
+
+    public String updateAppraisalStaff(OrderStaffAppraisalRequest orderStaffAppraisalRequest) {
+        Optional<PurchaseOrder> purchaseOrderOptional = orderRepository.findById(orderStaffAppraisalRequest.getOrderID());
+        if (purchaseOrderOptional.isPresent()) {
+            PurchaseOrder order = purchaseOrderOptional.get();
+            Optional<StaffAccount> staffAccountOptional = staffAccountRepository.findById(orderStaffAppraisalRequest.getStaffAppraisalID());
+            if (staffAccountOptional.isPresent()) {
+                StaffAccount staffAccount = staffAccountOptional.get();
+                order.setStaffAccountAppraisal(staffAccount);
+                orderRepository.save(order);
+                return "Update Order with Appraisal Staff Successfully";
+            }
+            return "Appraisal Staff ID Not Found";
+        }
+        return "Order ID Not Found";
+    }
 
 }

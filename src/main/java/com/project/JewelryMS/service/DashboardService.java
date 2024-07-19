@@ -32,7 +32,10 @@ public class DashboardService {
     private PurchaseOrderRepository purchaseOrderRepository;
     @Autowired
     private ShiftRepository shiftRepository;
-
+    @Autowired
+    private WorkAreaRepository workAreaRepository;
+    @Autowired
+    private StaffShiftRepository staffShiftRepository;
 
     public List<CategoryResponse> RevenueCategory(){
         Optional<List<Category>> optionalCategoryList = Optional.ofNullable(categoryRepository.findAllCategories());
@@ -300,7 +303,7 @@ public class DashboardService {
 
 
         for (PurchaseOrder order : orders) {
-            StaffAccount staffAccount = order.getStaffAccountCashier();
+            StaffAccount staffAccount = order.getStaffAccount();
             if (staffAccount != null) {
                 int staffId = staffAccount.getStaffID();
                 double orderRevenue = order.getOrderDetails().stream()
@@ -328,7 +331,7 @@ public class DashboardService {
         Map<Integer, Integer> salesByStaff = new HashMap<>();
 
         for (PurchaseOrder order : orders) {
-            StaffAccount staffAccount = order.getStaffAccountCashier();
+            StaffAccount staffAccount = order.getStaffAccount();
             if (staffAccount != null) {
                 int staffId = staffAccount.getStaffID();
                 int totalSales = order.getOrderDetails().stream()
@@ -389,7 +392,7 @@ public class DashboardService {
     private Map<String, Double> getRevenueByYear(List<String> years) {
         Map<String, Double> result = new HashMap<>();
         for (String year : years) {
-            Double totalRevenue = orderRepository.findTotalRevenueByYear(year);
+            Float totalRevenue = orderRepository.findTotalRevenueByYear(year);
             result.put(year, totalRevenue != null ? totalRevenue : 0.0);
         }
         return result;
@@ -537,9 +540,9 @@ public class DashboardService {
                 response.setPurchaseDate(po.getPurchaseDate());
                 response.setStatus(po.getStatus());
                 response.setTotal(po.getTotalAmount());
-                if (po.getStaffAccountCashier() != null) {
-                    response.setStaffID(po.getStaffAccountCashier().getStaffID());
-                    response.setStaffName(po.getStaffAccountCashier().getAccount().getAccountName());
+                if (po.getStaffAccount() != null) {
+                    response.setStaffID(po.getStaffAccount().getStaffID());
+                    response.setStaffName(po.getStaffAccount().getAccount().getAccountName());
                 } else {
                     response.setStaffID(null);
                     response.setStaffName(null);
@@ -602,5 +605,168 @@ public class DashboardService {
         response.setShiftsCount(shiftsCount);
         return response;
     }
+
+
+
+    //DashBoard workArea statistics Section
+
+    public List<WorkAreaRevenueResponse> getWorkAreaRevenueResponsesByYear() {
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        List<WorkArea> workAreas = workAreaRepository.findAll();
+        return workAreas.stream().map(workArea -> createWorkAreaRevenueResponseByYear(workArea, currentYear)).collect(Collectors.toList());
+    }
+
+    public List<WorkAreaRevenueResponse> getWorkAreaRevenueResponsesByMonth() {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        List<WorkArea> workAreas = workAreaRepository.findAll();
+        return workAreas.stream().map(workArea -> createWorkAreaRevenueResponseByMonth(workArea, currentYear, currentMonth)).collect(Collectors.toList());
+    }
+
+    public List<WorkAreaRevenueResponse> getWorkAreaRevenueResponsesByDay() {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        List<WorkArea> workAreas = workAreaRepository.findAll();
+        return workAreas.stream().map(workArea -> createWorkAreaRevenueResponseByDay(workArea, currentYear, currentMonth, currentDay)).collect(Collectors.toList());
+    }
+
+    private WorkAreaRevenueResponse createWorkAreaRevenueResponseByYear(WorkArea workArea, int year) {
+        WorkAreaRevenueResponse response = new WorkAreaRevenueResponse();
+        response.setWorkAreaID(workArea.getId());
+        response.setWorkAreaCode(workArea.getWorkAreaCode());
+        response.setDescription(workArea.getDescription());
+        response.setStatus(workArea.getStatus());
+
+        List<Staff_Shift> staffShifts = staffShiftRepository.findByWorkArea(workArea);
+        List<Integer> staffIDs = staffShifts.stream()
+                .map(staffShift -> staffShift.getStaffAccount().getStaffID())
+                .collect(Collectors.toList());
+
+        List<PurchaseOrder> orders;
+        if (workArea.getWorkAreaCode().startsWith("SALE")) {
+            orders = orderRepository.findByStaffSaleIDsAndYear(staffIDs, year);
+        } else if (workArea.getWorkAreaCode().startsWith("CASH")) {
+            orders = orderRepository.findByStaffIDsAndYear(staffIDs, year);
+        } else {
+            orders = List.of();
+        }
+
+        Float totalRevenue = calculateTotalRevenue(orders);
+        response.setTotalRevenueAmount(totalRevenue);
+        response.setNumberOrder(orders.size());
+        response.setStaffWorkAreaRevenues(calculateStaffRevenues(staffIDs, orders, workArea.getWorkAreaCode()));
+
+        return response;
+    }
+
+    private WorkAreaRevenueResponse createWorkAreaRevenueResponseByMonth(WorkArea workArea, int year, int month) {
+        WorkAreaRevenueResponse response = new WorkAreaRevenueResponse();
+        response.setWorkAreaID(workArea.getId());
+        response.setWorkAreaCode(workArea.getWorkAreaCode());
+        response.setDescription(workArea.getDescription());
+        response.setStatus(workArea.getStatus());
+
+        List<Staff_Shift> staffShifts = staffShiftRepository.findByWorkArea(workArea);
+        List<Integer> staffIDs = staffShifts.stream()
+                .map(staffShift -> staffShift.getStaffAccount().getStaffID())
+                .collect(Collectors.toList());
+
+        List<PurchaseOrder> orders;
+        if (workArea.getWorkAreaCode().startsWith("SALE")) {
+            orders = orderRepository.findByStaffSaleIDsAndMonth(staffIDs, year, month);
+        } else if (workArea.getWorkAreaCode().startsWith("CASH")) {
+            orders = orderRepository.findByStaffIDsAndMonth(staffIDs, year, month);
+        } else {
+            orders = List.of();
+        }
+
+        Float totalRevenue = calculateTotalRevenue(orders);
+        response.setTotalRevenueAmount(totalRevenue);
+        response.setNumberOrder(orders.size());
+        response.setStaffWorkAreaRevenues(calculateStaffRevenues(staffIDs, orders, workArea.getWorkAreaCode()));
+
+        return response;
+    }
+
+    private WorkAreaRevenueResponse createWorkAreaRevenueResponseByDay(WorkArea workArea, int year, int month, int day) {
+        WorkAreaRevenueResponse response = new WorkAreaRevenueResponse();
+        response.setWorkAreaID(workArea.getId());
+        response.setWorkAreaCode(workArea.getWorkAreaCode());
+        response.setDescription(workArea.getDescription());
+        response.setStatus(workArea.getStatus());
+
+        List<Staff_Shift> staffShifts = staffShiftRepository.findByWorkArea(workArea);
+        List<Integer> staffIDs = staffShifts.stream()
+                .map(staffShift -> staffShift.getStaffAccount().getStaffID())
+                .collect(Collectors.toList());
+
+        List<PurchaseOrder> orders;
+        if (workArea.getWorkAreaCode().startsWith("SALE")) {
+            orders = orderRepository.findByStaffSaleIDsAndDay(staffIDs, year, month, day);
+        } else if (workArea.getWorkAreaCode().startsWith("CASH")) {
+            orders = orderRepository.findByStaffIDsAndDay(staffIDs, year, month, day);
+        } else {
+            orders = List.of();
+        }
+
+        Float totalRevenue = calculateTotalRevenue(orders);
+        response.setTotalRevenueAmount(totalRevenue);
+        response.setNumberOrder(orders.size());
+        response.setStaffWorkAreaRevenues(calculateStaffRevenues(staffIDs, orders, workArea.getWorkAreaCode()));
+
+        return response;
+    }
+
+    private Float calculateTotalRevenue(List<PurchaseOrder> orders) {
+        return orders.stream()
+                .map(PurchaseOrder::getTotalAmount)
+                .reduce(0f, Float::sum);
+    }
+
+    private List<StaffWorkAreaRevenue> calculateStaffRevenues(List<Integer> staffIDs, List<PurchaseOrder> orders, String workAreaCode) {
+        Map<Integer, Float> staffRevenueMap = orders.stream()
+                .filter(order -> {
+                    if (workAreaCode.startsWith("SALE")) {
+                        return staffIDs.contains(order.getStaffAccountSale().getStaffID());
+                    } else if (workAreaCode.startsWith("CASH")) {
+                        return staffIDs.contains(order.getStaffAccount().getStaffID());
+                    }
+                    return false;
+                })
+                .collect(Collectors.groupingBy(
+                        order -> {
+                            if (workAreaCode.startsWith("SALE")) {
+                                return order.getStaffAccountSale().getStaffID();
+                            } else if (workAreaCode.startsWith("CASH")) {
+                                return order.getStaffAccount().getStaffID();
+                            }
+                            return null;
+                        },
+                        Collectors.reducing(0f, PurchaseOrder::getTotalAmount, Float::sum)
+                ));
+
+        return staffRevenueMap.entrySet().stream()
+                .map(entry -> {
+                    Integer staffID = entry.getKey();
+                    Float revenueAmount = entry.getValue();
+                    StaffAccount staff = staffShiftRepository.findStaffAccountById(staffID);
+                    if (staff != null) {
+                        StaffWorkAreaRevenue staffRevenue = new StaffWorkAreaRevenue();
+                        staffRevenue.setStaffID(staffID);
+                        staffRevenue.setStaffName(staff.getAccount().getUsername());
+                        staffRevenue.setRevenueAmount(revenueAmount);
+                        return staffRevenue;
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(revenue -> revenue != null)
+                .collect(Collectors.toList());
+    }
+
+
 
 }

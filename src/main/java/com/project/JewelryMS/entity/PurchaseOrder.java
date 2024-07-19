@@ -33,11 +33,11 @@ public class PurchaseOrder implements Serializable {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="FK_StaffCashierID", referencedColumnName = "PK_StaffID")
+    @JoinColumn(name="FK_StaffID", referencedColumnName = "PK_StaffID")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonManagedReference
     @JsonBackReference
-    private StaffAccount staffAccountCashier;
+    private StaffAccount staffAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="FK_StaffSaleID", referencedColumnName = "PK_StaffID")
@@ -66,7 +66,7 @@ public class PurchaseOrder implements Serializable {
         return "PurchaseOrder{" +
                 "PK_OrderID=" + PK_OrderID +
                 ", paymentType='" + paymentType + '\'' +
-                ", totalAmount=" + totalAmount +
+                ", revenueAmount=" + totalAmount +
                 ", purchaseDate=" + purchaseDate +
                 ", status=" + status +
                 '}';
