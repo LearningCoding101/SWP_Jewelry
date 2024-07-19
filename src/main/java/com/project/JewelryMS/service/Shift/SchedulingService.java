@@ -74,14 +74,10 @@ public class SchedulingService {
         WorkArea newWorkArea = workAreaRepository.findByWorkAreaCode(request.getWorkAreaCode())
                 .orElseThrow(() -> new EntityNotFoundException("Work area not found with code: " + request.getWorkAreaCode()));
 
-        // Check if the new work area already has another staff assigned
-        Optional<StaffAccount> existingStaffInWorkArea = staffAccountRepository.findByWorkArea(newWorkArea);
-
-        if (existingStaffInWorkArea.isPresent()) {
-            // Check if the existing staff is not the same as the one making the request
-            if (existingStaffInWorkArea.get().getStaffID()==(staff.getStaffID())) {
-                throw new IllegalStateException("Work area is already occupied by another staff member.");
-            }
+        // Check if the new work area is already occupied by another staff member
+        if (newWorkArea.getStaffAccounts().stream()
+                .anyMatch(existingStaff -> !existingStaff.getStaffID().equals(staff.getStaffID()))) {
+            throw new IllegalStateException("Work area is already occupied by another staff member.");
         }
 
         // Update the staff's work area
@@ -835,14 +831,4 @@ public class SchedulingService {
         Collections.shuffle(singleShiftTypes);
         return singleShiftTypes.get(0);
     }
-
-
-    /*
-    * Cashiers cannot be assigned to multiple shifts at different register stations (register)
-    * on the same day and shift type.
-    *
-    * Each shift assignment respects the constraint that a cashier works at only one station
-    * (register) at a time for each shift type (Morning, Afternoon, Evening).
-    */
-
 }
