@@ -56,7 +56,7 @@ public class AuthenticationService implements UserDetailsService {
         if(authenticationRepository.existsByAUsername(createStaffAccountRequest.getUsername())){
             throw new DuplicateUsernameException("Username đã được sử dụng.");
         }
-        if(authenticationRepository.existsByEmail(createStaffAccountRequest.getUsername())){
+        if(authenticationRepository.existsByEmail(createStaffAccountRequest.getEmail())){
             throw new DuplicateEmailException("Email đã được sử dụng.");
         }
         account.setAccountName(createStaffAccountRequest.getAccountName());
@@ -119,10 +119,16 @@ public class AuthenticationService implements UserDetailsService {
                     accountResponse.setUsername(account.getUsername());
                     accountResponse.setToken(token);
                     accountResponse.setRole(account.getRole());
-                    accountResponse.setId((long)account.getPK_userID());
+                    if(accountResponse.getRole()==RoleEnum.ROLE_STAFF){
+                        Optional<StaffAccount> staffAccount = staffAccountRepository.findByUsername(accountResponse.getUsername());
+                        if(staffAccount.isPresent()) {
+                            StaffAccount staffAcc = staffAccount.get();
+                            accountResponse.setId((long) staffAcc.getStaffID());
+                        }
+                    }else {
+                        accountResponse.setId((long) account.getPK_userID());
+                    }
 
-                    // Update attendance status if the login time falls within any active shift
-                    updateAttendanceStatusOnLogin(account, LocalDateTime.now());
                     return accountResponse;
     }
     public ResponseEntity<String> changePassword(ChangePasswordRequest request ,Long id) {
