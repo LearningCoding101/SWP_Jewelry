@@ -59,6 +59,7 @@ com\project\JewelryMS\entity\Account.class
 com\project\JewelryMS\model\Dashboard\YearComparisonResponse.class
 com\project\JewelryMS\model\Image\ImgbbResponse.class
 com\project\JewelryMS\model\Order\ProductResponse.class
+com\project\JewelryMS\model\Order\OrderRefundDetail.class
 com\project\JewelryMS\model\Shift\GetWorkAreaRequest.class
 com\project\JewelryMS\entity\ProductBuy.class
 com\project\JewelryMS\model\LoginGoogleRequest.class
@@ -93,6 +94,7 @@ com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\repository\DailyRevenueProjection.class
+com\project\JewelryMS\model\Order\OrderRefundMailRequest.class
 com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
 com\project\JewelryMS\repository\OrderRepository.class
@@ -112,6 +114,7 @@ com\project\JewelryMS\service\JWTservice.class
 com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.class
 com\project\JewelryMS\model\StaffShift\StaffShiftResponse$StaffResponse.class
 com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.class
+com\project\JewelryMS\model\Shift\UpdateStaffWorkAreaRequest.class
 com\project\JewelryMS\model\Shift\CreateWorkAreaRequest.class
 com\project\JewelryMS\model\ProductBuy\CreateProductBuyRequest.class
 com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.class

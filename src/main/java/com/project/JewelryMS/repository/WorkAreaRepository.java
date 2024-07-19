@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface WorkAreaRepository extends JpaRepository<WorkArea, Long> {
-    Optional<WorkArea> findByWorkAreaID(String workAreaID);
+    Optional<WorkArea> findByWorkAreaCode(String workAreaCode);
 
 }

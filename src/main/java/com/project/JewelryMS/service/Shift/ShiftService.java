@@ -115,9 +115,9 @@ public class ShiftService {
 
         List<Shift> shiftsWithoutStaff = shiftRepository.findShiftsWithoutStaff();
         shiftsWithoutStaff.forEach(shiftRepository::delete);
-
-        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(LocalDate.from(twoMonthsAgo));
-        shiftsOlderThanTwoMonths.forEach(shiftRepository::delete);
+    //De-activate 2 month shifts deletion
+//        List<Shift> shiftsOlderThanTwoMonths = shiftRepository.findShiftsOlderThan(LocalDate.from(twoMonthsAgo));
+//        shiftsOlderThanTwoMonths.forEach(shiftRepository::delete);
     }
 
     // Read Shifts by start time

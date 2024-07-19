@@ -72,6 +72,7 @@
 //        mockShift.setShiftID(1);
 //        mockShift.setStartTime(LocalDateTime.now());
 //        mockShift.setEndTime(LocalDateTime.now().plusHours(8));
+//        mockShift.set(mockWorkArea);
 //        mockShift.setStaffShifts(new HashSet<>(Collections.singletonList(mockStaffShift)));
 //
 //        mockStaffShift = new Staff_Shift();
