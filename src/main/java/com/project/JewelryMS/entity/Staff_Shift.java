@@ -35,7 +35,11 @@ public class Staff_Shift implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workAreaId", referencedColumnName = "workAreaID")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonBackReference
     @JsonManagedReference
     private WorkArea workArea;
+
+    @Column(name = "attendance_status")
+    private String attendanceStatus;
 }

@@ -26,5 +26,6 @@ public class StaffShiftResponse {
         private String email;
         private String username;
         private String workAreaID;
+        private String attendanceStatus; // Added field for attendance status
     }
 }
