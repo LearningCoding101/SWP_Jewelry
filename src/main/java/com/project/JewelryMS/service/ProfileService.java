@@ -53,7 +53,10 @@ public class ProfileService {
             account.setAccountName(updateManagerRequest.getAccountName());
             account.setAUsername(updateManagerRequest.getUsername());
             account.setEmail(updateManagerRequest.getEmail());
-            account.setAImage(imageService.uploadImageByPathService(updateManagerRequest.getImage()));
+            System.out.println(updateManagerRequest.toString());
+            if(!updateManagerRequest.getImage().contains("i.ibb.co")){
+                account.setAImage(imageService.uploadImageByPathService(updateManagerRequest.getImage()));
+            }
             authenticationRepository.save(account);
             return new UpdateManager(account.getEmail(), account.getUsername(),
                     account.getAccountName(), account.getAImage());
@@ -84,7 +87,9 @@ public class ProfileService {
             account.setAccountName(updateAdminRequest.getAccountName());
             account.setAUsername(updateAdminRequest.getUsername());
             account.setEmail(updateAdminRequest.getEmail());
-            account.setAImage(imageService.uploadImageByPathService(updateAdminRequest.getImage()));
+            if(!updateAdminRequest.getImage().contains("i.ibb.co")){
+                account.setAImage(imageService.uploadImageByPathService(updateAdminRequest.getImage()));
+            }
             authenticationRepository.save(account);
             return new UpdateAdmin(account.getEmail(), account.getUsername(),
                     account.getAccountName(), account.getAImage());
@@ -122,8 +127,10 @@ public class ProfileService {
             staffAccount.getAccount().setAccountName(updateStaffRequest.getAccountName());
             staffAccount.getAccount().setAUsername(updateStaffRequest.getUsername());
             staffAccount.getAccount().setEmail(updateStaffRequest.getEmail());
-            String image = imageService.uploadImageByPathService(updateStaffRequest.getImage());
-            staffAccount.getAccount().setAImage(image);
+            if(!updateStaffRequest.getImage().contains("i.ibb.co")){
+                String image = imageService.uploadImageByPathService(updateStaffRequest.getImage());
+                staffAccount.getAccount().setAImage(image);
+            }
             staffAccount.setPhoneNumber(updateStaffRequest.getPhoneNumber());
             staffAccountRepository.save(staffAccount);
             return new UpdateStaff(staffAccount.getAccount().getEmail(), staffAccount.getAccount().getUsername(),
