@@ -51,7 +51,7 @@ public class StaffAccount {
     @JsonBackReference
     private Set<Staff_Shift> staffShifts = new HashSet<>();
 
-    @OneToMany(mappedBy = "staffAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "staffAccountCashier", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties
     @JsonBackReference
     private Set<PurchaseOrder> purchaseOrders = new HashSet<>();

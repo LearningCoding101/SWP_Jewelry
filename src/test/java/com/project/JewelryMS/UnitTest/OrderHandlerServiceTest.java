@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.project.JewelryMS.entity.*;
@@ -142,7 +141,7 @@ class OrderHandlerServiceTest {
                 order.getStatus() == 1 &&
                         "Cash".equals(order.getPaymentType()) &&
                         Math.abs(1000000.0F - order.getTotalAmount()) < 0.001 &&
-                        order.getStaffAccount().getStaffID() == 1 &&
+                        order.getStaffAccountCashier().getStaffID() == 1 &&
                         "test@example.com".equals(order.getEmail()) &&
                         order.getOrderDetails().size() == 1 &&
                         order.getOrderDetails().iterator().next().getQuantity() == 2 &&

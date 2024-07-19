@@ -300,7 +300,7 @@ public class DashboardService {
 
 
         for (PurchaseOrder order : orders) {
-            StaffAccount staffAccount = order.getStaffAccount();
+            StaffAccount staffAccount = order.getStaffAccountCashier();
             if (staffAccount != null) {
                 int staffId = staffAccount.getStaffID();
                 double orderRevenue = order.getOrderDetails().stream()
@@ -328,7 +328,7 @@ public class DashboardService {
         Map<Integer, Integer> salesByStaff = new HashMap<>();
 
         for (PurchaseOrder order : orders) {
-            StaffAccount staffAccount = order.getStaffAccount();
+            StaffAccount staffAccount = order.getStaffAccountCashier();
             if (staffAccount != null) {
                 int staffId = staffAccount.getStaffID();
                 int totalSales = order.getOrderDetails().stream()
@@ -537,9 +537,9 @@ public class DashboardService {
                 response.setPurchaseDate(po.getPurchaseDate());
                 response.setStatus(po.getStatus());
                 response.setTotal(po.getTotalAmount());
-                if (po.getStaffAccount() != null) {
-                    response.setStaffID(po.getStaffAccount().getStaffID());
-                    response.setStaffName(po.getStaffAccount().getAccount().getAccountName());
+                if (po.getStaffAccountCashier() != null) {
+                    response.setStaffID(po.getStaffAccountCashier().getStaffID());
+                    response.setStaffName(po.getStaffAccountCashier().getAccount().getAccountName());
                 } else {
                     response.setStaffID(null);
                     response.setStaffName(null);

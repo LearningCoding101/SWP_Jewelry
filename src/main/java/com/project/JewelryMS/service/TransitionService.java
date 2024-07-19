@@ -1,7 +1,6 @@
 package com.project.JewelryMS.service;
 
 import com.project.JewelryMS.entity.PurchaseOrder;
-import com.project.JewelryMS.entity.StaffAccount;
 import com.project.JewelryMS.enumClass.OrderTypeEnum;
 import com.project.JewelryMS.model.Transition.TransitionResponse;
 import com.project.JewelryMS.repository.CustomerRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransitionService {
@@ -43,9 +41,9 @@ public class TransitionService {
                 response.setOrderType(OrderTypeEnum.INGOING);
             }
 
-            if (order.getStaffAccount() != null) {
-                response.setStaffID(order.getStaffAccount().getStaffID());
-                response.setStaffName(order.getStaffAccount().getAccount().getAccountName());
+            if (order.getStaffAccountCashier() != null) {
+                response.setStaffID(order.getStaffAccountCashier().getStaffID());
+                response.setStaffName(order.getStaffAccountCashier().getAccount().getAccountName());
 
             }
 

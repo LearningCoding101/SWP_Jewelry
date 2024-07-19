@@ -113,9 +113,9 @@ public class OrderHandlerService {
         order.setTotalAmount(orderRequest.getTotalAmount());
 
         if (orderRequest.getStaff_ID() != null) {
-            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
         } else {
-            order.setStaffAccount(null);
+            order.setStaffAccountCashier(null);
         }
         order.setEmail(email);
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -166,9 +166,9 @@ public class OrderHandlerService {
         order.setPaymentType(orderRequest.getPaymentType());
         order.setTotalAmount(orderRequest.getTotalAmount());
         if (orderRequest.getStaff_ID() != null) {
-            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
+            staffAccountRepository.findById(orderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
         } else {
-            order.setStaffAccount(null);
+            order.setStaffAccountCashier(null);
         }
 
         List<OrderBuyDetail> orderBuyDetails = new ArrayList<>();
@@ -273,8 +273,8 @@ public class OrderHandlerService {
             } else {
                 orderToGet.setCustomer_ID(null);
             }
-            if (order.getStaffAccount() != null) {
-                Integer staffID = order.getStaffAccount().getStaffID();
+            if (order.getStaffAccountCashier() != null) {
+                Integer staffID = order.getStaffAccountCashier().getStaffID();
                 orderToGet.setStaff_ID(staffID);
             } else {
                 // Handle the case where the customer is null, if necessary
@@ -615,9 +615,9 @@ public class OrderHandlerService {
             }
 
             if (updateOrderRequest.getStaff_ID() != null) {
-                staffAccountRepository.findById(updateOrderRequest.getStaff_ID()).ifPresent(order::setStaffAccount);
+                staffAccountRepository.findById(updateOrderRequest.getStaff_ID()).ifPresent(order::setStaffAccountCashier);
             } else {
-                order.setStaffAccount(null);
+                order.setStaffAccountCashier(null);
             }
             if(updateOrderRequest.getPaymentType()!=null) {
                 order.setPaymentType(updateOrderRequest.getPaymentType());
@@ -702,7 +702,7 @@ public class OrderHandlerService {
                         customer.getPhoneNumber(),
                         customer.isStatus(),
                         orderRepository.findByCustomerID(customer.getPK_CustomerID()).stream()
-                                .filter(order -> order.getStaffAccount() != null)
+                                .filter(order -> order.getStaffAccountCashier() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
@@ -730,7 +730,7 @@ public class OrderHandlerService {
                         order.getCustomer().getPhoneNumber(),
                         order.getCustomer().isStatus(),
                         orderRepository.findByCustomerID(order.getCustomer().getPK_CustomerID()).stream()
-                                .filter(order1 -> order1.getStaffAccount() != null)
+                                .filter(order1 -> order1.getStaffAccountCashier() != null)
                                 .map(OrderHandlerService::mapToOrderGuaranteeResponse)
                                 .collect(Collectors.toList())
                 ))
@@ -744,8 +744,8 @@ public class OrderHandlerService {
                 order.getPurchaseDate(),
                 order.getStatus(),
                 order.getTotalAmount(),
-                order.getStaffAccount().getStaffID(),
-                order.getStaffAccount().getAccount().getAccountName(),
+                order.getStaffAccountCashier().getStaffID(),
+                order.getStaffAccountCashier().getAccount().getAccountName(),
                 order.getOrderDetails().stream().map(OrderHandlerService::mapToOrderDetailGuaranteeResponse).collect(Collectors.toList())
         );
     }
