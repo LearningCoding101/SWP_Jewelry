@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkAreaRequest {
-    private String workAreaID;
+    private String workAreaCode;
     private int register;
     private String description;
 }
