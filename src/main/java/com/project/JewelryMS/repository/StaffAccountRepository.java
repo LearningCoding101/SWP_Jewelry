@@ -2,6 +2,7 @@ package com.project.JewelryMS.repository;
 
 import com.project.JewelryMS.entity.Shift;
 import com.project.JewelryMS.entity.StaffAccount;
+import com.project.JewelryMS.entity.WorkArea;
 import com.project.JewelryMS.model.Staff.StaffAccountResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +43,7 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
 
     @Query("SELECT DISTINCT s FROM StaffAccount s LEFT JOIN FETCH s.workArea WHERE s.staffID IN :staffIds")
     List<StaffAccount> findAllByIdWithWorkAreaEagerly(Set<Integer> staffIds);
+
+    Optional<StaffAccount> findByWorkArea(WorkArea workArea);
+
 }

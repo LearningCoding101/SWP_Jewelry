@@ -19,12 +19,12 @@ public class WorkAreaService {
 
     // Create a new work area
     public WorkAreaRequest createWorkArea(WorkAreaRequest workAreaRequest) {
-        if (!isValidWorkAreaID(workAreaRequest.getWorkAreaID())) {
+        if (!isValidWorkAreaID(workAreaRequest.getWorkAreaCode())) {
             throw new IllegalArgumentException("Invalid workAreaID format. Expected format: <4 Uppercase letters><3 numbers>.");
         }
 
         WorkArea workArea = new WorkArea();
-        workArea.setWorkAreaID(workAreaRequest.getWorkAreaID());
+        workArea.setWorkAreaCode(workAreaRequest.getWorkAreaCode());
         workArea.setRegister(workAreaRequest.getRegister());
         workArea.setDescription(workAreaRequest.getDescription());
         workArea = workAreaRepository.save(workArea);
@@ -40,16 +40,16 @@ public class WorkAreaService {
     }
 
     // Get work area by ID
-    public WorkAreaRequest getWorkAreaByWorkAreaID(String workAreaID) {
-        WorkArea workArea = workAreaRepository.findByWorkAreaID(workAreaID)
-                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaID + " not found"));
+    public WorkAreaRequest getWorkAreaByWorkAreaID(String workAreaCode) {
+        WorkArea workArea = workAreaRepository.findByWorkAreaCode(workAreaCode)
+                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaCode + " not found"));
         return toWorkAreaRequest(workArea);
     }
 
     // Update work area
-    public WorkAreaRequest updateWorkArea(String workAreaID, WorkAreaRequest workAreaRequest) {
-        WorkArea workArea = workAreaRepository.findByWorkAreaID(workAreaID)
-                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaID + " not found"));
+    public WorkAreaRequest updateWorkArea(String workAreaCode, WorkAreaRequest workAreaRequest) {
+        WorkArea workArea = workAreaRepository.findByWorkAreaCode(workAreaCode)
+                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaCode + " not found"));
 
         workArea.setRegister(workAreaRequest.getRegister());
         workArea.setDescription(workAreaRequest.getDescription());
@@ -59,9 +59,9 @@ public class WorkAreaService {
 
     // Delete work area
     @Transactional
-    public void deleteWorkArea(String workAreaID) {
-        WorkArea workArea = workAreaRepository.findByWorkAreaID(workAreaID)
-                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaID + " not found"));
+    public void deleteWorkArea(String workAreaCode) {
+        WorkArea workArea = workAreaRepository.findByWorkAreaCode(workAreaCode)
+                .orElseThrow(() -> new RuntimeException("Work Area ID: " + workAreaCode + " not found"));
 
         workArea.setStatus("Inactive");  // Update status instead of deleting
         workAreaRepository.save(workArea);
@@ -70,7 +70,7 @@ public class WorkAreaService {
     // Convert WorkArea entity to WorkAreaRequest DTO
     private WorkAreaRequest toWorkAreaRequest(WorkArea workArea) {
         WorkAreaRequest workAreaRequest = new WorkAreaRequest();
-        workAreaRequest.setWorkAreaID(workArea.getWorkAreaID());
+        workAreaRequest.setWorkAreaCode(workArea.getWorkAreaCode());
         workAreaRequest.setRegister(workArea.getRegister());
         workAreaRequest.setDescription(workArea.getDescription());
         return workAreaRequest;
@@ -80,7 +80,7 @@ public class WorkAreaService {
     private GetWorkAreaRequest toGetWorkAreaRequest(WorkArea workArea) {
         return new GetWorkAreaRequest(
                 workArea.getId(),
-                workArea.getWorkAreaID(),
+                workArea.getWorkAreaCode(),
                 workArea.getRegister(),
                 workArea.getDescription(),
                 workArea.getStatus()
