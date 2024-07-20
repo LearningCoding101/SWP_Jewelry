@@ -64,6 +64,10 @@ public class SchedulingService {
     @Autowired
     private WorkAreaRepository workAreaRepository;
 
+
+    // Track if shifts have been scheduled on the current Saturday
+    private boolean isShiftsScheduledToday = false;
+
     @Transactional
     public UpdateStaffWorkAreaRequest updateStaffWorkArea(UpdateStaffWorkAreaRequest request) {
         // Fetch the staff entity from the database
@@ -260,7 +264,7 @@ public class SchedulingService {
         // Remove shifts without staff
         shifts.removeIf(shift -> {
             if (shift.getStaffShifts().isEmpty()) {
-                // Delete the shift from the database
+                // Outright delete the shift from the database
                 shiftRepository.delete(shift);
                 return true;
             }
@@ -330,16 +334,17 @@ public class SchedulingService {
 
         // Check if the staff's work area ID is null
         if (staff.getWorkArea() == null || staff.getWorkArea().getWorkAreaCode() == null) {
-            throw new ShiftAssignmentException("Staff does not have a work area assigned. Please assign a work area ID for the staff.");
+            throw new ShiftAssignmentException("Staff does not have a work area assigned. Please assign a work area code for the staff.");
         }
 
         try {
-            // Check if the staff member is already assigned to any shift on the same day
+            // Check if the staff member is already assigned to the same shift type on the same day
             boolean isAssigned = staff.getStaffShifts().stream()
-                    .anyMatch(ss -> ss.getShift().getStartTime().toLocalDate().equals(date));
+                    .anyMatch(ss -> ss.getShift().getStartTime().toLocalDate().equals(date)
+                            && ss.getShift().getShiftType().equals(shiftType));
 
             if (isAssigned) {
-                throw new ShiftAssignmentException("Staff is already assigned to a shift on this day. Please choose a different day or staff member.");
+                throw new ShiftAssignmentException("Staff is already assigned to the " + shiftType + " shift on this day. Please choose a different shift type or day.");
             }
 
             // Find a shift on the specified date and period
@@ -768,8 +773,12 @@ public class SchedulingService {
 //    }
 
     @Scheduled(cron = "0 0 0 * * SAT") // Run every Saturday at midnight
-//    @Scheduled(cron = "0 */10 * * * *") // Run every 10 minutes
+    //    @Scheduled(cron = "0 */10 * * * *") // Run every 10 minutes
     public void scheduleShiftsAutomatically() {
+        if (isShiftsScheduledToday) {
+            return; // Skip if shifts have already been scheduled today
+        }
+
         List<Integer> staffIds = getAllStaffIds();
         LocalDate today = LocalDate.now();
         LocalDate startDate;
@@ -806,13 +815,14 @@ public class SchedulingService {
         }
 
         assignRandomStaffShiftPattern(staffIds, startDate, endDate);
+        isShiftsScheduledToday = true; // Mark that shifts have been scheduled today
     }
 
     @PostConstruct
     public void checkAndRunAutomationOnStartup() {
         CompletableFuture.runAsync(() -> {
             LocalDate today = LocalDate.now();
-            if (today.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            if (today.getDayOfWeek() == DayOfWeek.SATURDAY && !isShiftsScheduledToday) {
                 scheduleShiftsAutomatically();
             }
         });
@@ -824,7 +834,8 @@ public class SchedulingService {
                 .collect(Collectors.toList());
     }
 
-    private Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, ConcurrentLinkedQueue<StaffShiftResponse> staffShiftResponses) {
+    @Transactional
+    public Future<?> assignShift(ExecutorService executorService, int staffId, LocalDate date, String shiftType, ConcurrentLinkedQueue<StaffShiftResponse> staffShiftResponses) {
         return executorService.submit(() -> {
             try {
                 StaffShiftResponse response = assignStaffToDay(staffId, date, shiftType);
@@ -837,7 +848,8 @@ public class SchedulingService {
         });
     }
 
-    private Future<?> assignSingleShift(ExecutorService executorService, int staffId, LocalDate date, ConcurrentLinkedQueue<StaffShiftResponse> staffShiftResponses) {
+    @Transactional
+    public Future<?> assignSingleShift(ExecutorService executorService, int staffId, LocalDate date, ConcurrentLinkedQueue<StaffShiftResponse> staffShiftResponses) {
         return executorService.submit(() -> {
             try {
                 String shiftType = getRandomSingleShiftType();
