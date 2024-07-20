@@ -51,4 +51,5 @@ public interface StaffAccountRepository extends JpaRepository<StaffAccount, Inte
     @Query("SELECT sa FROM StaffAccount sa WHERE sa.account.accountName LIKE %:accountName%")
     List<StaffAccount> findByAccountNameContaining(@Param("accountName") String accountName);
 
+
 }
