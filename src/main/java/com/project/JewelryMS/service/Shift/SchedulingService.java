@@ -784,13 +784,13 @@ public class SchedulingService {
         assignRandomStaffShiftPattern(staffIds, startDate, endDate);
     }
 
-    @PostConstruct
-    public void checkAndRunAutomationOnStartup() {
-        LocalDate today = LocalDate.now();
-        if (today.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            scheduleShiftsAutomatically();
-        }
-    }
+//    @PostConstruct
+//    public void checkAndRunAutomationOnStartup() {
+//        LocalDate today = LocalDate.now();
+//        if (today.getDayOfWeek() == DayOfWeek.SATURDAY) {
+//            scheduleShiftsAutomatically();
+//        }
+//    }
 
 
     private List<Integer> getAllStaffIds() {

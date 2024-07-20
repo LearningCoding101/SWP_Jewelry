@@ -95,6 +95,7 @@ com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\repository\DailyRevenueProjection.class
+com\project\JewelryMS\model\Shift\StaffWorkAreaResponse.class
 com\project\JewelryMS\model\Order\OrderRefundMailRequest.class
 com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
@@ -171,6 +172,7 @@ com\project\JewelryMS\model\Dashboard\StaffWorkAreaRevenue.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\model\Refund\RefundOrderDetailRequest.class
 com\project\JewelryMS\service\TransitionService.class
+com\project\JewelryMS\model\Shift\WorkAreaResponse.class
 com\project\JewelryMS\service\QRService.class
 com\project\JewelryMS\entity\ProductSell_Promotion.class
 com\project\JewelryMS\model\Promotion\PromotionRequest.class

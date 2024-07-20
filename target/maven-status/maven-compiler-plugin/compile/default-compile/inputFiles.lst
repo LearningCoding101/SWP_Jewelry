@@ -174,8 +174,10 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\GetWorkAreaRequest
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\ShiftRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilityDeserializer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffWorkAreaResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\UpdateStaffWorkAreaRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\WorkAreaRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\WorkAreaResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountRequest.java
