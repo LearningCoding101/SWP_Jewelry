@@ -818,15 +818,15 @@ public class SchedulingService {
         isShiftsScheduledToday = true; // Mark that shifts have been scheduled today
     }
 
-    @PostConstruct
-    public void checkAndRunAutomationOnStartup() {
-        CompletableFuture.runAsync(() -> {
-            LocalDate today = LocalDate.now();
-            if (today.getDayOfWeek() == DayOfWeek.SATURDAY && !isShiftsScheduledToday) {
-                scheduleShiftsAutomatically();
-            }
-        });
-    }
+//    @PostConstruct
+//    public void checkAndRunAutomationOnStartup() {
+//        CompletableFuture.runAsync(() -> {
+//            LocalDate today = LocalDate.now();
+//            if (today.getDayOfWeek() == DayOfWeek.SATURDAY && !isShiftsScheduledToday) {
+//                scheduleShiftsAutomatically();
+//            }
+//        });
+//    }
 
 
     private List<Integer> getAllStaffIds() {
