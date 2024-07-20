@@ -11,6 +11,7 @@ com\project\JewelryMS\model\Order\OrderResponse.class
 com\project\JewelryMS\model\ProductBuy\ProductBuyResponse.class
 com\project\JewelryMS\model\Promotion\CreatePromotionRequest.class
 com\project\JewelryMS\controller\AuthenticationAPI.class
+com\project\JewelryMS\model\Order\OrderStaffAppraisalRequest.class
 com\project\JewelryMS\service\StaffAccountService.class
 com\project\JewelryMS\model\Order\OrderDetailGuaranteeResponse.class
 com\project\JewelryMS\controller\InfoController.class
@@ -94,6 +95,7 @@ com\project\JewelryMS\model\Staff\StaffAccountResponse$ShiftResponse.class
 com\project\JewelryMS\model\Customer\CustomerDeleteRequest.class
 com\project\JewelryMS\model\ProductSell\ProductSellResponse.class
 com\project\JewelryMS\repository\DailyRevenueProjection.class
+com\project\JewelryMS\model\Shift\StaffWorkAreaResponse.class
 com\project\JewelryMS\model\Order\OrderRefundMailRequest.class
 com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.class
 com\project\JewelryMS\model\ProductSell\RemovePromotionRequest.class
@@ -106,6 +108,7 @@ com\project\JewelryMS\controller\VNPAYController.class
 com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.class
 com\project\JewelryMS\model\Profile\StaffProfileResponse.class
 com\project\JewelryMS\model\Order\ClaimOrderRequest.class
+com\project\JewelryMS\model\Dashboard\WorkAreaRevenueResponse.class
 com\project\JewelryMS\service\ProfileService.class
 com\project\JewelryMS\controller\DashBoardController.class
 com\project\JewelryMS\model\Dashboard\RevenueDateRequest.class
@@ -121,6 +124,7 @@ com\project\JewelryMS\model\Shift\AssignStaffByShiftTypePatternRequest.class
 com\project\JewelryMS\config\WebSocketConfig.class
 com\project\JewelryMS\model\Profile\UpdateManager.class
 com\project\JewelryMS\model\Order\OrderData.class
+com\project\JewelryMS\model\Order\OrderStaffSaleRequest.class
 com\project\JewelryMS\service\CustomerService.class
 com\project\JewelryMS\repository\ProductSellPromotionRepository.class
 com\project\JewelryMS\config\SecurityConfig.class
@@ -164,9 +168,11 @@ com\project\JewelryMS\entity\PricingRatio.class
 com\project\JewelryMS\entity\Customer.class
 com\project\JewelryMS\entity\WorkArea.class
 com\project\JewelryMS\entity\Refund.class
+com\project\JewelryMS\model\Dashboard\StaffWorkAreaRevenue.class
 com\project\JewelryMS\repository\ProductSellRepository.class
 com\project\JewelryMS\model\Refund\RefundOrderDetailRequest.class
 com\project\JewelryMS\service\TransitionService.class
+com\project\JewelryMS\model\Shift\WorkAreaResponse.class
 com\project\JewelryMS\service\QRService.class
 com\project\JewelryMS\entity\ProductSell_Promotion.class
 com\project\JewelryMS\model\Promotion\PromotionRequest.class
