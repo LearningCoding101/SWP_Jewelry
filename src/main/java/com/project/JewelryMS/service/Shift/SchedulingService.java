@@ -70,6 +70,11 @@ public class SchedulingService {
         StaffAccount staff = staffAccountRepository.findById(request.getStaffId())
                 .orElseThrow(() -> new EntityNotFoundException("Staff not found with id: " + request.getStaffId()));
 
+        // Check if the staff is inactive
+        if (staff.getAccount().getStatus() == 0) {
+            throw new IllegalStateException("Cannot assign work area to inactive staff.");
+        }
+
         // Fetch the new work area entity from the database
         WorkArea newWorkArea = workAreaRepository.findByWorkAreaCode(request.getWorkAreaCode())
                 .orElseThrow(() -> new EntityNotFoundException("Work area not found with code: " + request.getWorkAreaCode()));
@@ -90,16 +95,35 @@ public class SchedulingService {
         return new UpdateStaffWorkAreaRequest(staff.getStaffID(), newWorkArea.getWorkAreaCode());
     }
 
-
     @Transactional
     public void switchStaffWorkArea(Integer staffId1, Integer staffId2) {
         // Fetch the first staff entity from the database
         StaffAccount staff1 = staffAccountRepository.findById(staffId1)
                 .orElseThrow(() -> new EntityNotFoundException("Staff not found with id: " + staffId1));
 
+        // Check if the first staff is inactive
+        if (staff1.getAccount().getStatus() == 0) {
+            // If inactive staff still has a work area, set it to null
+            if (staff1.getWorkArea() != null) {
+                staff1.setWorkArea(null);
+                staffAccountRepository.save(staff1);
+            }
+            throw new IllegalStateException("Cannot switch work area of inactive staff with id: " + staffId1);
+        }
+
         // Fetch the second staff entity from the database
         StaffAccount staff2 = staffAccountRepository.findById(staffId2)
                 .orElseThrow(() -> new EntityNotFoundException("Staff not found with id: " + staffId2));
+
+        // Check if the second staff is inactive
+        if (staff2.getAccount().getStatus() == 0) {
+            // If inactive staff still has a work area, set it to null
+            if (staff2.getWorkArea() != null) {
+                staff2.setWorkArea(null);
+                staffAccountRepository.save(staff2);
+            }
+            throw new IllegalStateException("Cannot switch work area of inactive staff with id: " + staffId2);
+        }
 
         // Get the work areas assigned to each staff member
         WorkArea workArea1 = staff1.getWorkArea();
@@ -786,12 +810,13 @@ public class SchedulingService {
 
     @PostConstruct
     public void checkAndRunAutomationOnStartup() {
-        LocalDate today = LocalDate.now();
-        if (today.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            scheduleShiftsAutomatically();
-        }
+        CompletableFuture.runAsync(() -> {
+            LocalDate today = LocalDate.now();
+            if (today.getDayOfWeek() == DayOfWeek.SATURDAY) {
+                scheduleShiftsAutomatically();
+            }
+        });
     }
-
 
     private List<Integer> getAllStaffIds() {
         return staffAccountRepository.findAllStaffAccountsByRoleStaff().stream()
