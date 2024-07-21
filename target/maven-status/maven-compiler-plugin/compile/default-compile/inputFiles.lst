@@ -84,7 +84,9 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueRe
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffRevenueResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffSalesResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffStatisticsResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\StaffWorkAreaRevenue.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\TopSellProductResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\WorkAreaRevenueResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Dashboard\YearComparisonResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\EmailDetail.java
@@ -118,6 +120,8 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderGuaranteeResp
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderRefundDetail.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderRefundMailRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderResponse.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderStaffAppraisalRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\OrderStaffSaleRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductBuyResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ProductResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Order\ReleaseOrderRequest.java
@@ -170,8 +174,10 @@ D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\GetWorkAreaRequest
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\ShiftRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilityDeserializer.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffAvailabilitySerializer.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\StaffWorkAreaResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\UpdateStaffWorkAreaRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\WorkAreaRequest.java
+D:\swpBackend\src\main\java\com\project\JewelryMS\model\Shift\WorkAreaResponse.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\CreateStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\DeleteStaffAccountRequest.java
 D:\swpBackend\src\main\java\com\project\JewelryMS\model\Staff\StaffAccountRequest.java
