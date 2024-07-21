@@ -12,7 +12,7 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER) // Change fetch type for testing
     @JoinColumn(name = "product_id")
     private ProductSell productSell;
 
