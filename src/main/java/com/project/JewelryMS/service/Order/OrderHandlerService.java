@@ -849,8 +849,9 @@ public class OrderHandlerService {
     }
 
     private float calculateRefundAmount(OrderDetail orderDetail, int quantityToRefund) {
+        Float discountFactor = orderDetail.getPromotion().getDiscount() / 100.0f;
         // Calculate refund amount for the specified quantity
-        return (orderDetail.getProductSell().getCost() * quantityToRefund);
+        return (orderDetail.getProductSell().getCost() * quantityToRefund * discountFactor);
     }
 
     public List<RefundResponse> getAllRefunds() {
